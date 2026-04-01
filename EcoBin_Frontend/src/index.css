@@ -1,4 +1,4 @@
-﻿@tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -99,60 +99,60 @@
   }
 
   .surface-card {
-    @apply rounded-2xl border border-slate-400/25 bg-gradient-to-br from-slate-900/85 to-slate-800/70 p-5 shadow-[0_18px_34px_rgba(3,8,20,0.34)] backdrop-blur;
+    @apply rounded-[20px] border border-white/10 bg-gradient-to-br from-slate-900/60 to-slate-950/40 p-5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-xl transition-all duration-300 hover:border-white/20 hover:shadow-[0_8px_32px_rgba(34,201,141,0.15)];
   }
 
   .surface-card.inset {
-    @apply bg-gradient-to-b from-slate-950/70 to-slate-900/70;
+    @apply bg-gradient-to-b from-slate-950/50 to-slate-900/50 hover:shadow-none;
   }
 
   .section-head {
-    @apply mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between;
+    @apply mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between;
   }
 
   .page-title {
-    @apply text-3xl font-black tracking-[0.2px] text-slate-100 md:text-4xl;
-    font-family: "Trebuchet MS", "Segoe UI", "Tahoma", sans-serif;
+    @apply bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-3xl font-black tracking-tight text-transparent md:text-5xl;
+    font-family: "Outfit", "Inter", "Segoe UI", sans-serif;
   }
 
   .page-subtitle {
-    @apply mt-1 max-w-3xl text-sm text-slate-300/80 md:text-base;
+    @apply mt-2 max-w-3xl text-sm leading-relaxed text-slate-300 md:text-base;
   }
 
   .section-title {
-    @apply flex items-center gap-2 text-lg font-bold text-slate-100;
+    @apply flex items-center gap-2.5 text-xl font-extrabold tracking-tight text-white;
   }
 
   .section-note {
-    @apply text-sm leading-relaxed text-slate-300/75;
+    @apply text-sm leading-relaxed text-slate-400;
   }
 
   .grid-2 {
-    @apply grid grid-cols-1 gap-4 lg:grid-cols-2;
+    @apply grid grid-cols-1 gap-5 lg:grid-cols-2;
   }
 
   .grid-3 {
-    @apply grid grid-cols-1 gap-4 xl:grid-cols-3;
+    @apply grid grid-cols-1 gap-5 xl:grid-cols-3;
   }
 
   .grid-4 {
-    @apply grid grid-cols-2 gap-3 xl:grid-cols-4;
+    @apply grid grid-cols-2 gap-4 xl:grid-cols-4;
   }
 
   .stack-sm {
-    @apply grid gap-2;
+    @apply grid gap-2.5;
   }
 
   .stack-md {
-    @apply grid gap-3;
-  }
-
-  .stack-lg {
     @apply grid gap-4;
   }
 
+  .stack-lg {
+    @apply grid gap-6;
+  }
+
   .row {
-    @apply flex items-center gap-2.5;
+    @apply flex items-center gap-3;
   }
 
   .row.space {
@@ -168,15 +168,15 @@
   .btn-ghost,
   .btn-danger,
   .btn-soft {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border px-5 py-2.5 text-sm font-bold tracking-wide transition-all duration-300 active:scale-95;
   }
 
   .btn-primary {
-    @apply border-transparent bg-gradient-to-r from-emerald-400 to-emerald-500 text-slate-950 shadow-[0_12px_22px_rgba(31,166,117,0.32)] hover:-translate-y-0.5 hover:brightness-110;
+    @apply relative overflow-hidden border-transparent bg-emerald-500 text-slate-950 shadow-[0_0_20px_rgba(34,201,141,0.4)] hover:-translate-y-0.5 hover:bg-emerald-400 hover:shadow-[0_0_30px_rgba(34,201,141,0.6)];
   }
 
   .btn-secondary {
-    @apply border-blue-400/40 bg-blue-400/20 text-blue-100 hover:-translate-y-0.5;
+    @apply border-blue-500/30 bg-blue-500/10 text-blue-300 hover:-translate-y-0.5 hover:bg-blue-500/20 hover:shadow-[0_0_20px_rgba(79,141,255,0.3)];
   }
 
   .btn-ghost {
@@ -351,28 +351,28 @@
   }
 
   .top-nav {
-    @apply fixed inset-x-0 top-0 z-[100] border-b border-slate-400/25 bg-slate-950/80 backdrop-blur;
+    @apply fixed inset-x-0 top-4 z-[100] mx-auto w-[calc(100%-2rem)] max-w-[1360px] rounded-full border border-white/10 bg-slate-950/70 backdrop-blur-xl shadow-lg;
   }
 
   .top-nav-inner {
-    @apply mx-auto flex h-[76px] w-full max-w-[1360px] items-center justify-between gap-3 px-4;
+    @apply mx-auto flex h-[64px] items-center justify-between gap-3 px-5 lg:px-6;
   }
 
   .brand-link {
-    @apply inline-flex items-center gap-2 text-2xl font-black text-emerald-50;
-    font-family: "Trebuchet MS", "Segoe UI", "Tahoma", sans-serif;
+    @apply inline-flex items-center gap-2 text-xl font-bold text-white;
+    font-family: "Outfit", "Inter", sans-serif;
   }
 
   .nav-links {
-    @apply ml-auto hidden items-center gap-1 lg:flex;
+    @apply ml-auto hidden items-center gap-1.5 lg:flex;
   }
 
   .nav-link {
-    @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-slate-300 transition-all hover:border-slate-400/30 hover:bg-slate-400/10 hover:text-slate-100;
+    @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-transparent px-3.5 py-1.5 text-sm font-semibold text-slate-300 transition-all hover:bg-white/5 hover:text-white;
   }
 
   .nav-link.active {
-    @apply border-blue-400/45 bg-blue-400/20 text-blue-100;
+    @apply bg-blue-500/15 text-blue-300;
   }
 
   .nav-actions {
@@ -380,11 +380,11 @@
   }
 
   .nav-toggle {
-    @apply inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-400/30 text-slate-200 lg:hidden;
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-slate-200 lg:hidden;
   }
 
   .nav-mobile {
-    @apply hidden border-t border-slate-400/25 bg-slate-950/95 p-4;
+    @apply hidden absolute left-0 right-0 top-[72px] mt-2 rounded-[20px] border border-white/10 bg-slate-950/95 p-5 shadow-2xl backdrop-blur-3xl;
   }
 
   .nav-mobile.open {
@@ -392,40 +392,40 @@
   }
 
   .site-footer {
-    @apply mt-auto border-t border-slate-400/20 bg-slate-950/60;
+    @apply mt-auto border-t border-white/10 bg-slate-950/40 backdrop-blur-lg;
   }
 
   .site-footer-inner {
-    @apply mx-auto grid w-full max-w-[1360px] grid-cols-1 gap-5 px-5 py-8 md:grid-cols-3;
+    @apply mx-auto grid w-full max-w-[1360px] grid-cols-1 gap-8 px-5 py-10 md:grid-cols-3;
   }
 
   .footer-title {
-    @apply mb-2 text-base font-bold;
+    @apply mb-3 text-sm font-bold uppercase tracking-wider text-white;
   }
 
   .footer-list {
-    @apply grid list-none gap-1.5 text-slate-300/75;
+    @apply grid list-none gap-2 text-sm text-slate-400;
   }
 
   .footer-note {
-    @apply border-t border-slate-400/20 px-4 py-4 text-center text-xs text-slate-400;
+    @apply border-t border-white/5 px-4 py-5 text-center text-xs text-slate-500;
   }
 
   .hero-grid {
-    @apply grid grid-cols-1 gap-5 xl:grid-cols-[1.32fr_0.98fr];
+    @apply grid grid-cols-1 gap-8 object-cover xl:grid-cols-[1.32fr_0.98fr];
   }
 
   .hero-title {
-    @apply text-[2.15rem] font-black leading-[1.05] tracking-tight text-slate-100 md:text-[3.2rem];
-    font-family: "Trebuchet MS", "Segoe UI", "Tahoma", sans-serif;
+    @apply text-5xl font-extrabold leading-[1.05] tracking-tight text-white md:text-[4rem];
+    font-family: "Outfit", "Inter", sans-serif;
   }
 
   .hero-gradient-text {
-    @apply bg-gradient-to-r from-emerald-200 to-blue-300 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-emerald-300 via-teal-200 to-blue-300 bg-clip-text text-transparent drop-shadow-sm;
   }
 
   .hero-subtitle {
-    @apply max-w-2xl text-base text-slate-200/85;
+    @apply mt-4 max-w-2xl text-lg text-slate-300/90 leading-relaxed;
   }
 
   .hero-cta {

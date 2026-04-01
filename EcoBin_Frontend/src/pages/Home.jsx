@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -143,10 +143,10 @@ const Home = () => {
                             <motion.article
                                 key={step.title}
                                 className="surface-card home-step-card"
-                                initial={{ opacity: 0, y: 8 }}
+                                initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.08 }}
+                                viewport={{ once: true, margin: "-50px" }}
+                                transition={{ delay: index * 0.15, duration: 0.5 }}
                             >
                                 <div className="icon-pill mb-3">
                                     <Icon size={17} className="text-blue-300" />
