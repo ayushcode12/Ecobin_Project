@@ -197,13 +197,13 @@ const History = () => {
         <div className="page-shell">
             <section className="section-head">
                 <div>
-                    <h1 className="page-title"><HistoryIcon size={30} style={{ verticalAlign: 'middle', marginRight: '0.4rem' }} />My History</h1>
+                    <h1 className="page-title"><HistoryIcon size={30} className="mr-2 inline-block align-middle" />My History</h1>
                     <p className="page-subtitle">Filter your scans and reports, then export records as CSV.</p>
                 </div>
             </section>
 
             <section className="surface-card page-section">
-                <div className="row wrap space" style={{ marginBottom: '0.8rem' }}>
+                <div className="row wrap space mb-4">
                     <div className="pill-tabs">
                         <button className={`pill-tab ${activeTab === 'scans' ? 'active' : ''}`} onClick={() => setActiveTab('scans')}>My Scans</button>
                         <button className={`pill-tab ${activeTab === 'reports' ? 'active' : ''}`} onClick={() => setActiveTab('reports')}>My Reports</button>
@@ -217,20 +217,14 @@ const History = () => {
                                 resetFilters();
                                 setTimeout(fetchData, 0);
                             }}
-                        >
-                            <RotateCcw size={15} /> Reset
-                        </button>
+                        ><RotateCcw size={15} /> Reset</button>
                     </div>
                 </div>
 
                 <div className="form-grid cols-2">
                     <div>
                         <label className="form-label">Category</label>
-                        <select
-                            className="select-control"
-                            value={filters.categoryType}
-                            onChange={(e) => setFilter('categoryType', e.target.value)}
-                        >
+                        <select className="select-control" value={filters.categoryType} onChange={(e) => setFilter('categoryType', e.target.value)}>
                             <option value="">All</option>
                             <option value="Biodegradable">Biodegradable</option>
                             <option value="Recyclable">Recyclable</option>
@@ -244,11 +238,7 @@ const History = () => {
                     {activeTab === 'reports' ? (
                         <div>
                             <label className="form-label">Status</label>
-                            <select
-                                className="select-control"
-                                value={filters.status}
-                                onChange={(e) => setFilter('status', e.target.value)}
-                            >
+                            <select className="select-control" value={filters.status} onChange={(e) => setFilter('status', e.target.value)}>
                                 <option value="">All</option>
                                 <option value="PENDING">PENDING</option>
                                 <option value="APPROVED">APPROVED</option>
@@ -266,22 +256,12 @@ const History = () => {
 
                     <div>
                         <label className="form-label">From</label>
-                        <input
-                            className="input-control"
-                            type="datetime-local"
-                            value={filters.dateFrom}
-                            onChange={(e) => setFilter('dateFrom', e.target.value)}
-                        />
+                        <input className="input-control" type="datetime-local" value={filters.dateFrom} onChange={(e) => setFilter('dateFrom', e.target.value)} />
                     </div>
 
                     <div>
                         <label className="form-label">To</label>
-                        <input
-                            className="input-control"
-                            type="datetime-local"
-                            value={filters.dateTo}
-                            onChange={(e) => setFilter('dateTo', e.target.value)}
-                        />
+                        <input className="input-control" type="datetime-local" value={filters.dateTo} onChange={(e) => setFilter('dateTo', e.target.value)} />
                     </div>
                 </div>
             </section>
@@ -319,15 +299,9 @@ const History = () => {
                                                 <td>{formatDate(row.createdAt)}</td>
                                                 <td>{category}</td>
                                                 <td>{row.textDescription || '-'}</td>
-                                                {activeTab === 'reports' && (
-                                                    <td>
-                                                        <span className={`status-chip ${getStatusClass(row.status)}`}>
-                                                            {row.status || 'UNKNOWN'}
-                                                        </span>
-                                                    </td>
-                                                )}
+                                                {activeTab === 'reports' && <td><span className={`status-chip ${getStatusClass(row.status)}`}>{row.status || 'UNKNOWN'}</span></td>}
                                                 {activeTab === 'scans' && <td>{row.matchedKeyword || '-'}</td>}
-                                                <td style={{ color: '#7df2c7', fontWeight: 760 }}>+{points}</td>
+                                                <td className="font-bold text-emerald-200">+{points}</td>
                                             </tr>
                                         );
                                     })}

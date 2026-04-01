@@ -214,9 +214,9 @@ const AdminReports = () => {
     if (!isAdmin) {
         return (
             <div className="page-shell compact">
-                <div className="surface-card" style={{ textAlign: 'center' }}>
-                    <h2 className="section-title" style={{ justifyContent: 'center', marginBottom: '0.55rem' }}>Admin Access Required</h2>
-                    <p className="section-note" style={{ marginBottom: '0.8rem' }}>{error || 'You do not have permission to open this page.'}</p>
+                <div className="surface-card text-center">
+                    <h2 className="section-title mb-2 justify-center">Admin Access Required</h2>
+                    <p className="section-note mb-3">{error || 'You do not have permission to open this page.'}</p>
                     <button className="btn-primary" onClick={() => navigate('/dashboard')}>Go To Dashboard</button>
                 </div>
             </div>
@@ -224,25 +224,21 @@ const AdminReports = () => {
     }
 
     return (
-        <div className="page-shell">
+        <div className="page-shell space-y-5">
             <section className="section-head">
                 <div>
-                    <h1 className="page-title"><ListTodo size={30} style={{ verticalAlign: 'middle', marginRight: '0.4rem' }} />Admin Report Queue</h1>
+                    <h1 className="page-title"><ListTodo size={30} className="mr-2 inline-block align-middle" />Admin Report Queue</h1>
                     <p className="page-subtitle">Enforce status workflow, add notes, assign pickup dates, and close reports with proof.</p>
                 </div>
-                <button className="btn-ghost" onClick={fetchReports}>
-                    <RefreshCcw size={15} /> Refresh
-                </button>
+                <button className="btn-ghost" onClick={fetchReports}><RefreshCcw size={15} /> Refresh</button>
             </section>
 
-            {error && <div className="alert error page-section">{error}</div>}
+            {error && <div className="alert error">{error}</div>}
 
             {sortedReports.length === 0 ? (
-                <section className="surface-card page-section">
-                    <div className="empty-state">No reports available right now.</div>
-                </section>
+                <section className="surface-card"><div className="empty-state">No reports available right now.</div></section>
             ) : (
-                <section className="stack-md page-section">
+                <section className="stack-md">
                     {sortedReports.map((report) => {
                         const reportId = report.id;
                         const currentStatus = report.status || 'PENDING';
@@ -250,13 +246,8 @@ const AdminReports = () => {
                         const busy = updatingId === reportId;
 
                         return (
-                            <motion.article
-                                key={reportId}
-                                className="surface-card"
-                                initial={{ opacity: 0, y: 8 }}
-                                animate={{ opacity: 1, y: 0 }}
-                            >
-                                <div className="row space wrap" style={{ marginBottom: '0.75rem' }}>
+                            <motion.article key={reportId} className="surface-card" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                                <div className="row wrap space mb-3">
                                     <div>
                                         <h3 className="section-title">Report #{reportId}</h3>
                                         <p className="help-text">Created {formatDate(report.createdAt)}</p>
@@ -264,7 +255,7 @@ const AdminReports = () => {
                                     <span className={`status-chip ${getStatusClass(currentStatus)}`}>{currentStatus}</span>
                                 </div>
 
-                                <div className="grid-2" style={{ marginBottom: '0.75rem' }}>
+                                <div className="grid-2 gap-4">
                                     <div className="stack-sm">
                                         <div><strong>Reporter:</strong> {report?.user?.name || 'Unknown'} ({report?.user?.email || 'N/A'})</div>
                                         <div><strong>Description:</strong> {report?.textDescription || 'No description'}</div>
@@ -277,14 +268,10 @@ const AdminReports = () => {
 
                                         <div className="row wrap">
                                             {report?.imageUrl && (
-                                                <a href={report.imageUrl} target="_blank" rel="noreferrer" className="btn-soft">
-                                                    <LocateFixed size={14} /> Open Uploaded Image
-                                                </a>
+                                                <a href={report.imageUrl} target="_blank" rel="noreferrer" className="btn-soft"><LocateFixed size={14} /> Open Uploaded Image</a>
                                             )}
                                             {report?.resolutionProofUrl && (
-                                                <a href={report.resolutionProofUrl} target="_blank" rel="noreferrer" className="btn-secondary">
-                                                    <CheckCircle2 size={14} /> Resolution Proof
-                                                </a>
+                                                <a href={report.resolutionProofUrl} target="_blank" rel="noreferrer" className="btn-secondary"><CheckCircle2 size={14} /> Resolution Proof</a>
                                             )}
                                         </div>
                                     </div>
@@ -293,56 +280,29 @@ const AdminReports = () => {
                                         <div className="form-grid">
                                             <div>
                                                 <label className="form-label">Update Status</label>
-                                                <select
-                                                    className="select-control"
-                                                    value={statusDrafts[reportId] || currentStatus}
-                                                    onChange={(e) => setStatusDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))}
-                                                >
-                                                    {selectable.map((status) => (
-                                                        <option key={status} value={status}>{status}</option>
-                                                    ))}
+                                                <select className="select-control" value={statusDrafts[reportId] || currentStatus} onChange={(e) => setStatusDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))}>
+                                                    {selectable.map((status) => <option key={status} value={status}>{status}</option>)}
                                                 </select>
                                             </div>
 
                                             <div>
                                                 <label className="form-label">Admin Note</label>
-                                                <textarea
-                                                    className="textarea-control"
-                                                    rows={3}
-                                                    value={noteDrafts[reportId] || ''}
-                                                    onChange={(e) => setNoteDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))}
-                                                    placeholder="Add action note (required for COMPLETED/REJECTED)"
-                                                />
+                                                <textarea className="textarea-control" rows={3} value={noteDrafts[reportId] || ''} onChange={(e) => setNoteDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} placeholder="Add action note (required for COMPLETED/REJECTED)" />
                                             </div>
 
                                             <div>
                                                 <label className="form-label">Resolution Proof URL</label>
-                                                <input
-                                                    className="input-control"
-                                                    type="url"
-                                                    value={proofDrafts[reportId] || ''}
-                                                    onChange={(e) => setProofDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))}
-                                                    placeholder="https://..."
-                                                />
+                                                <input className="input-control" type="url" value={proofDrafts[reportId] || ''} onChange={(e) => setProofDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} placeholder="https://..." />
                                             </div>
 
-                                            <button className="btn-primary" onClick={() => handleStatusUpdate(report)} disabled={busy}>
-                                                <SendHorizontal size={15} /> {busy ? 'Saving...' : 'Apply Status'}
-                                            </button>
+                                            <button className="btn-primary" onClick={() => handleStatusUpdate(report)} disabled={busy}><SendHorizontal size={15} /> {busy ? 'Saving...' : 'Apply Status'}</button>
 
                                             <div>
                                                 <label className="form-label">Assign Pickup Date</label>
-                                                <input
-                                                    type="datetime-local"
-                                                    className="input-control"
-                                                    value={pickupDrafts[reportId] || ''}
-                                                    onChange={(e) => setPickupDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))}
-                                                />
+                                                <input type="datetime-local" className="input-control" value={pickupDrafts[reportId] || ''} onChange={(e) => setPickupDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} />
                                             </div>
 
-                                            <button className="btn-ghost" onClick={() => handlePickupAssign(reportId)} disabled={busy}>
-                                                <CalendarClock size={15} /> {busy ? 'Saving...' : 'Assign Pickup'}
-                                            </button>
+                                            <button className="btn-ghost" onClick={() => handlePickupAssign(reportId)} disabled={busy}><CalendarClock size={15} /> {busy ? 'Saving...' : 'Assign Pickup'}</button>
                                         </div>
                                     </div>
                                 </div>

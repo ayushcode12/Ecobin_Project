@@ -100,13 +100,9 @@ const ReportWaste = () => {
                 </div>
             </section>
 
-            <motion.section
-                className="surface-card"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-            >
-                {error && <div className="alert error" style={{ marginBottom: '0.8rem' }}>{error}</div>}
-                {success && <div className="alert success" style={{ marginBottom: '0.8rem' }}>{success}</div>}
+            <motion.section className="surface-card" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                {error && <div className="alert error mb-4">{error}</div>}
+                {success && <div className="alert success mb-4">{success}</div>}
 
                 <form className="form-grid" onSubmit={handleSubmit}>
                     <div className="form-grid cols-2">
@@ -127,11 +123,7 @@ const ReportWaste = () => {
 
                         <div>
                             <label className="form-label">Severity</label>
-                            <select
-                                className="select-control"
-                                value={form.severity}
-                                onChange={(e) => updateField('severity', e.target.value)}
-                            >
+                            <select className="select-control" value={form.severity} onChange={(e) => updateField('severity', e.target.value)}>
                                 <option value="LOW">LOW</option>
                                 <option value="MEDIUM">MEDIUM</option>
                                 <option value="HIGH">HIGH</option>
@@ -153,71 +145,33 @@ const ReportWaste = () => {
                     <div className="form-grid cols-2">
                         <div>
                             <label className="form-label">Image URL (Optional)</label>
-                            <input
-                                className="input-control"
-                                type="url"
-                                value={form.imageUrl}
-                                onChange={(e) => updateField('imageUrl', e.target.value)}
-                                placeholder="https://..."
-                            />
+                            <input className="input-control" type="url" value={form.imageUrl} onChange={(e) => updateField('imageUrl', e.target.value)} placeholder="https://..." />
                         </div>
 
                         <div>
                             <label className="form-label">Estimated Quantity</label>
-                            <input
-                                className="input-control"
-                                type="number"
-                                min="1"
-                                value={form.estimatedQuantity}
-                                onChange={(e) => updateField('estimatedQuantity', e.target.value)}
-                            />
+                            <input className="input-control" type="number" min="1" value={form.estimatedQuantity} onChange={(e) => updateField('estimatedQuantity', e.target.value)} />
                         </div>
                     </div>
 
                     <div>
-                        <label className="form-label">
-                            <MapPin size={15} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '0.3rem' }} />
-                            Address (Optional)
-                        </label>
-                        <input
-                            className="input-control"
-                            type="text"
-                            value={form.address}
-                            onChange={(e) => updateField('address', e.target.value)}
-                            placeholder="Street, landmark, or area"
-                        />
+                        <label className="form-label"><MapPin size={15} className="mr-1 inline-block align-middle" />Address (Optional)</label>
+                        <input className="input-control" type="text" value={form.address} onChange={(e) => updateField('address', e.target.value)} placeholder="Street, landmark, or area" />
                     </div>
 
-                    <div className="form-grid cols-3" style={{ alignItems: 'end' }}>
+                    <div className="form-grid cols-3 items-end">
                         <div>
                             <label className="form-label">Latitude</label>
-                            <input
-                                className="input-control"
-                                type="text"
-                                value={form.latitude}
-                                onChange={(e) => updateField('latitude', e.target.value)}
-                                placeholder="Optional"
-                            />
+                            <input className="input-control" type="text" value={form.latitude} onChange={(e) => updateField('latitude', e.target.value)} placeholder="Optional" />
                         </div>
                         <div>
                             <label className="form-label">Longitude</label>
-                            <input
-                                className="input-control"
-                                type="text"
-                                value={form.longitude}
-                                onChange={(e) => updateField('longitude', e.target.value)}
-                                placeholder="Optional"
-                            />
+                            <input className="input-control" type="text" value={form.longitude} onChange={(e) => updateField('longitude', e.target.value)} placeholder="Optional" />
                         </div>
-                        <button type="button" className="btn-ghost" onClick={detectLocation}>
-                            <LocateFixed size={15} /> Use GPS
-                        </button>
+                        <button type="button" className="btn-ghost" onClick={detectLocation}><LocateFixed size={15} /> Use GPS</button>
                     </div>
 
-                    <button type="submit" className="btn-primary" disabled={submitting}>
-                        <SendHorizontal size={16} />
-                        {submitting ? 'Submitting...' : 'Submit Report'}
-                    </button>
+                    <button type="submit" className="btn-primary" disabled={submitting}><SendHorizontal size={16} />{submitting ? 'Submitting...' : 'Submit Report'}</button>
                 </form>
             </motion.section>
         </div>

@@ -47,7 +47,6 @@ const Navbar = () => {
         };
 
         fetchRole();
-
         return () => {
             cancelled = true;
         };
@@ -59,9 +58,7 @@ const Navbar = () => {
 
     const navItems = useMemo(() => {
         if (!isAuthenticated) {
-            return [
-                { to: '/', label: 'Home', icon: Home },
-            ];
+            return [{ to: '/', label: 'Home', icon: Home }];
         }
 
         const common = [
@@ -73,9 +70,7 @@ const Navbar = () => {
             { to: '/leaderboard', label: 'Leaderboard', icon: Trophy },
         ];
 
-        if (!isAdmin) {
-            return common;
-        }
+        if (!isAdmin) return common;
 
         return [
             ...common,
@@ -85,10 +80,7 @@ const Navbar = () => {
     }, [isAuthenticated, isAdmin]);
 
     const isPathActive = (path) => {
-        if (path === '/') {
-            return location.pathname === '/';
-        }
-
+        if (path === '/') return location.pathname === '/';
         return location.pathname === path || location.pathname.startsWith(`${path}/`);
     };
 
@@ -103,11 +95,7 @@ const Navbar = () => {
             {navItems.map((item) => {
                 const Icon = item.icon;
                 return (
-                    <Link
-                        key={item.to}
-                        to={item.to}
-                        className={`nav-link ${isPathActive(item.to) ? 'active' : ''}`}
-                    >
+                    <Link key={item.to} to={item.to} className={`nav-link ${isPathActive(item.to) ? 'active' : ''}`}>
                         <Icon size={15} /> {item.label}
                     </Link>
                 );
@@ -119,7 +107,7 @@ const Navbar = () => {
         <header className="top-nav">
             <div className="top-nav-inner">
                 <button className="brand-link" onClick={() => navigate(isAuthenticated ? '/dashboard' : '/')}>
-                    <ScanEye size={22} color="#22c98d" />
+                    <ScanEye size={22} className="text-emerald-300" />
                     <span>EcoBin</span>
                 </button>
 
@@ -128,12 +116,12 @@ const Navbar = () => {
                 </nav>
 
                 {!isAuthenticated ? (
-                    <div className="nav-actions desktop">
+                    <div className="nav-actions hidden lg:inline-flex">
                         <Link to="/login" className={`nav-link ${isPathActive('/login') ? 'active' : ''}`}>Login</Link>
                         <Link to="/signup" className="btn-primary">Create Account</Link>
                     </div>
                 ) : (
-                    <div className="nav-actions desktop">
+                    <div className="nav-actions hidden lg:inline-flex">
                         <button className="btn-danger" onClick={handleLogout}>
                             <LogOut size={15} /> Logout
                         </button>
@@ -150,18 +138,16 @@ const Navbar = () => {
             </div>
 
             <div className={`nav-mobile ${mobileOpen ? 'open' : ''}`}>
-                <div className="stack-sm">
-                    {renderNavLinks()}
-                </div>
+                <div className="stack-sm">{renderNavLinks()}</div>
 
                 {!isAuthenticated ? (
-                    <div className="nav-actions">
+                    <div className="nav-actions mt-2 grid w-full gap-2">
                         <Link to="/login" className={`nav-link ${isPathActive('/login') ? 'active' : ''}`}>Login</Link>
-                        <Link to="/signup" className="btn-primary" style={{ width: '100%' }}>Create Account</Link>
+                        <Link to="/signup" className="btn-primary w-full">Create Account</Link>
                     </div>
                 ) : (
-                    <div className="nav-actions" style={{ marginTop: '0.45rem' }}>
-                        <button className="btn-danger" style={{ width: '100%' }} onClick={handleLogout}>
+                    <div className="nav-actions mt-2 w-full">
+                        <button className="btn-danger w-full" onClick={handleLogout}>
                             <LogOut size={15} /> Logout
                         </button>
                     </div>

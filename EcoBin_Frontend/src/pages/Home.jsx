@@ -12,10 +12,10 @@ import {
     Trophy,
 } from 'lucide-react';
 
-const steps = [
+const stepCards = [
     {
         title: 'Capture or Type Waste',
-        description: 'Use camera scan or type text like "banana peel" to classify quickly.',
+        description: 'Use camera scan or type items like banana peel to classify in seconds.',
         icon: Camera,
     },
     {
@@ -31,7 +31,7 @@ const steps = [
 ];
 
 const highlights = [
-    { label: 'Rule Engine Ready', value: '30+' },
+    { label: 'Rule Engine Ready', value: '30+ Keywords' },
     { label: 'Workflow', value: 'Strict Status Flow' },
     { label: 'Gamification', value: 'Points + Streaks' },
 ];
@@ -47,31 +47,31 @@ const Home = () => {
 
     const primaryAction = useMemo(() => {
         return isAuthenticated
-            ? { label: 'Go To Dashboard', action: () => navigate('/dashboard') }
+            ? { label: 'Open Dashboard', action: () => navigate('/dashboard') }
             : { label: 'Login To Start', action: () => navigate('/login') };
     }, [isAuthenticated, navigate]);
 
     return (
-        <div className="page-shell">
+        <div className="page-shell space-y-6">
             <motion.section
-                className="hero-grid"
-                initial={{ opacity: 0, y: 12 }}
+                className="grid gap-4 xl:grid-cols-12"
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45 }}
+                transition={{ duration: 0.4 }}
             >
-                <article className="surface-card home-hero-main">
-                    <span className="badge brand" style={{ marginBottom: '0.9rem' }}>Community Waste Platform</span>
-                    <h1 className="hero-title" style={{ marginBottom: '0.85rem' }}>
+                <article className="surface-card home-hero-main xl:col-span-8">
+                    <span className="badge brand mb-4">Community Waste Platform</span>
+                    <h1 className="hero-title mb-4">
                         Classify waste better.
                         <br />
                         <span className="hero-gradient-text">Keep streets cleaner together.</span>
                     </h1>
 
                     <p className="hero-subtitle">
-                        EcoBin helps people sort waste correctly, report roadside dumps, and build consistent green habits through points and streaks.
+                        EcoBin helps people sort waste correctly, report roadside dumps, and build daily green habits with points and streaks.
                     </p>
 
-                    <div className="hero-cta" style={{ marginTop: '1.35rem' }}>
+                    <div className="hero-cta">
                         <button className="btn-primary" onClick={primaryAction.action}>
                             {primaryAction.label} <ArrowRight size={16} />
                         </button>
@@ -83,45 +83,47 @@ const Home = () => {
                     <div className="home-stat-grid">
                         {highlights.map((item) => (
                             <div key={item.label} className="home-stat-tile">
-                                <div style={{ fontSize: '1.14rem', fontWeight: 780, marginBottom: '0.12rem' }}>{item.value}</div>
-                                <div className="help-text">{item.label}</div>
+                                <p className="text-sm font-bold text-slate-100">{item.value}</p>
+                                <p className="help-text mt-1">{item.label}</p>
                             </div>
                         ))}
                     </div>
                 </article>
 
-                <article className="surface-card inset home-hero-side">
-                    <h2 className="section-title" style={{ marginBottom: '0.8rem' }}>
-                        <Leaf size={18} color="#22c98d" /> Why EcoBin
+                <article className="surface-card inset home-hero-side xl:col-span-4">
+                    <h2 className="section-title mb-4">
+                        <Leaf size={18} className="text-emerald-300" /> Why EcoBin Works
                     </h2>
-                    <p className="section-note" style={{ marginBottom: '0.95rem' }}>
-                        People often confuse recyclable, biodegradable, and non-biodegradable waste. EcoBin gives immediate guidance and action paths.
-                    </p>
 
-                    <div className="stack-md">
-                        <div className="surface-card inset" style={{ padding: '0.85rem' }}>
-                            <div className="row" style={{ marginBottom: '0.2rem' }}>
-                                <ClipboardList size={16} color="#8ab6ff" />
-                                <strong>User Classification</strong>
+                    <div className="stack-sm">
+                        <div className="metric-chip">
+                            <div className="row mb-1">
+                                <ClipboardList size={16} className="text-blue-300" />
+                                <strong className="text-sm">User Classification</strong>
                             </div>
-                            <p className="help-text">Type waste text and test rule-based categorization now.</p>
+                            <p className="help-text">Text classification live now for testing and points.</p>
                         </div>
 
-                        <div className="surface-card inset" style={{ padding: '0.85rem' }}>
-                            <div className="row" style={{ marginBottom: '0.2rem' }}>
-                                <LocateFixed size={16} color="#8ab6ff" />
-                                <strong>Admin Action Queue</strong>
+                        <div className="metric-chip">
+                            <div className="row mb-1">
+                                <LocateFixed size={16} className="text-blue-300" />
+                                <strong className="text-sm">Admin Action Queue</strong>
                             </div>
-                            <p className="help-text">Track reports from PENDING to COMPLETED with proof.</p>
+                            <p className="help-text">Reports move from PENDING to COMPLETED with proof.</p>
                         </div>
 
-                        <div className="surface-card inset" style={{ padding: '0.85rem' }}>
-                            <div className="row" style={{ marginBottom: '0.2rem' }}>
-                                <Award size={16} color="#8ab6ff" />
-                                <strong>Engagement Loop</strong>
+                        <div className="metric-chip">
+                            <div className="row mb-1">
+                                <Award size={16} className="text-blue-300" />
+                                <strong className="text-sm">Engagement Loop</strong>
                             </div>
-                            <p className="help-text">Points, streaks, and leaderboard keep users active daily.</p>
+                            <p className="help-text">Points, streaks, and leaderboard keep users active.</p>
                         </div>
+                    </div>
+
+                    <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-1">
+                        <Link to="/history" className="btn-soft w-full justify-start">View History</Link>
+                        <Link to="/report" className="btn-soft w-full justify-start">Report Waste</Link>
                     </div>
                 </article>
             </motion.section>
@@ -130,26 +132,26 @@ const Home = () => {
                 <div className="section-head">
                     <div>
                         <h2 className="section-title">How EcoBin Works</h2>
-                        <p className="section-note">Simple 3-step experience, already live for testing before model integration.</p>
+                        <p className="section-note">Simple 3-step experience ready before model integration.</p>
                     </div>
                 </div>
 
                 <div className="grid-3">
-                    {steps.map((step, index) => {
+                    {stepCards.map((step, index) => {
                         const Icon = step.icon;
                         return (
                             <motion.article
                                 key={step.title}
                                 className="surface-card home-step-card"
-                                initial={{ opacity: 0, y: 10 }}
+                                initial={{ opacity: 0, y: 8 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
+                                transition={{ delay: index * 0.08 }}
                             >
-                                <div className="icon-pill" style={{ marginBottom: '0.78rem' }}>
-                                    <Icon size={17} color="#9cc5ff" />
+                                <div className="icon-pill mb-3">
+                                    <Icon size={17} className="text-blue-300" />
                                 </div>
-                                <h3 style={{ fontSize: '1.12rem', marginBottom: '0.45rem' }}>{step.title}</h3>
+                                <h3 className="mb-2 text-lg font-bold text-slate-100">{step.title}</h3>
                                 <p className="section-note">{step.description}</p>
                             </motion.article>
                         );
@@ -158,46 +160,38 @@ const Home = () => {
             </section>
 
             <section className="grid-2 page-section">
-                <article className="surface-card" style={{ padding: '1.35rem' }}>
-                    <h3 className="section-title" style={{ marginBottom: '0.5rem' }}>
-                        <Trophy size={17} color="#8ab6ff" /> Built For Daily Usage
+                <article className="surface-card">
+                    <h3 className="section-title mb-2">
+                        <Trophy size={17} className="text-blue-300" /> Built For Daily Usage
                     </h3>
-                    <p className="section-note" style={{ marginBottom: '0.75rem' }}>
-                        Users can keep scanning text items, monitor history, and continue daily quest progress.
+                    <p className="section-note mb-4">
+                        Keep classifying text items, monitor progress, and continue daily quest streak.
                     </p>
                     <Link to="/history" className="btn-secondary">View Activity History</Link>
                 </article>
 
-                <article className="surface-card" style={{ padding: '1.35rem' }}>
-                    <h3 className="section-title" style={{ marginBottom: '0.5rem' }}>
-                        <LocateFixed size={17} color="#8ab6ff" /> Built For Field Response
+                <article className="surface-card">
+                    <h3 className="section-title mb-2">
+                        <LocateFixed size={17} className="text-blue-300" /> Built For Field Response
                     </h3>
-                    <p className="section-note" style={{ marginBottom: '0.75rem' }}>
-                        Report road waste with severity and location details so admin cleanup can be prioritized.
+                    <p className="section-note mb-4">
+                        Report road waste with severity and location details so cleanup can be prioritized.
                     </p>
                     <Link to="/report" className="btn-secondary">Report Waste</Link>
                 </article>
             </section>
 
             <section className="page-section">
-                <div
-                    className="surface-card home-cta-card"
-                    style={{
-                        background: 'linear-gradient(120deg, rgba(34,201,141,0.2), rgba(15,27,52,0.84) 48%, rgba(79,141,255,0.22))',
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '0.9rem',
-                    }}
-                >
-                    <div>
-                        <h2 style={{ fontSize: '1.42rem', fontWeight: 800, marginBottom: '0.18rem' }}>Ready to continue building?</h2>
-                        <p className="section-note">The platform is now ready for live testing and the next step is model integration.</p>
-                    </div>
-                    <div className="row wrap">
-                        <Link to={isAuthenticated ? '/dashboard' : '/signup'} className="btn-primary">Start Now</Link>
-                        <Link to="/leaderboard" className="btn-secondary">See Leaderboard</Link>
+                <div className="surface-card home-cta-card bg-gradient-to-r from-emerald-500/25 via-slate-900/85 to-blue-500/25">
+                    <div className="row wrap space">
+                        <div>
+                            <h2 className="text-2xl font-black text-slate-100">Ready to continue building?</h2>
+                            <p className="section-note mt-1">The platform is ready for live testing. Next step is model integration.</p>
+                        </div>
+                        <div className="row wrap">
+                            <Link to={isAuthenticated ? '/dashboard' : '/signup'} className="btn-primary">Start Now</Link>
+                            <Link to="/leaderboard" className="btn-secondary">See Leaderboard</Link>
+                        </div>
                     </div>
                 </div>
             </section>

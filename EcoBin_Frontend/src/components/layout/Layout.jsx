@@ -10,9 +10,9 @@ const Footer = () => {
         <footer className="site-footer">
             <div className="site-footer-inner">
                 <div>
-                    <div className="row" style={{ marginBottom: '0.55rem' }}>
-                        <Leaf size={22} color="#22c98d" />
-                        <span className="footer-title" style={{ marginBottom: 0 }}>EcoBin</span>
+                    <div className="mb-2 flex items-center gap-2">
+                        <Leaf size={22} className="text-emerald-300" />
+                        <span className="footer-title mb-0">EcoBin</span>
                     </div>
                     <p className="section-note">
                         Built to help communities classify waste correctly, report roadside waste faster, and drive cleaner neighborhoods together.
@@ -31,7 +31,7 @@ const Footer = () => {
 
                 <div>
                     <h4 className="footer-title">Community</h4>
-                    <div className="row wrap" style={{ marginBottom: '0.7rem' }}>
+                    <div className="row wrap mb-3">
                         <a className="btn-soft" href="https://github.com/ayushcode12/Ecobin_Project" target="_blank" rel="noreferrer" aria-label="GitHub">
                             <Github size={16} /> GitHub
                         </a>
@@ -60,9 +60,7 @@ const Layout = ({ children }) => {
             <div className="bg-orb right" />
 
             <Navbar />
-            <main className="app-main">
-                {children}
-            </main>
+            <main className="app-main">{children}</main>
             <Footer />
         </div>
     );

@@ -13,9 +13,7 @@ const Login = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (token) {
-            navigate('/dashboard');
-        }
+        if (token) navigate('/dashboard');
     }, [navigate]);
 
     const handleSubmit = async (event) => {
@@ -42,31 +40,22 @@ const Login = () => {
                 transition={{ duration: 0.4 }}
             >
                 <div className="auth-panel showcase">
-                    <span className="badge accent" style={{ marginBottom: '0.75rem' }}>Welcome Back</span>
+                    <span className="badge accent mb-3">Welcome Back</span>
                     <h1 className="auth-title">Sign in and continue your clean-city streak.</h1>
                     <p className="auth-subtitle">Classify waste, report local issues, and keep earning points every day.</p>
 
                     <div className="stack-sm">
-                        <div className="metric-chip row">
-                            <ShieldCheck size={16} color="#8ab6ff" />
-                            <span className="help-text">Secure role-based access for users and admins</span>
-                        </div>
-                        <div className="metric-chip row">
-                            <Trophy size={16} color="#8ab6ff" />
-                            <span className="help-text">Points, streaks, and leaderboard progress</span>
-                        </div>
-                        <div className="metric-chip row">
-                            <Sparkles size={16} color="#8ab6ff" />
-                            <span className="help-text">Rule-based text classification live for testing</span>
-                        </div>
+                        <div className="metric-chip row"><ShieldCheck size={16} className="text-blue-300" /><span className="help-text">Secure role-based access for users and admins</span></div>
+                        <div className="metric-chip row"><Trophy size={16} className="text-blue-300" /><span className="help-text">Points, streaks, and leaderboard progress</span></div>
+                        <div className="metric-chip row"><Sparkles size={16} className="text-blue-300" /><span className="help-text">Rule-based text classification live for testing</span></div>
                     </div>
                 </div>
 
                 <div className="auth-panel">
-                    <h2 className="section-title" style={{ marginBottom: '0.2rem' }}>Account Login</h2>
-                    <p className="section-note" style={{ marginBottom: '0.9rem' }}>Use your registered email and password.</p>
+                    <h2 className="section-title mb-1">Account Login</h2>
+                    <p className="section-note mb-4">Use your registered email and password.</p>
 
-                    {error && <div className="alert error" style={{ marginBottom: '0.8rem' }}>{error}</div>}
+                    {error && <div className="alert error mb-4">{error}</div>}
 
                     <form className="auth-form" onSubmit={handleSubmit}>
                         <div>
@@ -104,7 +93,7 @@ const Login = () => {
                         </button>
                     </form>
 
-                    <div className="help-text" style={{ marginTop: '0.95rem' }}>
+                    <div className="help-text mt-4">
                         New here? <Link to="/signup" className="quick-link">Create an account</Link>.
                     </div>
                 </div>

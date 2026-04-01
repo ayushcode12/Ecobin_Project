@@ -28,23 +28,15 @@ const Scan = () => {
     const [result, setResult] = useState(null);
 
     const requestImageUrl = useMemo(() => {
-        if (imageUrl.trim()) {
-            return imageUrl.trim();
-        }
-
-        if (preview) {
-            return preview;
-        }
-
+        if (imageUrl.trim()) return imageUrl.trim();
+        if (preview) return preview;
         return 'https://placehold.co/400';
     }, [imageUrl, preview]);
 
     const handleImageChange = (event) => {
         const file = event.target.files?.[0];
         if (!file) return;
-
-        const objectUrl = URL.createObjectURL(file);
-        setPreview(objectUrl);
+        setPreview(URL.createObjectURL(file));
     };
 
     const handleSubmit = async () => {
@@ -92,24 +84,16 @@ const Scan = () => {
             <section className="section-head">
                 <div>
                     <h1 className="page-title">Text-Based Waste Classification</h1>
-                    <p className="page-subtitle">
-                        Enter a waste item, test rule-based classification instantly, and earn points.
-                    </p>
+                    <p className="page-subtitle">Enter a waste item, test rule-based classification instantly, and earn points.</p>
                 </div>
                 <div className="row wrap">
                     <button className="btn-ghost" onClick={() => navigate('/dashboard')}>Dashboard</button>
-                    <button className="btn-ghost" onClick={() => navigate('/')}>
-                        <Home size={15} /> Home
-                    </button>
+                    <button className="btn-ghost" onClick={() => navigate('/')}><Home size={15} /> Home</button>
                 </div>
             </section>
 
             {!result ? (
-                <motion.section
-                    className="surface-card stack-md"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                >
+                <motion.section className="surface-card stack-md" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
                     <div>
                         <label className="form-label">Waste Text</label>
                         <input
@@ -120,23 +104,14 @@ const Scan = () => {
                             onChange={(e) => setTextDescription(e.target.value)}
                             onKeyDown={onEnterSubmit}
                         />
-                        <p className="help-text" style={{ marginTop: '0.36rem' }}>
-                            Text classification also gives points and appears in dashboard activity.
-                        </p>
+                        <p className="help-text mt-1.5">Text classification also gives points and appears in dashboard activity.</p>
                     </div>
 
                     <div>
                         <p className="form-label">Quick Samples</p>
                         <div className="row wrap">
                             {SAMPLE_ITEMS.map((item) => (
-                                <button
-                                    key={item}
-                                    className="btn-soft"
-                                    onClick={() => setTextDescription(item)}
-                                    type="button"
-                                >
-                                    {item}
-                                </button>
+                                <button key={item} className="btn-soft" onClick={() => setTextDescription(item)} type="button">{item}</button>
                             ))}
                         </div>
                     </div>
@@ -154,12 +129,12 @@ const Scan = () => {
                         </div>
                         <div>
                             <label className="form-label">Optional Image Upload</label>
-                            <div className="image-drop" style={{ minHeight: '130px' }}>
+                            <div className="image-drop min-h-[130px]">
                                 {preview ? (
-                                    <img src={preview} alt="Selected preview" style={{ objectFit: 'cover' }} />
+                                    <img src={preview} alt="Selected preview" className="object-cover" />
                                 ) : (
                                     <div className="image-drop-hint">
-                                        <ImagePlus size={22} style={{ margin: '0 auto 0.35rem' }} />
+                                        <ImagePlus size={22} className="mx-auto mb-1.5" />
                                         Upload photo for context
                                     </div>
                                 )}
@@ -173,62 +148,29 @@ const Scan = () => {
                             {loading ? <Loader2 size={16} className="animate-spin" /> : <SendHorizontal size={16} />}
                             {loading ? 'Submitting...' : 'Submit Text Classification'}
                         </button>
-                        <button className="btn-ghost" type="button" onClick={resetForm}>
-                            <RotateCcw size={15} /> Clear
-                        </button>
+                        <button className="btn-ghost" type="button" onClick={resetForm}><RotateCcw size={15} /> Clear</button>
                     </div>
 
                     {error && <div className="alert error">{error}</div>}
                 </motion.section>
             ) : (
-                <motion.section
-                    className="surface-card"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    style={{ textAlign: 'center' }}
-                >
-                    <div
-                        style={{
-                            width: '88px',
-                            height: '88px',
-                            margin: '0 auto 0.95rem',
-                            borderRadius: '999px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            border: '1px solid rgba(34, 201, 141, 0.46)',
-                            background: 'rgba(34, 201, 141, 0.16)',
-                        }}
-                    >
-                        <CheckCircle2 size={42} color="#7df2c7" />
+                <motion.section className="surface-card text-center" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                    <div className="mx-auto mb-4 flex h-[88px] w-[88px] items-center justify-center rounded-full border border-emerald-400/40 bg-emerald-400/20">
+                        <CheckCircle2 size={42} className="text-emerald-200" />
                     </div>
 
-                    <h2 className="page-title" style={{ fontSize: '1.72rem', marginBottom: '0.4rem' }}>{result.categoryType || 'Unknown Category'}</h2>
-                    <p className="page-subtitle" style={{ margin: '0 auto 0.85rem' }}>
-                        {result.motivationalMessage || 'Classification completed successfully.'}
-                    </p>
+                    <h2 className="page-title mb-2 text-[1.72rem]">{result.categoryType || 'Unknown Category'}</h2>
+                    <p className="page-subtitle mx-auto mb-4">{result.motivationalMessage || 'Classification completed successfully.'}</p>
 
-                    <div className="grid-3" style={{ marginBottom: '0.9rem' }}>
-                        <div className="metric-chip">
-                            <p className="help-text">Points Earned</p>
-                            <div className="stat-value brand" style={{ fontSize: '1.5rem' }}>+{result.pointsAwarded || 0}</div>
-                        </div>
-                        <div className="metric-chip">
-                            <p className="help-text">Updated Total</p>
-                            <div className="stat-value" style={{ fontSize: '1.5rem' }}>{result.updatedTotalPoints || 0}</div>
-                        </div>
-                        <div className="metric-chip">
-                            <p className="help-text">Rule Priority</p>
-                            <div className="stat-value" style={{ fontSize: '1.5rem' }}>{result.rulePriority ?? 0}</div>
-                        </div>
+                    <div className="grid-3 mb-4">
+                        <div className="metric-chip"><p className="help-text">Points Earned</p><div className="text-3xl font-black text-emerald-200">+{result.pointsAwarded || 0}</div></div>
+                        <div className="metric-chip"><p className="help-text">Updated Total</p><div className="text-3xl font-black">{result.updatedTotalPoints || 0}</div></div>
+                        <div className="metric-chip"><p className="help-text">Rule Priority</p><div className="text-3xl font-black">{result.rulePriority ?? 0}</div></div>
                     </div>
 
-                    <p className="help-text" style={{ marginBottom: '0.8rem' }}>
-                        <Sparkles size={14} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: '0.25rem' }} />
-                        Matched rule: {result.matchedKeyword || 'No keyword matched'}
-                    </p>
+                    <p className="help-text mb-4"><Sparkles size={14} className="mr-1 inline-block align-text-bottom" />Matched rule: {result.matchedKeyword || 'No keyword matched'}</p>
 
-                    <div className="row wrap" style={{ justifyContent: 'center' }}>
+                    <div className="row wrap justify-center">
                         <button className="btn-primary" onClick={resetForm}>Classify Another</button>
                         <button className="btn-ghost" onClick={() => navigate('/dashboard')}>Back To Dashboard</button>
                         <button className="btn-ghost" onClick={() => navigate('/history')}>View History</button>

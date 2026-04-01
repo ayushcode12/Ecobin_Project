@@ -119,33 +119,25 @@ const AdminRules = () => {
     };
 
     return (
-        <div className="page-shell">
+        <div className="page-shell space-y-5">
             <section className="section-head">
                 <div>
-                    <h1 className="page-title"><BrainCircuit size={30} style={{ verticalAlign: 'middle', marginRight: '0.4rem' }} />Rule Engine Admin</h1>
+                    <h1 className="page-title"><BrainCircuit size={30} className="mr-2 inline-block align-middle" />Rule Engine Admin</h1>
                     <p className="page-subtitle">Manage keyword rules, priorities, and points without touching code.</p>
                 </div>
-                <button className="btn-ghost" onClick={fetchRules}>
-                    <RefreshCcw size={15} /> Refresh
-                </button>
+                <button className="btn-ghost" onClick={fetchRules}><RefreshCcw size={15} /> Refresh</button>
             </section>
 
-            {error && <div className="alert error page-section">{error}</div>}
+            {error && <div className="alert error">{error}</div>}
 
-            <section className="grid-2 page-section">
+            <section className="grid-2">
                 <motion.article className="surface-card" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                    <h2 className="section-title" style={{ marginBottom: '0.7rem' }}>
-                        {form.id ? `Edit Rule #${form.id}` : 'Create Rule'}
-                    </h2>
+                    <h2 className="section-title mb-3">{form.id ? `Edit Rule #${form.id}` : 'Create Rule'}</h2>
 
                     <form className="form-grid" onSubmit={handleSubmit}>
                         <div>
                             <label className="form-label">Category</label>
-                            <select
-                                className="select-control"
-                                value={form.categoryType}
-                                onChange={(e) => setField('categoryType', e.target.value)}
-                            >
+                            <select className="select-control" value={form.categoryType} onChange={(e) => setField('categoryType', e.target.value)}>
                                 <option value="Biodegradable">Biodegradable</option>
                                 <option value="Recyclable">Recyclable</option>
                                 <option value="Non-Biodegradable">Non-Biodegradable</option>
@@ -154,68 +146,38 @@ const AdminRules = () => {
 
                         <div>
                             <label className="form-label">Keyword</label>
-                            <input
-                                className="input-control"
-                                value={form.keyword}
-                                onChange={(e) => setField('keyword', e.target.value)}
-                                placeholder="e.g. banana peel"
-                            />
+                            <input className="input-control" value={form.keyword} onChange={(e) => setField('keyword', e.target.value)} placeholder="e.g. banana peel" />
                         </div>
 
                         <div className="form-grid cols-2">
                             <div>
                                 <label className="form-label">Priority</label>
-                                <input
-                                    type="number"
-                                    className="input-control"
-                                    value={form.priority}
-                                    onChange={(e) => setField('priority', e.target.value)}
-                                />
+                                <input type="number" className="input-control" value={form.priority} onChange={(e) => setField('priority', e.target.value)} />
                             </div>
 
                             <div>
                                 <label className="form-label">Points</label>
-                                <input
-                                    type="number"
-                                    className="input-control"
-                                    value={form.points}
-                                    onChange={(e) => setField('points', e.target.value)}
-                                />
+                                <input type="number" className="input-control" value={form.points} onChange={(e) => setField('points', e.target.value)} />
                             </div>
                         </div>
 
-                        <label className="row" style={{ color: '#c8d5e4' }}>
-                            <input
-                                type="checkbox"
-                                checked={form.active}
-                                onChange={(e) => setField('active', e.target.checked)}
-                            />
+                        <label className="row text-slate-200">
+                            <input type="checkbox" checked={form.active} onChange={(e) => setField('active', e.target.checked)} />
                             Active Rule
                         </label>
 
                         <div className="row wrap">
-                            <button className="btn-primary" type="submit" disabled={saving}>
-                                <Plus size={15} /> {saving ? 'Saving...' : (form.id ? 'Update Rule' : 'Create Rule')}
-                            </button>
-                            {form.id && (
-                                <button className="btn-ghost" type="button" onClick={resetForm}>Cancel Edit</button>
-                            )}
+                            <button className="btn-primary" type="submit" disabled={saving}><Plus size={15} /> {saving ? 'Saving...' : (form.id ? 'Update Rule' : 'Create Rule')}</button>
+                            {form.id && <button className="btn-ghost" type="button" onClick={resetForm}>Cancel Edit</button>}
                         </div>
                     </form>
                 </motion.article>
 
                 <motion.article className="surface-card" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                    <h2 className="section-title" style={{ marginBottom: '0.7rem' }}>
-                        <Wand2 size={16} /> Text Classification Preview
-                    </h2>
+                    <h2 className="section-title mb-3"><Wand2 size={16} /> Text Classification Preview</h2>
 
                     <div className="stack-sm">
-                        <input
-                            className="input-control"
-                            value={previewText}
-                            onChange={(e) => setPreviewText(e.target.value)}
-                            placeholder="Type sample text: plastic bottle near market"
-                        />
+                        <input className="input-control" value={previewText} onChange={(e) => setPreviewText(e.target.value)} placeholder="Type sample text: plastic bottle near market" />
                         <div className="row wrap">
                             <button className="btn-secondary" onClick={handlePreview}>Run Preview</button>
                             <button className="btn-soft" onClick={() => { setPreviewText(''); setPreviewResult(null); }}>Clear</button>
@@ -223,7 +185,7 @@ const AdminRules = () => {
                     </div>
 
                     {previewResult ? (
-                        <div className="surface-card inset" style={{ marginTop: '0.8rem' }}>
+                        <div className="surface-card inset mt-3">
                             <div className="stack-sm">
                                 <div><strong>Category:</strong> {previewResult.categoryType}</div>
                                 <div><strong>Points:</strong> {previewResult.points}</div>
@@ -232,22 +194,15 @@ const AdminRules = () => {
                             </div>
                         </div>
                     ) : (
-                        <p className="help-text" style={{ marginTop: '0.8rem' }}>
-                            Preview results will appear here using your current backend rules.
-                        </p>
+                        <p className="help-text mt-3">Preview results will appear here using your current backend rules.</p>
                     )}
                 </motion.article>
             </section>
 
-            <section className="surface-card page-section">
-                <div className="row space wrap" style={{ marginBottom: '0.8rem' }}>
+            <section className="surface-card">
+                <div className="row wrap space mb-4">
                     <h2 className="section-title">Current Rules ({sortedRules.length})</h2>
-                    <select
-                        className="select-control"
-                        style={{ width: '240px' }}
-                        value={filterCategory}
-                        onChange={(e) => setFilterCategory(e.target.value)}
-                    >
+                    <select className="select-control w-full max-w-[240px]" value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
                         <option value="">All Categories</option>
                         <option value="Biodegradable">Biodegradable</option>
                         <option value="Recyclable">Recyclable</option>
@@ -300,9 +255,7 @@ const AdminRules = () => {
                                                     >
                                                         Edit
                                                     </button>
-                                                    <button className="btn-danger" onClick={() => handleDelete(rule.id)}>
-                                                        <Trash2 size={14} /> Delete
-                                                    </button>
+                                                    <button className="btn-danger" onClick={() => handleDelete(rule.id)}><Trash2 size={14} /> Delete</button>
                                                 </div>
                                             </td>
                                         </tr>

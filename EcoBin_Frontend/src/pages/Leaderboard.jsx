@@ -72,11 +72,11 @@ const Leaderboard = () => {
                     <div className="empty-state">No leaderboard data available yet.</div>
                 ) : (
                     <>
-                        <div className="podium" style={{ marginBottom: '1rem' }}>
+                        <div className="podium mb-4">
                             {[2, 1, 3].map((position) => {
                                 const user = users[position - 1];
                                 if (!user) {
-                                    return <div key={position} className="podium-card" style={{ opacity: 0.45 }}>Waiting for rank #{position}</div>;
+                                    return <div key={position} className="podium-card opacity-45">Waiting for rank #{position}</div>;
                                 }
 
                                 const champion = position === 1;
@@ -84,26 +84,20 @@ const Leaderboard = () => {
                                 return (
                                     <motion.article
                                         key={position}
-                                        className="podium-card"
+                                        className={`podium-card ${champion ? '-translate-y-2 bg-gradient-to-br from-amber-500/20 to-slate-900/85' : ''}`}
                                         initial={{ opacity: 0, y: 16 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: position * 0.08 }}
-                                        style={{
-                                            transform: champion ? 'translateY(-10px)' : 'none',
-                                            background: champion
-                                                ? 'linear-gradient(165deg, rgba(245,185,65,0.16), rgba(15,27,52,0.82))'
-                                                : undefined,
-                                        }}
                                     >
                                         {champion ? (
-                                            <Trophy size={24} color="#f5b941" style={{ margin: '0 auto 0.35rem' }} />
+                                            <Trophy size={24} className="mx-auto mb-1.5 text-amber-300" />
                                         ) : (
-                                            <Medal size={20} color={position === 2 ? '#cbd5e1' : '#fb923c'} style={{ margin: '0 auto 0.35rem' }} />
+                                            <Medal size={20} className={`mx-auto mb-1.5 ${position === 2 ? 'text-slate-300' : 'text-orange-400'}`} />
                                         )}
                                         {renderAvatar(user.name, position)}
-                                        <div style={{ fontWeight: 760, marginBottom: '0.2rem' }}>{user.name}</div>
-                                        <div className="badge accent" style={{ marginBottom: '0.3rem' }}>#{position}</div>
-                                        <div style={{ color: '#7df2c7', fontWeight: 760 }}>{(user.totalPoints || 0).toLocaleString()} pts</div>
+                                        <div className="mb-1 font-bold">{user.name}</div>
+                                        <div className="badge accent mb-1">#{position}</div>
+                                        <div className="font-bold text-emerald-200">{(user.totalPoints || 0).toLocaleString()} pts</div>
                                     </motion.article>
                                 );
                             })}
@@ -124,38 +118,26 @@ const Leaderboard = () => {
                                             const rank = index + 1;
                                             return (
                                                 <tr key={`${user.name}-${rank}`}>
-                                                    <td style={{ fontWeight: 760 }}>#{rank}</td>
+                                                    <td className="font-bold">#{rank}</td>
                                                     <td>
                                                         <div className="row">
                                                             <div
-                                                                style={{
-                                                                    width: '34px',
-                                                                    height: '34px',
-                                                                    borderRadius: '999px',
-                                                                    background: `hsl(${stringToHue(user.name)} 60% 36%)`,
-                                                                    display: 'inline-flex',
-                                                                    alignItems: 'center',
-                                                                    justifyContent: 'center',
-                                                                    fontWeight: 760,
-                                                                }}
+                                                                className="inline-flex h-[34px] w-[34px] items-center justify-center rounded-full font-bold"
+                                                                style={{ background: `hsl(${stringToHue(user.name)} 60% 36%)` }}
                                                             >
                                                                 {nameInitial(user.name)}
                                                             </div>
                                                             <span>{user.name}</span>
                                                         </div>
                                                     </td>
-                                                    <td style={{ color: '#7df2c7', fontWeight: 760 }}>
-                                                        {(user.totalPoints || 0).toLocaleString()}
-                                                    </td>
+                                                    <td className="font-bold text-emerald-200">{(user.totalPoints || 0).toLocaleString()}</td>
                                                 </tr>
                                             );
                                         })}
 
                                         {users.length <= 3 && (
                                             <tr>
-                                                <td colSpan={3}>
-                                                    <div className="empty-state">Keep scanning and reporting to rise in rankings.</div>
-                                                </td>
+                                                <td colSpan={3}><div className="empty-state">Keep scanning and reporting to rise in rankings.</div></td>
                                             </tr>
                                         )}
                                     </tbody>
@@ -163,11 +145,7 @@ const Leaderboard = () => {
                             </div>
                         </div>
 
-                        {remaining.length > 0 && (
-                            <p className="help-text" style={{ marginTop: '0.65rem' }}>
-                                Showing all {users.length} ranked users.
-                            </p>
-                        )}
+                        {remaining.length > 0 && <p className="help-text mt-3">Showing all {users.length} ranked users.</p>}
                     </>
                 )}
             </section>
