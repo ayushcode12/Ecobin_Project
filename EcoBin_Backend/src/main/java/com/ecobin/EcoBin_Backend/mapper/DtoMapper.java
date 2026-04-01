@@ -31,6 +31,13 @@ public class DtoMapper {
                 wr.getMotivationalMessage(),
                 wr.getPoints(),
                 wr.getStatus(),
+                wr.getSeverity(),
+                wr.getEstimatedQuantity(),
+                wr.getAddress(),
+                wr.getLatitude(),
+                wr.getLongitude(),
+                wr.getAdminNote(),
+                wr.getResolutionProofUrl(),
                 wr.getCreatedAt(),
                 wr.getPickupDate()
         );

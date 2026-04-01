@@ -6,6 +6,7 @@ import com.ecobin.EcoBin_Backend.model.User;
 import com.ecobin.EcoBin_Backend.repository.UserRepository;
 import com.ecobin.EcoBin_Backend.security.jwt.JwtService;
 import com.ecobin.EcoBin_Backend.security.service.CustomUserDetailsService;
+import com.ecobin.EcoBin_Backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,9 @@ public class AuthController {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/signup")
     public ResponseEntity<String> signUp(@RequestBody User userData){
         Optional<User> existingUser = userRepository.findByEmail(userData.getEmail());
@@ -49,7 +53,7 @@ public class AuthController {
             userData.setPassword(passwordEncoder.encode(userData.getPassword()));
             userData.setCreatedAt(LocalDateTime.now());
             userData.setRole("ROLE_USER");
-            userRepository.save(userData);
+            userService.createUser(userData);
             return ResponseEntity.ok("User registered successfully");
         }
     }

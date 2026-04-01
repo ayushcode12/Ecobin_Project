@@ -20,6 +20,13 @@ public class WasteRequestDTO {
     private String motivationalMessage;
     private Integer points;
     private String status;
+    private String severity;
+    private Integer estimatedQuantity;
+    private String address;
+    private Double latitude;
+    private Double longitude;
+    private String adminNote;
+    private String resolutionProofUrl;
 
     private LocalDateTime createdAt;
     private LocalDateTime pickupDate;

@@ -1,5 +1,6 @@
 package com.ecobin.EcoBin_Backend.service;
 
+import com.ecobin.EcoBin_Backend.dto.ClassificationPreviewDTO;
 import com.ecobin.EcoBin_Backend.dto.ScanResultDTO;
 import com.ecobin.EcoBin_Backend.model.User;
 import com.ecobin.EcoBin_Backend.model.UserStats;
@@ -20,29 +21,49 @@ public class ScanService {
     @Autowired
     private UserStatsRepository userStatsRepository;
 
+    @Autowired
+    private ClassificationRuleService classificationRuleService;
+
+    @Autowired
+    private ScanHistoryService scanHistoryService;
+
     public ScanResultDTO processScan(String textDescription, String imageUrl, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         UserStats stats = getOrCreateUserStats(user);
+        ClassificationPreviewDTO classification = classificationRuleService.classifyText(textDescription);
 
-        String categoryType = detectCategory(textDescription);
+        String categoryType = classification.getCategoryType();
+        int points = classification.getPoints() == null ? 3 : classification.getPoints();
 
         updateStreak(stats);
-
-        int points = calculatePoints(categoryType);
-
         stats.setTotalPoints(stats.getTotalPoints() + points);
-
         userStatsRepository.save(stats);
 
-        return buildScanResult(categoryType, points, stats);
+        scanHistoryService.saveScan(
+                user,
+                textDescription,
+                imageUrl,
+                categoryType,
+                classification.getMatchedKeyword(),
+                classification.getRulePriority(),
+                points
+        );
+
+        return buildScanResult(
+                categoryType,
+                points,
+                stats,
+                classification.getMatchedKeyword(),
+                classification.getRulePriority()
+        );
     }
 
-    private UserStats getOrCreateUserStats(User user){
+    private UserStats getOrCreateUserStats(User user) {
         Optional<UserStats> existing = userStatsRepository.findByUser(user);
 
-        if (existing.isPresent()){
+        if (existing.isPresent()) {
             return existing.get();
         }
 
@@ -51,22 +72,23 @@ public class ScanService {
         newStats.setTotalPoints(0);
         newStats.setCurrentStreak(0);
         newStats.setLastSubmissionDate(null);
-
         return userStatsRepository.save(newStats);
     }
 
-    private void updateStreak(UserStats stats){
+    private void updateStreak(UserStats stats) {
         LocalDate today = LocalDate.now();
 
-        if(stats.getLastSubmissionDate() == null){
+        if (stats.getLastSubmissionDate() == null) {
             stats.setCurrentStreak(1);
             stats.setLastSubmissionDate(today);
             return;
         }
 
-        if(stats.getLastSubmissionDate().equals(today)) return;
+        if (stats.getLastSubmissionDate().equals(today)) {
+            return;
+        }
 
-        if(stats.getLastSubmissionDate().equals(today.minusDays(1))){
+        if (stats.getLastSubmissionDate().equals(today.minusDays(1))) {
             stats.setCurrentStreak(stats.getCurrentStreak() + 1);
             stats.setLastSubmissionDate(today);
             return;
@@ -76,65 +98,45 @@ public class ScanService {
         stats.setLastSubmissionDate(today);
     }
 
-    private String detectCategory(String textDescription){
+    private String generateMotivationalMessage(String categoryType) {
+        if (categoryType.equals("Non-Biodegradable")) {
+            return "Good call. Non-biodegradable waste needs proper segregation to reduce pollution.";
+        }
 
-        String text = textDescription.toLowerCase();
+        if (categoryType.equals("Recyclable")) {
+            return "Awesome! Recycling this item helps save energy and valuable resources.";
+        }
 
-        if (text.contains("banana") || text.contains("food")) return "Biodegradable";
-        if (text.contains("plastic") || text.contains("wrapper")) return "Non-Biodegradable";
-        if (text.contains("battery") || text.contains("chemical")) return "Hazardous";
-        return "Recyclable";
-
-    }
-
-    private int calculatePoints(String categoryType){
-
-        if (categoryType.equals("Hazardous")) return 20;
-        if (categoryType.equals("Non-Biodegradable")) return 10;
-        if (categoryType.equals("Recyclable")) return 5;
-        if (categoryType.equals("Biodegradable")) return 2;
-        return 1;
-
-    }
-
-    private String generateMotivationalMessage(String categoryType){
-
-        if (categoryType.equals("Hazardous"))
-            return "Great job identifying hazardous waste! Proper disposal prevents serious harm.";
-
-        if (categoryType.equals("Non-Biodegradable"))
-            return "You’re helping reduce pollution! Non-biodegradable waste must be handled carefully.";
-
-        if (categoryType.equals("Recyclable"))
-            return "Awesome! Recycling this item helps save energy and resources.";
-
-        if (categoryType.equals("Biodegradable"))
-            return "Nice! Biodegradable waste can return to nature and reduce landfill load.";
+        if (categoryType.equals("Biodegradable")) {
+            return "Great! Biodegradable waste can return to nature and reduce landfill load.";
+        }
 
         return "Every small effort matters! Keep learning about waste categories.";
-
     }
 
-    private String determineBinColor(String categoryType){
-
-        if (categoryType.equals("Biodegradable"))
+    private String determineBinColor(String categoryType) {
+        if (categoryType.equals("Biodegradable")) {
             return "Green";
+        }
 
-        if (categoryType.equals("Recyclable"))
+        if (categoryType.equals("Recyclable")) {
             return "Blue";
+        }
 
-        if (categoryType.equals("Hazardous"))
-            return "Red";
-
-        if (categoryType.equals("Non-Biodegradable"))
+        if (categoryType.equals("Non-Biodegradable")) {
             return "Black";
+        }
 
         return "Grey";
-
     }
 
-    private ScanResultDTO buildScanResult(String categoryType, int points, UserStats stats){
-
+    private ScanResultDTO buildScanResult(
+            String categoryType,
+            int points,
+            UserStats stats,
+            String matchedKeyword,
+            Integer rulePriority
+    ) {
         String binColor = determineBinColor(categoryType);
         String motivationalMessage = generateMotivationalMessage(categoryType);
 
@@ -145,8 +147,9 @@ public class ScanService {
                 motivationalMessage,
                 points,
                 stats.getCurrentStreak(),
-                stats.getTotalPoints()
+                stats.getTotalPoints(),
+                matchedKeyword,
+                rulePriority
         );
     }
-
 }

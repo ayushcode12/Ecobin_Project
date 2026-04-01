@@ -35,38 +35,43 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable());
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.authorizeHttpRequests(auth -> auth
-                //Auth module
-                .requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
+                // Auth module
+                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
 
-                //User module
+                // User module
                 .requestMatchers("/api/users/me").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/api/users/**").hasRole("ADMIN")
 
-                //Category module
+                // Category module
                 .requestMatchers(HttpMethod.GET, "/api/categories").hasAnyRole("USER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/categories/**").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/api/categories/**").hasRole("ADMIN")
 
-                //Waste Request module
                 // Waste Request module
                 .requestMatchers(HttpMethod.POST, "/api/requests").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/api/requests/my").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/requests/{id}/status").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/requests/{id}/pickup").hasRole("ADMIN")
+                .requestMatchers("/api/requests/my/export").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/requests/*/status").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/requests/*/pickup").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/requests").hasRole("ADMIN")
 
-                .requestMatchers("/api/scan/**").hasAnyRole("USER","ADMIN")
+                // Rule engine module
+                .requestMatchers(HttpMethod.GET, "/api/rules/preview").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/api/rules/**").hasRole("ADMIN")
+
+                // Scan history module
+                .requestMatchers("/api/scan/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/api/scans/**").hasAnyRole("USER", "ADMIN")
+
                 .requestMatchers("/api/stats/me").hasAnyRole("USER", "ADMIN")
 
                 .requestMatchers("/api/stats/leaderboard").hasAnyRole("USER", "ADMIN")
 
-                .anyRequest().authenticated()
-        );
-        http.sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        );
+                .anyRequest().authenticated());
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -76,7 +81,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000");  // React frontend
+        config.addAllowedOrigin("http://localhost:3000"); // React frontend
+        config.addAllowedOrigin("http://localhost:5173"); // Vite frontend default port
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
@@ -86,9 +92,8 @@ public class SecurityConfig {
         return source;
     }
 
-
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

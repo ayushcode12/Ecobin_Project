@@ -36,6 +36,13 @@ public class WasteRequest {
 
     private Integer points;
     private String status;
+    private String severity;
+    private Integer estimatedQuantity;
+    private String address;
+    private Double latitude;
+    private Double longitude;
+    private String adminNote;
+    private String resolutionProofUrl;
 
     private LocalDateTime createdAt;
     private LocalDateTime pickupDate;
@@ -43,6 +50,11 @@ public class WasteRequest {
     @PrePersist
     void onCreate(){
          createdAt = LocalDateTime.now();
-         status = "PENDING";
+         if (status == null || status.isBlank()) {
+             status = "PENDING";
+         }
+         if (severity == null || severity.isBlank()) {
+             severity = "MEDIUM";
+         }
     }
 }

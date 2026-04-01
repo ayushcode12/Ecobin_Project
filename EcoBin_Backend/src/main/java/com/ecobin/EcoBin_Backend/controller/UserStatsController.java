@@ -30,7 +30,14 @@ public class UserStatsController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return userStatsRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("UserStats not found for user"));
+                .orElseGet(() -> {
+                    UserStats stats = new UserStats();
+                    stats.setUser(user);
+                    stats.setTotalPoints(0);
+                    stats.setCurrentStreak(0);
+                    stats.setLastSubmissionDate(null);
+                    return userStatsRepository.save(stats);
+                });
 
     }
 

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, ArrowRight } from 'lucide-react';
-import { login } from '@/services/api';
+import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { signup } from '@/services/api';
 
-const Login = () => {
+const Signup = () => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -22,10 +23,10 @@ const Login = () => {
         e.preventDefault();
         setError('');
         try {
-            await login(email, password);
-            navigate('/dashboard');
+            await signup({ name, email, password });
+            navigate('/login');
         } catch (err) {
-            setError('Invalid email or password');
+            setError('Registration failed. Try again.');
         }
     };
 
@@ -50,12 +51,34 @@ const Login = () => {
                 }}
             >
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '0.5rem' }}>Welcome Back</h2>
-                    <p style={{ color: '#94a3b8' }}>Enter your credentials to access your EcoBin account.</p>
+                    <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '0.5rem' }}>Join EcoBin</h2>
+                    <p style={{ color: '#94a3b8' }}>Start your journey towards a cleaner planet.</p>
                     {error && <p style={{ color: '#ef4444', marginTop: '0.5rem' }}>{error}</p>}
                 </div>
 
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+
+                    <div style={{ position: 'relative' }}>
+                        <User size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                        <input
+                            type="text"
+                            placeholder="Full Name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '0.75rem 1rem 0.75rem 3rem',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                borderRadius: '0.5rem',
+                                color: 'white',
+                                outline: 'none',
+                                fontSize: '1rem'
+                            }}
+                            required
+                        />
+                    </div>
+
                     <div style={{ position: 'relative' }}>
                         <Mail size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
                         <input
@@ -73,6 +96,7 @@ const Login = () => {
                                 outline: 'none',
                                 fontSize: '1rem'
                             }}
+                            required
                         />
                     </div>
 
@@ -93,20 +117,21 @@ const Login = () => {
                                 outline: 'none',
                                 fontSize: '1rem'
                             }}
+                            required
                         />
                     </div>
 
                     <button type="submit" className="btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                        Sign In <ArrowRight size={18} />
+                        Create Account <ArrowRight size={18} />
                     </button>
                 </form>
 
                 <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: '#94a3b8' }}>
-                    Don't have an account? <Link to="/signup" style={{ color: '#10b981', fontWeight: 600 }}>Sign Up</Link> | <Link to="/" style={{ color: '#60a5fa', fontWeight: 600 }}>Home</Link>
+                    Already have an account? <Link to="/login" style={{ color: '#10b981', fontWeight: 600 }}>Sign In</Link> | <Link to="/" style={{ color: '#60a5fa', fontWeight: 600 }}>Home</Link>
                 </div>
             </motion.div>
         </div>
     );
 };
 
-export default Login;
+export default Signup;

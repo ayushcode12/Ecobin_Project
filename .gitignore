@@ -23,6 +23,10 @@ dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+hs_err_pid*.log
+replay_pid*.log
+status_log.txt
+backend.log
 
 # Java/Spring
 target/

@@ -2,7 +2,9 @@ package com.ecobin.EcoBin_Backend.service;
 
 import com.ecobin.EcoBin_Backend.dto.CreateUserRequestDTO;
 import com.ecobin.EcoBin_Backend.model.User;
+import com.ecobin.EcoBin_Backend.model.UserStats;
 import com.ecobin.EcoBin_Backend.repository.UserRepository;
+import com.ecobin.EcoBin_Backend.repository.UserStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,8 +21,13 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserStatsRepository userStatsRepository;
+
     public User createUser(User user){
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        ensureUserStats(savedUser);
+        return savedUser;
     }
 
     public List<User> getAllUsers(){
@@ -61,11 +68,26 @@ public class UserService {
 
         user.setRole(assignRole);
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        ensureUserStats(savedUser);
+        return savedUser;
     }
 
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Find")) ;
+    }
+
+    private void ensureUserStats(User user) {
+        if (userStatsRepository.findByUser(user).isPresent()) {
+            return;
+        }
+
+        UserStats userStats = new UserStats();
+        userStats.setUser(user);
+        userStats.setTotalPoints(0);
+        userStats.setCurrentStreak(0);
+        userStats.setLastSubmissionDate(null);
+        userStatsRepository.save(userStats);
     }
 }

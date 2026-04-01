@@ -16,5 +16,7 @@ public class ScanResultDTO {
     private Integer pointsAwarded;
     private Integer updatedStreak;
     private Integer updatedTotalPoints;
+    private String matchedKeyword;
+    private Integer rulePriority;
 
 }
