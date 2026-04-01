@@ -1,30 +1,39 @@
 ﻿import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Award, Camera, ClipboardList, Leaf, LocateFixed, Sparkles } from 'lucide-react';
+import {
+    ArrowRight,
+    Award,
+    Camera,
+    ClipboardList,
+    Leaf,
+    LocateFixed,
+    Sparkles,
+    Trophy,
+} from 'lucide-react';
 
 const steps = [
     {
         title: 'Capture or Type Waste',
-        description: 'Users can scan waste or type text like "banana peel" to classify quickly.',
+        description: 'Use camera scan or type text like "banana peel" to classify quickly.',
         icon: Camera,
     },
     {
-        title: 'Instant Category Result',
-        description: 'The platform responds with a category and points using rules before ML integration.',
+        title: 'Get Instant Category',
+        description: 'Rule engine returns category, matched keyword, and points in real time.',
         icon: Sparkles,
     },
     {
-        title: 'Report and Improve Streets',
-        description: 'Roadside waste reports reach admins with location and severity to trigger action.',
+        title: 'Report Street Waste',
+        description: 'Send location-aware reports so admins can track cleanup workflow.',
         icon: LocateFixed,
     },
 ];
 
 const highlights = [
-    { label: 'Text Rules Ready', value: '30+' },
-    { label: 'Admin Workflows', value: 'Strict' },
-    { label: 'Daily Engagement', value: 'Points + Streaks' },
+    { label: 'Rule Engine Ready', value: '30+' },
+    { label: 'Workflow', value: 'Strict Status Flow' },
+    { label: 'Gamification', value: 'Points + Streaks' },
 ];
 
 const Home = () => {
@@ -39,7 +48,7 @@ const Home = () => {
     const primaryAction = useMemo(() => {
         return isAuthenticated
             ? { label: 'Go To Dashboard', action: () => navigate('/dashboard') }
-            : { label: 'Start With Login', action: () => navigate('/login') };
+            : { label: 'Login To Start', action: () => navigate('/login') };
     }, [isAuthenticated, navigate]);
 
     return (
@@ -48,20 +57,21 @@ const Home = () => {
                 className="hero-grid"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.45 }}
             >
-                <div className="surface-card" style={{ padding: '1.5rem' }}>
-                    <span className="badge brand" style={{ marginBottom: '0.8rem' }}>Community Waste Intelligence</span>
-                    <h1 className="hero-title">
+                <article className="surface-card home-hero-main">
+                    <span className="badge brand" style={{ marginBottom: '0.9rem' }}>Community Waste Platform</span>
+                    <h1 className="hero-title" style={{ marginBottom: '0.85rem' }}>
                         Classify waste better.
                         <br />
                         <span className="hero-gradient-text">Keep streets cleaner together.</span>
                     </h1>
+
                     <p className="hero-subtitle">
-                        EcoBin helps users classify waste, report hotspots, and earn daily points. You already have the full journey built for rule-based classification and admin action.
+                        EcoBin helps people sort waste correctly, report roadside dumps, and build consistent green habits through points and streaks.
                     </p>
 
-                    <div className="hero-cta">
+                    <div className="hero-cta" style={{ marginTop: '1.35rem' }}>
                         <button className="btn-primary" onClick={primaryAction.action}>
                             {primaryAction.label} <ArrowRight size={16} />
                         </button>
@@ -70,57 +80,57 @@ const Home = () => {
                         </Link>
                     </div>
 
-                    <div className="kpi-strip" style={{ marginTop: '1.05rem' }}>
+                    <div className="home-stat-grid">
                         {highlights.map((item) => (
-                            <div key={item.label} className="kpi-item">
-                                <div className="value">{item.value}</div>
-                                <div className="label">{item.label}</div>
+                            <div key={item.label} className="home-stat-tile">
+                                <div style={{ fontSize: '1.14rem', fontWeight: 780, marginBottom: '0.12rem' }}>{item.value}</div>
+                                <div className="help-text">{item.label}</div>
                             </div>
                         ))}
                     </div>
-                </div>
+                </article>
 
-                <div className="surface-card inset" style={{ padding: '1.35rem' }}>
-                    <h2 className="section-title" style={{ marginBottom: '0.7rem' }}>
-                        <Leaf size={18} color="#22c98d" /> Why This Matters
+                <article className="surface-card inset home-hero-side">
+                    <h2 className="section-title" style={{ marginBottom: '0.8rem' }}>
+                        <Leaf size={18} color="#22c98d" /> Why EcoBin
                     </h2>
                     <p className="section-note" style={{ marginBottom: '0.95rem' }}>
-                        Most users are confused between recyclable and biodegradable waste. EcoBin reduces that confusion with immediate guidance and clear next actions.
+                        People often confuse recyclable, biodegradable, and non-biodegradable waste. EcoBin gives immediate guidance and action paths.
                     </p>
 
                     <div className="stack-md">
-                        <div className="metric-chip">
+                        <div className="surface-card inset" style={{ padding: '0.85rem' }}>
                             <div className="row" style={{ marginBottom: '0.2rem' }}>
                                 <ClipboardList size={16} color="#8ab6ff" />
-                                <strong>Text Classification</strong>
+                                <strong>User Classification</strong>
                             </div>
-                            <p className="help-text">Rule-based and testable now, ML-ready later.</p>
+                            <p className="help-text">Type waste text and test rule-based categorization now.</p>
                         </div>
 
-                        <div className="metric-chip">
+                        <div className="surface-card inset" style={{ padding: '0.85rem' }}>
                             <div className="row" style={{ marginBottom: '0.2rem' }}>
                                 <LocateFixed size={16} color="#8ab6ff" />
-                                <strong>Road Waste Reporting</strong>
+                                <strong>Admin Action Queue</strong>
                             </div>
-                            <p className="help-text">Admins track status from pending to completion with proof.</p>
+                            <p className="help-text">Track reports from PENDING to COMPLETED with proof.</p>
                         </div>
 
-                        <div className="metric-chip">
+                        <div className="surface-card inset" style={{ padding: '0.85rem' }}>
                             <div className="row" style={{ marginBottom: '0.2rem' }}>
                                 <Award size={16} color="#8ab6ff" />
-                                <strong>Gamified Participation</strong>
+                                <strong>Engagement Loop</strong>
                             </div>
                             <p className="help-text">Points, streaks, and leaderboard keep users active daily.</p>
                         </div>
                     </div>
-                </div>
+                </article>
             </motion.section>
 
             <section className="page-section">
                 <div className="section-head">
                     <div>
                         <h2 className="section-title">How EcoBin Works</h2>
-                        <p className="section-note">Simple flow that is already testable before model integration.</p>
+                        <p className="section-note">Simple 3-step experience, already live for testing before model integration.</p>
                     </div>
                 </div>
 
@@ -130,16 +140,16 @@ const Home = () => {
                         return (
                             <motion.article
                                 key={step.title}
-                                className="surface-card"
-                                initial={{ opacity: 0, y: 12 }}
+                                className="surface-card home-step-card"
+                                initial={{ opacity: 0, y: 10 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: index * 0.12 }}
+                                transition={{ delay: index * 0.1 }}
                             >
-                                <div className="icon-pill" style={{ marginBottom: '0.7rem' }}>
+                                <div className="icon-pill" style={{ marginBottom: '0.78rem' }}>
                                     <Icon size={17} color="#9cc5ff" />
                                 </div>
-                                <h3 style={{ fontSize: '1.05rem', marginBottom: '0.35rem' }}>{step.title}</h3>
+                                <h3 style={{ fontSize: '1.12rem', marginBottom: '0.45rem' }}>{step.title}</h3>
                                 <p className="section-note">{step.description}</p>
                             </motion.article>
                         );
@@ -147,21 +157,43 @@ const Home = () => {
                 </div>
             </section>
 
+            <section className="grid-2 page-section">
+                <article className="surface-card" style={{ padding: '1.35rem' }}>
+                    <h3 className="section-title" style={{ marginBottom: '0.5rem' }}>
+                        <Trophy size={17} color="#8ab6ff" /> Built For Daily Usage
+                    </h3>
+                    <p className="section-note" style={{ marginBottom: '0.75rem' }}>
+                        Users can keep scanning text items, monitor history, and continue daily quest progress.
+                    </p>
+                    <Link to="/history" className="btn-secondary">View Activity History</Link>
+                </article>
+
+                <article className="surface-card" style={{ padding: '1.35rem' }}>
+                    <h3 className="section-title" style={{ marginBottom: '0.5rem' }}>
+                        <LocateFixed size={17} color="#8ab6ff" /> Built For Field Response
+                    </h3>
+                    <p className="section-note" style={{ marginBottom: '0.75rem' }}>
+                        Report road waste with severity and location details so admin cleanup can be prioritized.
+                    </p>
+                    <Link to="/report" className="btn-secondary">Report Waste</Link>
+                </article>
+            </section>
+
             <section className="page-section">
                 <div
-                    className="surface-card"
+                    className="surface-card home-cta-card"
                     style={{
-                        background: 'linear-gradient(120deg, rgba(34,201,141,0.18), rgba(15,27,52,0.82) 48%, rgba(79,141,255,0.2))',
+                        background: 'linear-gradient(120deg, rgba(34,201,141,0.2), rgba(15,27,52,0.84) 48%, rgba(79,141,255,0.22))',
                         display: 'flex',
                         flexWrap: 'wrap',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        gap: '0.8rem',
+                        gap: '0.9rem',
                     }}
                 >
                     <div>
-                        <h2 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: '0.2rem' }}>Ready to ship the next level?</h2>
-                        <p className="section-note">UI, rule engine, reporting workflow, and history are ready. Model integration can plug in next.</p>
+                        <h2 style={{ fontSize: '1.42rem', fontWeight: 800, marginBottom: '0.18rem' }}>Ready to continue building?</h2>
+                        <p className="section-note">The platform is now ready for live testing and the next step is model integration.</p>
                     </div>
                     <div className="row wrap">
                         <Link to={isAuthenticated ? '/dashboard' : '/signup'} className="btn-primary">Start Now</Link>
