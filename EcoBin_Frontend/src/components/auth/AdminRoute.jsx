@@ -46,8 +46,8 @@ const AdminRoute = ({ children }) => {
 
     if (loading) {
         return (
-            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ color: '#10b981', fontSize: '1.1rem' }}>Checking admin access...</div>
+            <div className="page-shell compact">
+                <div className="surface-card empty-state">Checking admin access...</div>
             </div>
         );
     }

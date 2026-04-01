@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, ArrowRight } from 'lucide-react';
+import { ArrowRight, Lock, Mail, ShieldCheck, Sparkles, Trophy } from 'lucide-react';
 import { login } from '@/services/api';
 
 const Login = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
     const [error, setError] = useState('');
-    const navigate = useNavigate();
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -18,91 +18,95 @@ const Login = () => {
         }
     }, [navigate]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
         setError('');
+        setSubmitting(true);
+
         try {
             await login(email, password);
             navigate('/dashboard');
         } catch (err) {
-            setError('Invalid email or password');
+            setError('Invalid email or password. Please try again.');
+        } finally {
+            setSubmitting(false);
         }
     };
 
     return (
-        <div style={{
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px'
-        }}>
+        <div className="auth-shell">
             <motion.div
-                className="glass"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                style={{
-                    width: '100%',
-                    maxWidth: '400px',
-                    padding: '2.5rem',
-                    borderRadius: '1rem',
-                }}
+                className="auth-card"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
             >
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '0.5rem' }}>Welcome Back</h2>
-                    <p style={{ color: '#94a3b8' }}>Enter your credentials to access your EcoBin account.</p>
-                    {error && <p style={{ color: '#ef4444', marginTop: '0.5rem' }}>{error}</p>}
+                <div className="auth-panel showcase">
+                    <span className="badge accent" style={{ marginBottom: '0.75rem' }}>Welcome Back</span>
+                    <h1 className="auth-title">Sign in and continue your clean-city streak.</h1>
+                    <p className="auth-subtitle">Classify waste, report local issues, and keep earning points every day.</p>
+
+                    <div className="stack-sm">
+                        <div className="metric-chip row">
+                            <ShieldCheck size={16} color="#8ab6ff" />
+                            <span className="help-text">Secure role-based access for users and admins</span>
+                        </div>
+                        <div className="metric-chip row">
+                            <Trophy size={16} color="#8ab6ff" />
+                            <span className="help-text">Points, streaks, and leaderboard progress</span>
+                        </div>
+                        <div className="metric-chip row">
+                            <Sparkles size={16} color="#8ab6ff" />
+                            <span className="help-text">Rule-based text classification live for testing</span>
+                        </div>
+                    </div>
                 </div>
 
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <div style={{ position: 'relative' }}>
-                        <Mail size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                        <input
-                            type="email"
-                            placeholder="Email Address"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem 1rem 0.75rem 3rem',
-                                background: 'rgba(255, 255, 255, 0.05)',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                borderRadius: '0.5rem',
-                                color: 'white',
-                                outline: 'none',
-                                fontSize: '1rem'
-                            }}
-                        />
+                <div className="auth-panel">
+                    <h2 className="section-title" style={{ marginBottom: '0.2rem' }}>Account Login</h2>
+                    <p className="section-note" style={{ marginBottom: '0.9rem' }}>Use your registered email and password.</p>
+
+                    {error && <div className="alert error" style={{ marginBottom: '0.8rem' }}>{error}</div>}
+
+                    <form className="auth-form" onSubmit={handleSubmit}>
+                        <div>
+                            <label className="form-label">Email</label>
+                            <div className="input-icon-wrap">
+                                <Mail size={16} className="input-icon" />
+                                <input
+                                    type="email"
+                                    className="input-control"
+                                    placeholder="you@example.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="form-label">Password</label>
+                            <div className="input-icon-wrap">
+                                <Lock size={16} className="input-icon" />
+                                <input
+                                    type="password"
+                                    className="input-control"
+                                    placeholder="Enter password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <button type="submit" className="btn-primary" disabled={submitting}>
+                            {submitting ? 'Signing In...' : 'Sign In'} <ArrowRight size={16} />
+                        </button>
+                    </form>
+
+                    <div className="help-text" style={{ marginTop: '0.95rem' }}>
+                        New here? <Link to="/signup" className="quick-link">Create an account</Link>.
                     </div>
-
-                    <div style={{ position: 'relative' }}>
-                        <Lock size={20} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem 1rem 0.75rem 3rem',
-                                background: 'rgba(255, 255, 255, 0.05)',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                borderRadius: '0.5rem',
-                                color: 'white',
-                                outline: 'none',
-                                fontSize: '1rem'
-                            }}
-                        />
-                    </div>
-
-                    <button type="submit" className="btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                        Sign In <ArrowRight size={18} />
-                    </button>
-                </form>
-
-                <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: '#94a3b8' }}>
-                    Don't have an account? <Link to="/signup" style={{ color: '#10b981', fontWeight: 600 }}>Sign Up</Link> | <Link to="/" style={{ color: '#60a5fa', fontWeight: 600 }}>Home</Link>
                 </div>
             </motion.div>
         </div>
