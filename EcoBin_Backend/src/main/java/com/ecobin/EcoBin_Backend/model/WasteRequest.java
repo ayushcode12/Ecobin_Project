@@ -29,9 +29,15 @@ public class WasteRequest {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Category category;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
+    
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
+    
     private String aiPrediction;
+    
+    @Column(columnDefinition = "TEXT")
     private String motivationalMessage;
 
     private Integer points;

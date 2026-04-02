@@ -32,10 +32,43 @@ public class ScanService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         UserStats stats = getOrCreateUserStats(user);
-        ClassificationPreviewDTO classification = classificationRuleService.classifyText(textDescription);
-
-        String categoryType = classification.getCategoryType();
-        int points = classification.getPoints() == null ? 3 : classification.getPoints();
+        
+        String categoryType = "Unknown";
+        int points = 3;
+        String matchedKeyword = null;
+        Integer rulePriority = null;
+        boolean aiUsed = false;
+        
+        // 1. Try AI Model if image is provided
+        if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+            try {
+                org.springframework.web.client.RestTemplate restTemplate = new org.springframework.web.client.RestTemplate();
+                java.util.Map<String, String> requestData = new java.util.HashMap<>();
+                requestData.put("image", imageUrl);
+                
+                org.springframework.http.ResponseEntity<java.util.Map> response = 
+                    restTemplate.postForEntity("http://localhost:5000/predict", requestData, java.util.Map.class);
+                    
+                if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                    categoryType = (String) response.getBody().get("prediction");
+                    matchedKeyword = "AI-Model-Predicted";
+                    points = 10; // AI bonus points
+                    aiUsed = true;
+                    rulePriority = 1000;
+                }
+            } catch (Exception e) {
+                System.err.println("AI Model API failed: " + e.getMessage());
+            }
+        }
+        
+        // 2. Fallback to Text Rules if no image or AI failed
+        if (!aiUsed) {
+            ClassificationPreviewDTO classification = classificationRuleService.classifyText(textDescription);
+            categoryType = classification.getCategoryType();
+            points = classification.getPoints() == null ? 3 : classification.getPoints();
+            matchedKeyword = classification.getMatchedKeyword();
+            rulePriority = classification.getRulePriority();
+        }
 
         updateStreak(stats);
         stats.setTotalPoints(stats.getTotalPoints() + points);
@@ -43,11 +76,11 @@ public class ScanService {
 
         scanHistoryService.saveScan(
                 user,
-                textDescription,
+                textDescription == null || textDescription.isBlank() ? "Image Classification" : textDescription,
                 imageUrl,
                 categoryType,
-                classification.getMatchedKeyword(),
-                classification.getRulePriority(),
+                matchedKeyword,
+                rulePriority,
                 points
         );
 
@@ -55,8 +88,8 @@ public class ScanService {
                 categoryType,
                 points,
                 stats,
-                classification.getMatchedKeyword(),
-                classification.getRulePriority()
+                matchedKeyword,
+                rulePriority
         );
     }
 

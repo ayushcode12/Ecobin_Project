@@ -24,8 +24,12 @@ public class ScanHistory {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
+    @Column(columnDefinition = "TEXT")
     private String textDescription;
+    
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
+    
     private String categoryType;
     private String matchedKeyword;
     private Integer rulePriority;

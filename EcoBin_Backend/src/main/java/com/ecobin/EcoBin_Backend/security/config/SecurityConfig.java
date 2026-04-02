@@ -69,6 +69,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/stats/me").hasAnyRole("USER", "ADMIN")
 
                 .requestMatchers("/api/stats/leaderboard").hasAnyRole("USER", "ADMIN")
+                
+                .requestMatchers("/error").permitAll()
 
                 .anyRequest().authenticated());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -81,8 +83,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000"); // React frontend
-        config.addAllowedOrigin("http://localhost:5173"); // Vite frontend default port
+        config.addAllowedOriginPattern("http://localhost:*"); // Support Vite dynamic ports (5173, 5174)
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
