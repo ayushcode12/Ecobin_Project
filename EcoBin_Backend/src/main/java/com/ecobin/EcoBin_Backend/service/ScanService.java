@@ -1,6 +1,7 @@
 package com.ecobin.EcoBin_Backend.service;
 
 import com.ecobin.EcoBin_Backend.dto.ClassificationPreviewDTO;
+import com.ecobin.EcoBin_Backend.dto.LiveScanPreviewDTO;
 import com.ecobin.EcoBin_Backend.dto.ScanResultDTO;
 import com.ecobin.EcoBin_Backend.model.User;
 import com.ecobin.EcoBin_Backend.model.UserStats;
@@ -27,41 +28,38 @@ public class ScanService {
     @Autowired
     private ScanHistoryService scanHistoryService;
 
+    @Autowired
+    private AiModelService aiModelService;
+
     public ScanResultDTO processScan(String textDescription, String imageUrl, String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         UserStats stats = getOrCreateUserStats(user);
-        
+
         String categoryType = "Unknown";
         int points = 3;
         String matchedKeyword = null;
         Integer rulePriority = null;
         boolean aiUsed = false;
-        
-        // 1. Try AI Model if image is provided
-        if (imageUrl != null && !imageUrl.trim().isEmpty()) {
-            try {
-                org.springframework.web.client.RestTemplate restTemplate = new org.springframework.web.client.RestTemplate();
-                java.util.Map<String, String> requestData = new java.util.HashMap<>();
-                requestData.put("image", imageUrl);
-                
-                org.springframework.http.ResponseEntity<java.util.Map> response = 
-                    restTemplate.postForEntity("http://localhost:5000/predict", requestData, java.util.Map.class);
-                    
-                if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                    categoryType = (String) response.getBody().get("prediction");
-                    matchedKeyword = "AI-Model-Predicted";
-                    points = 10; // AI bonus points
-                    aiUsed = true;
-                    rulePriority = 1000;
-                }
-            } catch (Exception e) {
-                System.err.println("AI Model API failed: " + e.getMessage());
-            }
+
+        boolean hasRealImage = imageUrl != null
+                && !imageUrl.trim().isEmpty()
+                && !imageUrl.contains("placehold.co")
+                && !imageUrl.equals("https://placehold.co/400");
+
+        if (hasRealImage) {
+            AiModelService.AiPredictionResult aiPrediction = aiModelService.predictImage(imageUrl);
+            categoryType = aiPrediction.prediction();
+            matchedKeyword = aiPrediction.confidence() == null
+                    ? "AI-Model-Predicted"
+                    : "AI-Model-Predicted (" + String.format("%.2f", aiPrediction.confidence()) + ")";
+            points = 10;
+            aiUsed = true;
+            rulePriority = 1000;
+            System.out.println("AI prediction: " + categoryType);
         }
-        
-        // 2. Fallback to Text Rules if no image or AI failed
+
         if (!aiUsed) {
             ClassificationPreviewDTO classification = classificationRuleService.classifyText(textDescription);
             categoryType = classification.getCategoryType();
@@ -90,6 +88,28 @@ public class ScanService {
                 stats,
                 matchedKeyword,
                 rulePriority
+        );
+    }
+
+    public LiveScanPreviewDTO previewLiveScan(String imageUrl) {
+        boolean hasRealImage = imageUrl != null
+                && !imageUrl.trim().isEmpty()
+                && !imageUrl.contains("placehold.co")
+                && !imageUrl.equals("https://placehold.co/400");
+
+        if (!hasRealImage) {
+            throw new IllegalArgumentException("A real image is required for live preview.");
+        }
+
+        AiModelService.AiPredictionResult aiPrediction = aiModelService.predictImage(imageUrl);
+        String categoryType = aiPrediction.prediction();
+
+        return new LiveScanPreviewDTO(
+                categoryType,
+                determineBinColor(categoryType),
+                aiPrediction.confidence(),
+                aiPrediction.rawLabel(),
+                buildLiveStatusMessage(categoryType, aiPrediction.confidence())
         );
     }
 
@@ -161,6 +181,22 @@ public class ScanService {
         }
 
         return "Grey";
+    }
+
+    private String buildLiveStatusMessage(String categoryType, Double confidence) {
+        if (confidence == null) {
+            return "Reading live camera frame...";
+        }
+
+        if (confidence >= 0.80d) {
+            return "Stable " + categoryType + " detection. Confirm to award points.";
+        }
+
+        if (confidence >= 0.60d) {
+            return "Model is leaning toward " + categoryType + ". Hold the item steady.";
+        }
+
+        return "Detection is still uncertain. Keep the object inside the box.";
     }
 
     private ScanResultDTO buildScanResult(

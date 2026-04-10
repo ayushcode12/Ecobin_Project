@@ -90,6 +90,8 @@ const Navbar = () => {
         setIsAdmin(false);
     };
 
+    const userLabel = isAdmin ? 'Admin Console' : 'Eco User';
+
     const renderNavLinks = () => (
         <>
             {navItems.map((item) => {
@@ -107,8 +109,13 @@ const Navbar = () => {
         <header className="top-nav">
             <div className="top-nav-inner">
                 <button className="brand-link" onClick={() => navigate(isAuthenticated ? '/dashboard' : '/')}>
-                    <ScanEye size={22} className="text-emerald-300" />
-                    <span>EcoBin</span>
+                    <span className="brand-mark">
+                        <ScanEye size={22} className="text-emerald-200" />
+                    </span>
+                    <span className="brand-copy">
+                        <span className="brand-name">EcoBin</span>
+                        <span className="brand-meta">AI Waste Sorting</span>
+                    </span>
                 </button>
 
                 <nav className="nav-links" aria-label="Primary">
@@ -116,12 +123,13 @@ const Navbar = () => {
                 </nav>
 
                 {!isAuthenticated ? (
-                    <div className="nav-actions hidden lg:inline-flex">
+                    <div className="nav-actions hidden xl:inline-flex">
                         <Link to="/login" className={`nav-link ${isPathActive('/login') ? 'active' : ''}`}>Login</Link>
                         <Link to="/signup" className="btn-primary">Create Account</Link>
                     </div>
                 ) : (
-                    <div className="nav-actions hidden lg:inline-flex">
+                    <div className="nav-actions hidden xl:inline-flex">
+                        <span className={`badge ${isAdmin ? 'warning' : 'accent'}`}>{userLabel}</span>
                         <button className="btn-danger" onClick={handleLogout}>
                             <LogOut size={15} /> Logout
                         </button>
@@ -138,6 +146,12 @@ const Navbar = () => {
             </div>
 
             <div className={`nav-mobile ${mobileOpen ? 'open' : ''}`}>
+                {isAuthenticated ? (
+                    <div className="mb-4 row wrap">
+                        <span className={`badge ${isAdmin ? 'warning' : 'accent'}`}>{userLabel}</span>
+                    </div>
+                ) : null}
+
                 <div className="stack-sm">{renderNavLinks()}</div>
 
                 {!isAuthenticated ? (

@@ -227,8 +227,9 @@ const AdminReports = () => {
         <div className="page-shell space-y-5">
             <section className="section-head">
                 <div>
+                    <span className="section-kicker mb-4">Admin Workflow Control</span>
                     <h1 className="page-title"><ListTodo size={30} className="mr-2 inline-block align-middle" />Admin Report Queue</h1>
-                    <p className="page-subtitle">Enforce status workflow, add notes, assign pickup dates, and close reports with proof.</p>
+                    <p className="page-subtitle">Review submitted waste issues, enforce status transitions, assign pickups, and close reports with proof.</p>
                 </div>
                 <button className="btn-ghost" onClick={fetchReports}><RefreshCcw size={15} /> Refresh</button>
             </section>

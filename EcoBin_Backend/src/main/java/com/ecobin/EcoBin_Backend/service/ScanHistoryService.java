@@ -32,7 +32,12 @@ public class ScanHistoryService {
         ScanHistory scan = new ScanHistory();
         scan.setUser(user);
         scan.setTextDescription(textDescription);
-        scan.setImageUrl(imageUrl);
+        // Never persist raw base64 — store a placeholder instead to keep DB lightweight
+        if (imageUrl != null && imageUrl.startsWith("data:")) {
+            scan.setImageUrl("base64-image-used");
+        } else {
+            scan.setImageUrl(imageUrl);
+        }
         scan.setCategoryType(categoryType);
         scan.setMatchedKeyword(matchedKeyword);
         scan.setRulePriority(rulePriority);

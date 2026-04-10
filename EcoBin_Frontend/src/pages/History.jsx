@@ -197,8 +197,9 @@ const History = () => {
         <div className="page-shell">
             <section className="section-head">
                 <div>
+                    <span className="section-kicker mb-4">Records, Filters, Export</span>
                     <h1 className="page-title"><HistoryIcon size={30} className="mr-2 inline-block align-middle" />My History</h1>
-                    <p className="page-subtitle">Filter your scans and reports, then export records as CSV.</p>
+                    <p className="page-subtitle">Review confirmed scans and waste reports, filter them cleanly, and export your activity for presentation or review.</p>
                 </div>
             </section>
 

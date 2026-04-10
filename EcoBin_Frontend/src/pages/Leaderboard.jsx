@@ -60,8 +60,9 @@ const Leaderboard = () => {
         <div className="page-shell narrow">
             <section className="section-head">
                 <div>
+                    <span className="section-kicker mb-4">Points, Ranking, Recognition</span>
                     <h1 className="page-title">Leaderboard</h1>
-                    <p className="page-subtitle">Top Eco Warriors making daily impact through scans and responsible reporting.</p>
+                    <p className="page-subtitle">Top Eco Warriors making daily impact through live scans, responsible reporting, and consistent community activity.</p>
                 </div>
             </section>
 
@@ -98,6 +99,7 @@ const Leaderboard = () => {
                                         <div className="mb-1 font-bold">{user.name}</div>
                                         <div className="badge accent mb-1">#{position}</div>
                                         <div className="font-bold text-emerald-200">{(user.totalPoints || 0).toLocaleString()} pts</div>
+                                        <p className="help-text mt-2">Strong recent contribution across the platform.</p>
                                     </motion.article>
                                 );
                             })}

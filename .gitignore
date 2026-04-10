@@ -27,6 +27,14 @@ hs_err_pid*.log
 replay_pid*.log
 status_log.txt
 backend.log
+ai-model.log
+
+# Python
+__pycache__/
+*.pyc
+
+# Local tooling cache
+.m2user/
 
 # Java/Spring
 target/

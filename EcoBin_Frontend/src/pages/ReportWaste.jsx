@@ -95,84 +95,117 @@ const ReportWaste = () => {
         <div className="page-shell narrow">
             <section className="section-head">
                 <div>
+                    <span className="section-kicker mb-4">Community Waste Reporting</span>
                     <h1 className="page-title">Report Road Waste</h1>
-                    <p className="page-subtitle">Share location-based waste issues with severity and quantity so admins can respond faster.</p>
+                    <p className="page-subtitle">Create a clear, location-aware waste report so admins can prioritize cleanup and move it through the action queue.</p>
                 </div>
             </section>
 
-            <motion.section className="surface-card" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                {error && <div className="alert error mb-4">{error}</div>}
-                {success && <div className="alert success mb-4">{success}</div>}
+            <motion.section className="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                <div className="surface-card">
+                    {error && <div className="alert error mb-4">{error}</div>}
+                    {success && <div className="alert success mb-4">{success}</div>}
 
-                <form className="form-grid" onSubmit={handleSubmit}>
-                    <div className="form-grid cols-2">
-                        <div>
-                            <label className="form-label">Category (Optional)</label>
-                            <select
-                                className="select-control"
-                                value={form.categoryId}
-                                onChange={(e) => updateField('categoryId', e.target.value)}
-                                disabled={loadingCategories}
-                            >
-                                <option value="">Auto / Unknown</option>
-                                {categories.map((cat) => (
-                                    <option key={cat.id} value={cat.id}>{cat.name || cat.categoryType}</option>
-                                ))}
-                            </select>
+                    <form className="form-grid" onSubmit={handleSubmit}>
+                        <div className="form-grid cols-2">
+                            <div>
+                                <label className="form-label">Category (Optional)</label>
+                                <select
+                                    className="select-control"
+                                    value={form.categoryId}
+                                    onChange={(e) => updateField('categoryId', e.target.value)}
+                                    disabled={loadingCategories}
+                                >
+                                    <option value="">Auto / Unknown</option>
+                                    {categories.map((cat) => (
+                                        <option key={cat.id} value={cat.id}>{cat.name || cat.categoryType}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="form-label">Severity</label>
+                                <select className="select-control" value={form.severity} onChange={(e) => updateField('severity', e.target.value)}>
+                                    <option value="LOW">LOW</option>
+                                    <option value="MEDIUM">MEDIUM</option>
+                                    <option value="HIGH">HIGH</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div>
-                            <label className="form-label">Severity</label>
-                            <select className="select-control" value={form.severity} onChange={(e) => updateField('severity', e.target.value)}>
-                                <option value="LOW">LOW</option>
-                                <option value="MEDIUM">MEDIUM</option>
-                                <option value="HIGH">HIGH</option>
-                            </select>
+                            <label className="form-label">Description</label>
+                            <textarea
+                                className="textarea-control"
+                                rows={4}
+                                placeholder="Example: Mixed plastic and food waste piled near bus stand."
+                                value={form.textDescription}
+                                onChange={(e) => updateField('textDescription', e.target.value)}
+                            />
                         </div>
-                    </div>
 
-                    <div>
-                        <label className="form-label">Description</label>
-                        <textarea
-                            className="textarea-control"
-                            rows={4}
-                            placeholder="Example: Mixed plastic and food waste piled near bus stand."
-                            value={form.textDescription}
-                            onChange={(e) => updateField('textDescription', e.target.value)}
-                        />
-                    </div>
+                        <div className="form-grid cols-2">
+                            <div>
+                                <label className="form-label">Image URL (Optional)</label>
+                                <input className="input-control" type="url" value={form.imageUrl} onChange={(e) => updateField('imageUrl', e.target.value)} placeholder="https://..." />
+                            </div>
 
-                    <div className="form-grid cols-2">
-                        <div>
-                            <label className="form-label">Image URL (Optional)</label>
-                            <input className="input-control" type="url" value={form.imageUrl} onChange={(e) => updateField('imageUrl', e.target.value)} placeholder="https://..." />
+                            <div>
+                                <label className="form-label">Estimated Quantity</label>
+                                <input className="input-control" type="number" min="1" value={form.estimatedQuantity} onChange={(e) => updateField('estimatedQuantity', e.target.value)} />
+                            </div>
                         </div>
 
                         <div>
-                            <label className="form-label">Estimated Quantity</label>
-                            <input className="input-control" type="number" min="1" value={form.estimatedQuantity} onChange={(e) => updateField('estimatedQuantity', e.target.value)} />
+                            <label className="form-label"><MapPin size={15} className="mr-1 inline-block align-middle" />Address (Optional)</label>
+                            <input className="input-control" type="text" value={form.address} onChange={(e) => updateField('address', e.target.value)} placeholder="Street, landmark, or area" />
                         </div>
-                    </div>
 
-                    <div>
-                        <label className="form-label"><MapPin size={15} className="mr-1 inline-block align-middle" />Address (Optional)</label>
-                        <input className="input-control" type="text" value={form.address} onChange={(e) => updateField('address', e.target.value)} placeholder="Street, landmark, or area" />
-                    </div>
-
-                    <div className="form-grid cols-3 items-end">
-                        <div>
-                            <label className="form-label">Latitude</label>
-                            <input className="input-control" type="text" value={form.latitude} onChange={(e) => updateField('latitude', e.target.value)} placeholder="Optional" />
+                        <div className="form-grid cols-3 items-end">
+                            <div>
+                                <label className="form-label">Latitude</label>
+                                <input className="input-control" type="text" value={form.latitude} onChange={(e) => updateField('latitude', e.target.value)} placeholder="Optional" />
+                            </div>
+                            <div>
+                                <label className="form-label">Longitude</label>
+                                <input className="input-control" type="text" value={form.longitude} onChange={(e) => updateField('longitude', e.target.value)} placeholder="Optional" />
+                            </div>
+                            <button type="button" className="btn-ghost" onClick={detectLocation}><LocateFixed size={15} /> Use GPS</button>
                         </div>
-                        <div>
-                            <label className="form-label">Longitude</label>
-                            <input className="input-control" type="text" value={form.longitude} onChange={(e) => updateField('longitude', e.target.value)} placeholder="Optional" />
-                        </div>
-                        <button type="button" className="btn-ghost" onClick={detectLocation}><LocateFixed size={15} /> Use GPS</button>
-                    </div>
 
-                    <button type="submit" className="btn-primary" disabled={submitting}><SendHorizontal size={16} />{submitting ? 'Submitting...' : 'Submit Report'}</button>
-                </form>
+                        <button type="submit" className="btn-primary" disabled={submitting}><SendHorizontal size={16} />{submitting ? 'Submitting...' : 'Submit Report'}</button>
+                    </form>
+                </div>
+
+                <div className="stack-md">
+                    <article className="surface-card inset">
+                        <h2 className="section-title mb-3">What makes a strong report?</h2>
+                        <div className="stack-sm">
+                            <div className="metric-chip">
+                                <p className="text-sm font-bold text-slate-100">Describe the waste clearly</p>
+                                <p className="help-text mt-1">Mention whether it is mixed waste, plastic-heavy, food waste, roadside dumping, or overflow.</p>
+                            </div>
+                            <div className="metric-chip">
+                                <p className="text-sm font-bold text-slate-100">Add location clues</p>
+                                <p className="help-text mt-1">Street names, landmarks, and GPS improve admin response speed.</p>
+                            </div>
+                            <div className="metric-chip">
+                                <p className="text-sm font-bold text-slate-100">Pick the right severity</p>
+                                <p className="help-text mt-1">Use HIGH only when the waste is urgent, dangerous, or spreading quickly.</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article className="surface-card inset">
+                        <h2 className="section-title mb-3">Workflow Preview</h2>
+                        <div className="stack-sm">
+                            <div className="row wrap"><span className="status-chip pending">PENDING</span><span className="help-text">User submits a report.</span></div>
+                            <div className="row wrap"><span className="status-chip approved">APPROVED</span><span className="help-text">Admin validates the issue.</span></div>
+                            <div className="row wrap"><span className="status-chip progress">IN_PROGRESS</span><span className="help-text">Pickup or cleanup is scheduled.</span></div>
+                            <div className="row wrap"><span className="status-chip completed">COMPLETED</span><span className="help-text">Issue is resolved with proof.</span></div>
+                        </div>
+                    </article>
+                </div>
             </motion.section>
         </div>
     );

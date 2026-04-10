@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8080/api';
+const MODEL_API_URL = 'http://localhost:5000';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -46,6 +47,52 @@ const saveLocalScanActivity = (requestPayload, responsePayload) => {
     }
 };
 
+const categoryToBinColor = (categoryType) => {
+    if (categoryType === 'Biodegradable') return 'Green';
+    if (categoryType === 'Recyclable') return 'Blue';
+    if (categoryType === 'Non-Biodegradable') return 'Black';
+    return 'Grey';
+};
+
+const buildLiveStatusMessage = (categoryType, confidence) => {
+    if (typeof confidence !== 'number' || Number.isNaN(confidence)) {
+        return 'Reading live camera frame...';
+    }
+    if (confidence >= 0.8) {
+        return `Stable ${categoryType} detection. Confirm to award points.`;
+    }
+    if (confidence >= 0.6) {
+        return `Model is leaning toward ${categoryType}. Hold the item steady.`;
+    }
+    return 'Detection is still uncertain. Keep the object inside the box.';
+};
+
+const buildLocalScanResponse = (entries) => ({
+    data: Array.isArray(entries) ? entries : [],
+});
+
+const previewLiveWasteDirect = async (imageUrl) => {
+    const response = await axios.post(`${MODEL_API_URL}/predict`, { image: imageUrl }, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    const categoryType = response?.data?.prediction || 'Unknown';
+    const parsedConfidence = Number(response?.data?.confidence);
+    const confidence = Number.isFinite(parsedConfidence) ? parsedConfidence : null;
+
+    return {
+        data: {
+            categoryType,
+            binColor: categoryToBinColor(categoryType),
+            confidence,
+            rawLabel: response?.data?.rawLabel || null,
+            statusMessage: buildLiveStatusMessage(categoryType, confidence),
+        },
+    };
+};
+
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
@@ -55,6 +102,22 @@ api.interceptors.request.use(
         return config;
     },
     (error) => Promise.reject(error)
+);
+
+// Auto-logout on 401 (expired or invalid token)
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error?.response?.status === 401) {
+            localStorage.removeItem('token');
+            // Avoid redirect loop if already on login/signup
+            const currentPath = window.location.pathname;
+            if (currentPath !== '/login' && currentPath !== '/signup') {
+                window.location.href = '/login';
+            }
+        }
+        return Promise.reject(error);
+    }
 );
 
 export const login = async (email, password) => {
@@ -79,14 +142,17 @@ export const getUserStats = async () => {
 
 export const getRecentActivity = async (filters = {}) => {
     try {
-        return await api.get('/scans/my', { params: filters });
+        return await api.get('/scan/recent', { params: { limit: filters.limit || 8 } });
     } catch (error) {
         if (error?.response?.status === 403 || error?.response?.status === 404) {
             try {
-                return await api.get('/scan/recent', { params: { limit: 8 } });
+                return await api.get('/scans/my', { params: filters });
             } catch (fallbackError) {
                 return await api.get('/scan/my', { params: filters });
             }
+        }
+        if (error?.response?.status === 500) {
+            return buildLocalScanResponse(readLocalScanActivitySafe().slice(0, 8));
         }
         throw error;
     }
@@ -97,6 +163,17 @@ export const scanWaste = async (textDescription, imageUrl) => {
     const response = await api.post('/scan', payload);
     saveLocalScanActivity(payload, response?.data || {});
     return response;
+};
+
+export const previewLiveWaste = async (imageUrl) => {
+    try {
+        return await api.post('/scan/live-preview', { imageUrl });
+    } catch (error) {
+        if (error?.response?.status === 401 || error?.response?.status === 403) {
+            throw error;
+        }
+        return await previewLiveWasteDirect(imageUrl);
+    }
 };
 
 export const getLeaderboard = async () => {
@@ -137,6 +214,9 @@ export const getMyScans = async (filters = {}) => {
     } catch (error) {
         if (error?.response?.status === 403 || error?.response?.status === 404) {
             return await api.get('/scan/my', { params: filters });
+        }
+        if (error?.response?.status === 500) {
+            return buildLocalScanResponse(readLocalScanActivitySafe());
         }
         throw error;
     }

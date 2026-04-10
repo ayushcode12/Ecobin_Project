@@ -41,23 +41,30 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String authHeader;
-        authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            // No token → let it pass (Security will block unauthorized)
+            // No token → let it pass (Security will block unauthorized endpoints)
             filterChain.doFilter(request, response);
             return;
         }
 
         System.out.println("JWT Filter active for: " + request.getRequestURI());
 
-        authHeader = request.getHeader("Authorization");
         String username = null;
-        String jwt = null;
+        String jwt = authHeader.substring(7);
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwt = authHeader.substring(7);
+        try {
             username = jwtService.extractUsername(jwt);
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Token expired. Please log in again.\"}");
+            return;
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Invalid token.\"}");
+            return;
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

@@ -122,8 +122,9 @@ const AdminRules = () => {
         <div className="page-shell space-y-5">
             <section className="section-head">
                 <div>
+                    <span className="section-kicker mb-4">Rule Engine Controls</span>
                     <h1 className="page-title"><BrainCircuit size={30} className="mr-2 inline-block align-middle" />Rule Engine Admin</h1>
-                    <p className="page-subtitle">Manage keyword rules, priorities, and points without touching code.</p>
+                    <p className="page-subtitle">Manage category rules, preview classification behavior, and tune point logic without touching backend code.</p>
                 </div>
                 <button className="btn-ghost" onClick={fetchRules}><RefreshCcw size={15} /> Refresh</button>
             </section>

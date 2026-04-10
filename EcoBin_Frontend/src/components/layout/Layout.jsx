@@ -10,12 +10,17 @@ const Footer = () => {
         <footer className="site-footer">
             <div className="site-footer-inner">
                 <div>
-                    <div className="mb-2 flex items-center gap-2">
-                        <Leaf size={22} className="text-emerald-300" />
-                        <span className="footer-title mb-0">EcoBin</span>
+                    <div className="mb-3 flex items-center gap-3">
+                        <span className="brand-mark">
+                            <Leaf size={20} className="text-emerald-200" />
+                        </span>
+                        <div>
+                            <div className="brand-name">EcoBin</div>
+                            <div className="help-text uppercase tracking-[0.18em]">College Project Edition</div>
+                        </div>
                     </div>
                     <p className="section-note">
-                        Built to help communities classify waste correctly, report roadside waste faster, and drive cleaner neighborhoods together.
+                        Smart waste sorting, field reporting, and community scoring in one product experience. Built to look like a real platform, not just a demo screen.
                     </p>
                 </div>
 
@@ -26,6 +31,16 @@ const Footer = () => {
                         <li><Link to="/dashboard">Dashboard</Link></li>
                         <li><Link to="/scan">Scan</Link></li>
                         <li><Link to="/history">History</Link></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 className="footer-title">Features</h4>
+                    <ul className="footer-list">
+                        <li>Live camera classification with review flow</li>
+                        <li>Waste reporting queue for admins</li>
+                        <li>Points, streaks, and leaderboard tracking</li>
+                        <li>Rule management for project demos and testing</li>
                     </ul>
                 </div>
 
@@ -46,7 +61,7 @@ const Footer = () => {
                 </div>
             </div>
             <div className="footer-note">
-                {year} EcoBin. Designed for practical, community-driven waste action.
+                {year} EcoBin. Designed for practical, community-driven waste action and a polished college-project presentation.
             </div>
         </footer>
     );

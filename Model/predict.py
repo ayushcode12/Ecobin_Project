@@ -1,20 +1,26 @@
-import keras
-import numpy as np
 import cv2
+import sys
+from pathlib import Path
 
-# Load model
-model = keras.models.load_model("ecobin_model.keras")
+from inference import load_ecobin_model, predict_image
 
-# Classes
-classes = ["biodegradable", "non-biodegradable", "recyclable"]
+model = load_ecobin_model()
 
-# Read image
-img = cv2.imread("test.jpg")  # put any image here
-img = cv2.resize(img, (224, 224))
-img = img / 255.0
-img = np.expand_dims(img, axis=0)
 
-# Predict
-prediction = model.predict(img)
+def main():
+    image_path = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().with_name("test.jpg")
+    if not image_path.is_absolute():
+        image_path = Path.cwd() / image_path
 
-print("Prediction:", classes[np.argmax(prediction)])
+    image = cv2.imread(str(image_path), cv2.IMREAD_COLOR)
+    if image is None:
+        raise FileNotFoundError(f"Could not load image: {image_path}")
+
+    result = predict_image(model, image)
+    print("Prediction:", result["display_label"])
+    print("Confidence:", f'{result["confidence"]:.4f}')
+    print("Probabilities:", result["probabilities"])
+
+
+if __name__ == "__main__":
+    main()

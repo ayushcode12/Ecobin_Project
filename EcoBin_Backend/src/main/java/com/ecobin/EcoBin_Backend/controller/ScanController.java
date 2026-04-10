@@ -1,6 +1,7 @@
 package com.ecobin.EcoBin_Backend.controller;
 
 import com.ecobin.EcoBin_Backend.dto.ScanHistoryDTO;
+import com.ecobin.EcoBin_Backend.dto.LiveScanPreviewDTO;
 import com.ecobin.EcoBin_Backend.dto.ScanRequestDTO;
 import com.ecobin.EcoBin_Backend.dto.ScanResultDTO;
 import com.ecobin.EcoBin_Backend.service.ScanService;
@@ -25,12 +26,17 @@ public class ScanController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-
     public ScanResultDTO scanWaste(@RequestBody ScanRequestDTO request){
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         return scanService.processScan(request.getTextDescription(), request.getImageUrl(), email);
+    }
+
+    @PostMapping("/live-preview")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public LiveScanPreviewDTO previewLiveScan(@RequestBody ScanRequestDTO request) {
+        return scanService.previewLiveScan(request.getImageUrl());
     }
 
     @GetMapping("/recent")

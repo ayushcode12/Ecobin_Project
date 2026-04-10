@@ -133,30 +133,33 @@ const Dashboard = () => {
     return (
         <div className="page-shell space-y-5">
             <motion.section
-                className="surface-card bg-gradient-to-r from-emerald-500/20 via-slate-900/85 to-blue-500/20"
+                className="surface-card"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
             >
                 <div className="row wrap space">
                     <div>
+                        <span className="section-kicker mb-4">Your EcoBin Overview</span>
                         <h1 className="page-title text-[2rem]">Dashboard</h1>
-                        <p className="page-subtitle">Everything about your points, streaks, quests, and latest text classifications.</p>
+                        <p className="page-subtitle">Track live scans, streaks, daily goals, and the impact of your activity from one clean overview.</p>
                     </div>
-                    <div className="row wrap">
+                    <div className="row wrap items-center">
+                        <span className="badge brand">Level {level}</span>
+                        <span className="badge accent">{todayTextScanCount} activities today</span>
                         <button className="btn-ghost" onClick={fetchDashboard}><RefreshCcw size={15} /> Refresh</button>
                         <button className="btn-danger" onClick={logout}><LogOut size={15} /> Logout</button>
                     </div>
                 </div>
             </motion.section>
 
-            <section className="grid-3">
+            <section className="grid-4">
                 <article className="surface-card">
                     <div className="row space mb-2">
                         <span className="section-note">Total Points</span>
                         <span className="icon-pill"><Award size={16} className="text-emerald-300" /></span>
                     </div>
                     <div className="stat-value brand">{stats.totalPoints || 0}</div>
-                    <p className="help-text">Points from text classification and report actions.</p>
+                    <p className="help-text">Points collected from confirmed scans and community participation.</p>
                 </article>
 
                 <article className="surface-card">
@@ -169,12 +172,21 @@ const Dashboard = () => {
                 </article>
 
                 <article className="surface-card">
-                    <h3 className="section-title mb-2"><Camera size={17} /> Quick Actions</h3>
-                    <div className="stack-sm">
-                        <Link to="/scan" className="btn-primary w-full">Open Text Classification</Link>
-                        <Link to="/report" className="btn-ghost w-full">Report Road Waste</Link>
-                        <Link to="/history" className="btn-ghost w-full">Open Full History</Link>
+                    <div className="row space mb-2">
+                        <span className="section-note">Today&apos;s Activity</span>
+                        <span className="icon-pill"><Camera size={16} className="text-blue-300" /></span>
                     </div>
+                    <div className="stat-value accent">{todayTextScanCount}</div>
+                    <p className="help-text">Recent local and server activity combined into one daily count.</p>
+                </article>
+
+                <article className="surface-card">
+                    <div className="row space mb-2">
+                        <span className="section-note">Level Progress</span>
+                        <span className="icon-pill"><Leaf size={16} className="text-emerald-300" /></span>
+                    </div>
+                    <div className="stat-value brand">{level}</div>
+                    <p className="help-text">{nextLevelPoints} points remain before the next level unlock.</p>
                 </article>
             </section>
 
@@ -189,6 +201,17 @@ const Dashboard = () => {
                 </article>
 
                 <article className="surface-card">
+                    <h3 className="section-title mb-2">Quick Actions</h3>
+                    <div className="stack-sm">
+                        <Link to="/scan" className="btn-primary w-full">Open Live Scan</Link>
+                        <Link to="/report" className="btn-ghost w-full">Report Waste Spot</Link>
+                        <Link to="/history" className="btn-ghost w-full">Open Full History</Link>
+                    </div>
+                </article>
+            </section>
+
+            <section className="grid-2">
+                <article className="surface-card">
                     <h3 className="section-title mb-2">Achievement Badges</h3>
                     <div className="grid-4">
                         {badgeItems.map((badge) => (
@@ -201,10 +224,19 @@ const Dashboard = () => {
                         ))}
                     </div>
                 </article>
+
+                <article className="surface-card">
+                    <h3 className="section-title mb-2"><Award size={17} className="text-amber-300" /> Daily Quest</h3>
+                    <p className="section-note mb-2">Complete {questTarget} scan-related actions today to keep your activity rhythm going.</p>
+                    <div className="row">
+                        <div className="progress-track h-[9px]"><div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500" style={{ width: `${questProgress}%` }} /></div>
+                        <span className="badge warning">{todayTextScanCount}/{questTarget}</span>
+                    </div>
+                </article>
             </section>
 
             <section className="grid-2">
-                <article className="surface-card bg-gradient-to-r from-emerald-500/20 via-slate-900/85 to-blue-500/15">
+                <article className="surface-card">
                     <h3 className="section-title mb-2"><Globe size={17} className="text-emerald-300" /> Environmental Impact</h3>
                     <div className="grid-2">
                         <div className="metric-chip text-center">
@@ -219,17 +251,23 @@ const Dashboard = () => {
                 </article>
 
                 <article className="surface-card quest-side">
-                    <h3 className="section-title mb-2"><Award size={17} className="text-amber-300" /> Daily Quest</h3>
-                    <p className="section-note mb-2">Submit {questTarget} text classifications today.</p>
-                    <div className="row">
-                        <div className="progress-track h-[9px]"><div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500" style={{ width: `${questProgress}%` }} /></div>
-                        <span className="badge warning">{todayTextScanCount}/{questTarget}</span>
+                    <h3 className="section-title mb-2"><TrendingUp size={17} className="text-blue-300" /> Momentum Snapshot</h3>
+                    <p className="section-note mb-4">Your profile gets stronger when scanning, reporting, and reviewing stay consistent across the week.</p>
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="metric-chip text-center">
+                            <div className="text-3xl font-black text-slate-100">{recentActivity.length}</div>
+                            <p className="help-text">Visible Records</p>
+                        </div>
+                        <div className="metric-chip text-center">
+                            <div className="text-3xl font-black text-slate-100">{badgeItems.filter((badge) => badge.unlocked).length}</div>
+                            <p className="help-text">Unlocked Badges</p>
+                        </div>
                     </div>
                 </article>
             </section>
 
             <section className="grid-2">
-                <article className="surface-card bg-gradient-to-r from-emerald-500/20 to-slate-900/80">
+                <article className="surface-card">
                     <h3 className="section-title mb-2 text-emerald-200"><Leaf size={17} /> Daily Inspiration</h3>
                     <blockquote className="italic text-slate-100">"The greatest threat to our planet is the belief that someone else will save it."</blockquote>
                     <p className="help-text mt-2 text-right">Robert Swan</p>
@@ -253,7 +291,7 @@ const Dashboard = () => {
                 <div className="surface-card">
                     {recentActivity.length === 0 ? (
                         <div className="empty-state">
-                            No text classifications yet. Visit <Link to="/scan" className="quick-link">Scan</Link> to submit your first item.
+                            No activity yet. Visit <Link to="/scan" className="quick-link">Scan</Link> to submit your first item.
                         </div>
                     ) : (
                         <div className="stack-sm">
@@ -273,7 +311,7 @@ const Dashboard = () => {
                                     </div>
                                     <div className="shrink-0 text-right">
                                         <div className="font-black text-emerald-200">+{item.pointsAwarded ?? item.points ?? 0} pts</div>
-                                        <div className="badge accent mt-1">{item.categoryType || item.status || 'TEXT_SCAN'}</div>
+                                        <div className="badge accent mt-1">{item.categoryType || item.status || 'SCAN'}</div>
                                     </div>
                                 </div>
                             ))}

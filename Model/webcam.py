@@ -1,11 +1,8 @@
-import keras
-import numpy as np
 import cv2
 
-# Load model
-model = keras.models.load_model("ecobin_model.keras")
+from inference import load_ecobin_model, predict_image
 
-classes = ["biodegradable", "non-biodegradable", "recyclable"]
+model = load_ecobin_model()
 
 cap = cv2.VideoCapture(0)
 
@@ -29,17 +26,9 @@ while True:
     # Crop center
     crop = frame[y1:y2, x1:x2]
 
-    # Preprocess
-    img = cv2.resize(crop, (224, 224))
-    img = img / 255.0
-    img = np.expand_dims(img, axis=0)
-
-    # Predict EVERY FRAME
-    prediction = model.predict(img, verbose=0)
-
-    class_index = np.argmax(prediction)
-    label = classes[class_index]
-    confidence = np.max(prediction)
+    result = predict_image(model, crop)
+    label = result["display_label"]
+    confidence = result["confidence"]
 
     # Optional: confidence filter
     if confidence < 0.5:

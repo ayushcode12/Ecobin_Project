@@ -40,20 +40,20 @@ const Login = () => {
                 transition={{ duration: 0.4 }}
             >
                 <div className="auth-panel showcase">
-                    <span className="badge accent mb-3">Welcome Back</span>
-                    <h1 className="auth-title">Sign in and continue your clean-city streak.</h1>
-                    <p className="auth-subtitle">Classify waste, report local issues, and keep earning points every day.</p>
+                    <span className="section-kicker mb-4">Welcome Back</span>
+                    <h1 className="auth-title">Sign in and continue your smart waste workflow.</h1>
+                    <p className="auth-subtitle">Access live camera scanning, waste reporting, admin-ready history, and a cleaner dashboard designed for strong project demos.</p>
 
                     <div className="stack-sm">
-                        <div className="metric-chip row"><ShieldCheck size={16} className="text-blue-300" /><span className="help-text">Secure role-based access for users and admins</span></div>
-                        <div className="metric-chip row"><Trophy size={16} className="text-blue-300" /><span className="help-text">Points, streaks, and leaderboard progress</span></div>
-                        <div className="metric-chip row"><Sparkles size={16} className="text-blue-300" /><span className="help-text">Rule-based text classification live for testing</span></div>
+                        <div className="metric-chip row"><ShieldCheck size={16} className="text-blue-300" /><span className="help-text">Role-aware access for users and admins</span></div>
+                        <div className="metric-chip row"><Trophy size={16} className="text-blue-300" /><span className="help-text">Points, streaks, and leaderboard progression</span></div>
+                        <div className="metric-chip row"><Sparkles size={16} className="text-blue-300" /><span className="help-text">Live AI scan review before final point assignment</span></div>
                     </div>
                 </div>
 
                 <div className="auth-panel">
                     <h2 className="section-title mb-1">Account Login</h2>
-                    <p className="section-note mb-4">Use your registered email and password.</p>
+                    <p className="section-note mb-4">Use your registered email and password to reopen your dashboard.</p>
 
                     {error && <div className="alert error mb-4">{error}</div>}
 
