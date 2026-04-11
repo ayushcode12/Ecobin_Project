@@ -124,15 +124,12 @@
   }
 
   .page-shell {
-    @apply mx-auto w-full max-w-[1440px] px-5 pb-14 pt-[118px];
+    @apply mx-auto w-full max-w-[1400px] px-5 pb-14 pt-[118px];
   }
 
-  .page-shell.narrow {
-    @apply max-w-[1180px];
-  }
-
+  .page-shell.narrow,
   .page-shell.compact {
-    @apply max-w-[900px];
+    @apply max-w-[1400px];
   }
 
   .page-section + .page-section {
@@ -140,7 +137,7 @@
   }
 
   .surface-card {
-    @apply relative overflow-hidden rounded-[30px] p-6 transition-all duration-300;
+    @apply relative overflow-hidden rounded-[18px] p-6 transition-all duration-300;
     border: 1px solid var(--ec-line);
     background:
       linear-gradient(180deg, rgba(14, 32, 42, 0.94), rgba(8, 23, 31, 0.9)),
@@ -176,7 +173,7 @@
   }
 
   .surface-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     border-color: var(--ec-line-strong);
     box-shadow:
       0 34px 88px rgba(1, 8, 13, 0.38),
@@ -189,7 +186,7 @@
   }
 
   .section-kicker {
-    @apply inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.24em];
+    @apply inline-flex items-center gap-2 rounded-[10px] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.24em];
     border: 1px solid rgba(104, 213, 163, 0.22);
     background: rgba(104, 213, 163, 0.12);
     color: #d9fff0;
@@ -261,7 +258,7 @@
   .btn-ghost,
   .btn-danger,
   .btn-soft {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border px-5 py-3 text-sm font-bold tracking-[0.03em] transition-all duration-300 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 rounded-[14px] border px-5 py-3 text-sm font-bold tracking-[0.03em] transition-all duration-300 active:scale-[0.98];
   }
 
   .btn-primary {
@@ -323,7 +320,7 @@
   }
 
   .icon-pill {
-    @apply inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[18px];
+    @apply inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px];
     border: 1px solid rgba(247, 239, 225, 0.12);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025));
     box-shadow:
@@ -351,7 +348,7 @@
   }
 
   .badge {
-    @apply inline-flex items-center justify-center rounded-full border px-3 py-1 text-[11px] font-bold tracking-[0.24px];
+    @apply inline-flex items-center justify-center rounded-[10px] border px-3 py-1 text-[11px] font-bold tracking-[0.24px];
   }
 
   .badge.brand {
@@ -385,7 +382,7 @@
   }
 
   .alert {
-    @apply rounded-[22px] border px-4 py-3 text-sm;
+    @apply rounded-[14px] border px-4 py-3 text-sm;
   }
 
   .alert.error {
@@ -414,7 +411,7 @@
   .input-control,
   .select-control,
   .textarea-control {
-    @apply w-full rounded-[20px] px-4 py-3 text-sm outline-none transition-all duration-200;
+    @apply w-full rounded-[14px] px-4 py-3 text-sm outline-none transition-all duration-200;
     border: 1px solid rgba(247, 239, 225, 0.12);
     background: linear-gradient(180deg, rgba(5, 16, 24, 0.92), rgba(12, 30, 40, 0.84));
     color: #f5f8f7;
@@ -465,13 +462,13 @@
   }
 
   .pill-tabs {
-    @apply inline-flex items-center gap-1 rounded-full p-1;
+    @apply inline-flex items-center gap-1 rounded-[12px] p-1;
     border: 1px solid rgba(247, 239, 225, 0.1);
     background: rgba(5, 16, 24, 0.58);
   }
 
   .pill-tab {
-    @apply rounded-full border border-transparent px-4 py-2 text-sm font-semibold transition-all;
+    @apply rounded-[10px] border border-transparent px-4 py-2 text-sm font-semibold transition-all;
     color: rgba(229, 238, 235, 0.72);
   }
 
@@ -493,7 +490,7 @@
   }
 
   .table-shell {
-    @apply overflow-hidden rounded-[26px];
+    @apply overflow-hidden rounded-[16px];
     border: 1px solid rgba(247, 239, 225, 0.1);
     background: rgba(4, 12, 18, 0.32);
   }
@@ -532,13 +529,13 @@
   }
 
   .metric-chip {
-    @apply rounded-[24px] px-4 py-4;
+    @apply rounded-[14px] px-4 py-4;
     border: 1px solid rgba(247, 239, 225, 0.08);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
   }
 
   .top-nav {
-    @apply fixed inset-x-0 top-4 z-[100] mx-auto w-[calc(100%-1.75rem)] max-w-[1440px] rounded-[28px] backdrop-blur-2xl;
+    @apply fixed inset-x-0 top-4 z-[100] mx-auto w-[calc(100%-1.75rem)] max-w-[1400px] rounded-[18px] backdrop-blur-2xl;
     border: 1px solid rgba(247, 239, 225, 0.1);
     background:
       linear-gradient(180deg, rgba(6, 18, 27, 0.9), rgba(8, 21, 31, 0.9)),
@@ -553,7 +550,7 @@
   }
 
   .brand-link {
-    @apply inline-flex items-center gap-3 rounded-[22px] px-2.5 py-2 transition-all;
+    @apply inline-flex items-center gap-3 rounded-[12px] px-2.5 py-2 transition-all;
     color: #fdf8ef;
   }
 
@@ -562,7 +559,7 @@
   }
 
   .brand-mark {
-    @apply inline-flex h-12 w-12 items-center justify-center rounded-[18px];
+    @apply inline-flex h-12 w-12 items-center justify-center rounded-[12px];
     border: 1px solid rgba(247, 239, 225, 0.12);
     background:
       linear-gradient(135deg, rgba(104, 213, 163, 0.22), rgba(241, 179, 101, 0.18)),
@@ -592,7 +589,7 @@
   }
 
   .nav-link {
-    @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-transparent px-3.5 py-2 text-sm font-semibold transition-all;
+    @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-[12px] border border-transparent px-3.5 py-2 text-sm font-semibold transition-all;
     color: rgba(232, 238, 236, 0.78);
   }
 
@@ -612,14 +609,14 @@
   }
 
   .nav-toggle {
-    @apply inline-flex h-11 w-11 items-center justify-center rounded-full xl:hidden;
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-[12px] xl:hidden;
     border: 1px solid rgba(247, 239, 225, 0.08);
     background: rgba(255, 255, 255, 0.04);
     color: #edf4f1;
   }
 
   .nav-mobile {
-    @apply hidden absolute left-0 right-0 top-[86px] mt-2 rounded-[26px] p-5 shadow-2xl backdrop-blur-3xl;
+    @apply hidden absolute left-0 right-0 top-[86px] mt-2 rounded-[16px] p-5 shadow-2xl backdrop-blur-3xl;
     border: 1px solid rgba(247, 239, 225, 0.1);
     background: rgba(7, 18, 26, 0.96);
   }
@@ -637,7 +634,7 @@
   }
 
   .site-footer-inner {
-    @apply mx-auto grid w-full max-w-[1440px] grid-cols-1 gap-8 px-5 py-14 md:grid-cols-2 xl:grid-cols-4;
+    @apply mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-8 px-5 py-12 md:grid-cols-3;
   }
 
   .footer-title {
@@ -654,10 +651,6 @@
     @apply px-4 py-5 text-center text-xs;
     border-top: 1px solid rgba(247, 239, 225, 0.06);
     color: rgba(184, 197, 197, 0.56);
-  }
-
-  .hero-grid {
-    @apply grid grid-cols-1 gap-6 xl:grid-cols-[1.18fr_0.82fr];
   }
 
   .hero-title {
@@ -699,7 +692,7 @@
   }
 
   .home-stat-tile {
-    @apply rounded-[24px] p-4;
+    @apply rounded-[14px] p-4;
     border: 1px solid rgba(247, 239, 225, 0.08);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
   }
@@ -712,12 +705,87 @@
     @apply p-6 md:p-7;
   }
 
+  .game-hero {
+    @apply grid grid-cols-1 items-start gap-5 xl:grid-cols-[1.08fr_0.92fr];
+  }
+
+  .game-command {
+    @apply self-start;
+    background:
+      linear-gradient(135deg, rgba(14, 34, 46, 0.98), rgba(7, 17, 25, 0.96)),
+      radial-gradient(circle at top right, rgba(120, 198, 240, 0.12), transparent 34%);
+  }
+
+  .game-stat-grid {
+    @apply grid grid-cols-1 gap-3 md:grid-cols-3;
+  }
+
+  .game-stat-card {
+    @apply rounded-[14px] border p-4;
+    border-color: rgba(247, 239, 225, 0.08);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+      radial-gradient(circle at top right, rgba(104, 213, 163, 0.08), transparent 30%);
+  }
+
+  .game-stat-label {
+    @apply text-[11px] font-bold uppercase tracking-[0.22em];
+    color: rgba(197, 209, 210, 0.64);
+  }
+
+  .game-stat-value {
+    @apply mt-2 text-[1.18rem] font-black leading-tight text-slate-100;
+    font-family: var(--ec-heading-font);
+    letter-spacing: -0.03em;
+  }
+
+  .game-loop-row {
+    @apply flex items-center gap-3 rounded-[14px] border px-4 py-3;
+    border-color: rgba(247, 239, 225, 0.08);
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  .game-loop-step {
+    @apply inline-flex min-w-[42px] justify-center rounded-[10px] border px-2 py-2 text-xs font-black;
+    border-color: rgba(104, 213, 163, 0.24);
+    background: rgba(104, 213, 163, 0.12);
+    color: #e5fff1;
+  }
+
+  .game-tile-grid {
+    @apply grid gap-3;
+  }
+
+  .game-cta-strip {
+    background:
+      linear-gradient(135deg, rgba(15, 37, 50, 0.96), rgba(8, 20, 28, 0.94)),
+      radial-gradient(circle at right, rgba(104, 213, 163, 0.12), transparent 28%);
+  }
+
+  .game-side-panel {
+    @apply self-start;
+  }
+
+  .game-highlight-bar {
+    @apply py-5;
+  }
+
+  .game-highlight-grid {
+    @apply grid grid-cols-1 gap-4 md:grid-cols-3;
+  }
+
+  .game-highlight-item {
+    @apply rounded-[14px] border px-4 py-4;
+    border-color: rgba(247, 239, 225, 0.08);
+    background: rgba(255, 255, 255, 0.025);
+  }
+
   .auth-shell {
     @apply flex min-h-screen items-center justify-center px-4 pb-10 pt-[112px];
   }
 
   .auth-card {
-    @apply grid w-full max-w-6xl grid-cols-1 overflow-hidden rounded-[36px] lg:grid-cols-[1.02fr_0.98fr];
+    @apply grid w-full max-w-6xl grid-cols-1 overflow-hidden rounded-[18px] lg:grid-cols-[1.02fr_0.98fr];
     border: 1px solid rgba(247, 239, 225, 0.1);
     background:
       linear-gradient(135deg, rgba(11, 25, 35, 0.98), rgba(7, 17, 25, 0.94)),
@@ -753,7 +821,7 @@
   }
 
   .activity-row {
-    @apply flex items-center justify-between gap-3 rounded-[24px] p-4;
+    @apply flex items-center justify-between gap-3 rounded-[14px] p-4;
     border: 1px solid rgba(247, 239, 225, 0.08);
     background: linear-gradient(180deg, rgba(8, 20, 28, 0.88), rgba(12, 28, 37, 0.8));
   }
@@ -763,7 +831,7 @@
   }
 
   .activity-thumb {
-    @apply flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[18px];
+    @apply flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[10px];
     border: 1px solid rgba(247, 239, 225, 0.1);
     background: rgba(255, 255, 255, 0.05);
   }
@@ -779,7 +847,7 @@
   }
 
   .image-drop {
-    @apply relative flex min-h-[190px] items-center justify-center overflow-hidden rounded-[26px] border border-dashed;
+    @apply relative flex min-h-[190px] items-center justify-center overflow-hidden rounded-[16px] border border-dashed;
     border-color: rgba(247, 239, 225, 0.14);
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
@@ -804,7 +872,7 @@
   }
 
   .podium-card {
-    @apply rounded-[28px] p-5 text-center;
+    @apply rounded-[16px] p-5 text-center;
     border: 1px solid rgba(247, 239, 225, 0.08);
     background: linear-gradient(180deg, rgba(10, 24, 34, 0.94), rgba(9, 20, 29, 0.88));
   }
@@ -829,7 +897,7 @@
   }
 
   .status-chip {
-    @apply inline-flex items-center justify-center rounded-full border px-2.5 py-1 text-[11px] font-bold tracking-[0.24px];
+    @apply inline-flex items-center justify-center rounded-[10px] border px-2.5 py-1 text-[11px] font-bold tracking-[0.24px];
   }
 
   .status-chip.pending {
@@ -920,7 +988,7 @@
 
 @media (max-width: 1024px) {
   .top-nav {
-    @apply rounded-[24px];
+    @apply rounded-[16px];
   }
 
   .top-nav-inner {
@@ -938,7 +1006,7 @@
   }
 
   .surface-card {
-    @apply rounded-[24px] p-4;
+    @apply rounded-[14px] p-4;
   }
 
   .hero-title {

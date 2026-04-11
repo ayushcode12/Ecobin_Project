@@ -1,15 +1,18 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
     Award,
     Camera,
-    Globe,
+    Flame,
     History,
     Leaf,
     LogOut,
     RefreshCcw,
+    ShieldCheck,
     TrendingUp,
+    Trophy,
+    Zap,
 } from 'lucide-react';
 import { getRecentActivity, getUserStats, logout } from '@/services/api';
 
@@ -99,7 +102,7 @@ const Dashboard = () => {
         return () => window.removeEventListener('ecobin-scan-saved', handleLocalScanSaved);
     }, []);
 
-    const todayTextScanCount = useMemo(() => {
+    const todayActivityCount = useMemo(() => {
         const now = new Date();
         const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
@@ -111,9 +114,9 @@ const Dashboard = () => {
     }, [recentActivity]);
 
     const level = Math.floor((stats.totalPoints || 0) / 100) + 1;
-    const nextLevelPoints = 100 - ((stats.totalPoints || 0) % 100 || 0);
     const levelProgress = (stats.totalPoints || 0) % 100;
-    const questProgress = Math.min(100, (todayTextScanCount / questTarget) * 100);
+    const nextLevelPoints = 100 - ((stats.totalPoints || 0) % 100 || 0);
+    const questProgress = Math.min(100, (todayActivityCount / questTarget) * 100);
 
     const badgeItems = [
         { name: 'Starter', unlocked: true },
@@ -121,6 +124,8 @@ const Dashboard = () => {
         { name: 'Pro', unlocked: (stats.totalPoints || 0) >= 500 },
         { name: 'Master', unlocked: (stats.totalPoints || 0) >= 1000 },
     ];
+
+    const unlockedBadges = badgeItems.filter((badge) => badge.unlocked).length;
 
     if (loading) {
         return (
@@ -131,21 +136,23 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="page-shell space-y-5">
+        <div className="page-shell narrow space-y-6">
             <motion.section
                 className="surface-card"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
             >
-                <div className="row wrap space">
+                <div className="row wrap space gap-4">
                     <div>
-                        <span className="section-kicker mb-4">Your EcoBin Overview</span>
+                        <span className="section-kicker mb-4">Player HUD</span>
                         <h1 className="page-title text-[2rem]">Dashboard</h1>
-                        <p className="page-subtitle">Track live scans, streaks, daily goals, and the impact of your activity from one clean overview.</p>
+                        <p className="page-subtitle">Your points, streak, mission progress, and recent runs.</p>
                     </div>
-                    <div className="row wrap items-center">
+
+                    <div className="row wrap gap-2">
                         <span className="badge brand">Level {level}</span>
-                        <span className="badge accent">{todayTextScanCount} activities today</span>
+                        <span className="badge warning">{stats.currentStreak || 0}-day streak</span>
+                        <Link to="/scan" className="btn-primary">Play Scan Mode</Link>
                         <button className="btn-ghost" onClick={fetchDashboard}><RefreshCcw size={15} /> Refresh</button>
                         <button className="btn-danger" onClick={logout}><LogOut size={15} /> Logout</button>
                     </div>
@@ -154,144 +161,139 @@ const Dashboard = () => {
 
             <section className="grid-4">
                 <article className="surface-card">
-                    <div className="row space mb-2">
-                        <span className="section-note">Total Points</span>
+                    <div className="row space mb-3">
+                        <span className="section-note">XP</span>
                         <span className="icon-pill"><Award size={16} className="text-emerald-300" /></span>
                     </div>
                     <div className="stat-value brand">{stats.totalPoints || 0}</div>
-                    <p className="help-text">Points collected from confirmed scans and community participation.</p>
+                    <div className="help-text mt-2">Total points banked.</div>
                 </article>
 
                 <article className="surface-card">
-                    <div className="row space mb-2">
-                        <span className="section-note">Current Streak</span>
-                        <span className="icon-pill"><TrendingUp size={16} className="text-blue-300" /></span>
+                    <div className="row space mb-3">
+                        <span className="section-note">Streak</span>
+                        <span className="icon-pill"><Flame size={16} className="text-amber-300" /></span>
                     </div>
-                    <div className="stat-value accent">{stats.currentStreak || 0} days</div>
-                    <p className="help-text">Stay active daily to keep your streak alive.</p>
+                    <div className="stat-value accent">{stats.currentStreak || 0}</div>
+                    <div className="help-text mt-2">Days in a row.</div>
                 </article>
 
                 <article className="surface-card">
-                    <div className="row space mb-2">
-                        <span className="section-note">Today&apos;s Activity</span>
+                    <div className="row space mb-3">
+                        <span className="section-note">Today</span>
                         <span className="icon-pill"><Camera size={16} className="text-blue-300" /></span>
                     </div>
-                    <div className="stat-value accent">{todayTextScanCount}</div>
-                    <p className="help-text">Recent local and server activity combined into one daily count.</p>
+                    <div className="stat-value accent">{todayActivityCount}</div>
+                    <div className="help-text mt-2">Actions completed today.</div>
                 </article>
 
                 <article className="surface-card">
-                    <div className="row space mb-2">
-                        <span className="section-note">Level Progress</span>
-                        <span className="icon-pill"><Leaf size={16} className="text-emerald-300" /></span>
+                    <div className="row space mb-3">
+                        <span className="section-note">Badges</span>
+                        <span className="icon-pill"><Trophy size={16} className="text-emerald-300" /></span>
                     </div>
-                    <div className="stat-value brand">{level}</div>
-                    <p className="help-text">{nextLevelPoints} points remain before the next level unlock.</p>
+                    <div className="stat-value brand">{unlockedBadges}</div>
+                    <div className="help-text mt-2">Unlocked right now.</div>
                 </article>
             </section>
 
             <section className="grid-2">
                 <article className="surface-card">
-                    <div className="row space mb-2">
-                        <h3 className="section-title">Level Progress</h3>
-                        <span className="badge brand">Level {level}</span>
+                    <div className="row space mb-4">
+                        <h2 className="section-title"><Zap size={18} className="text-emerald-300" /> Mission Board</h2>
+                        <span className="badge accent">Daily Run</span>
                     </div>
-                    <div className="progress-track"><div className="progress-fill" style={{ width: `${levelProgress}%` }} /></div>
-                    <p className="help-text mt-2 text-right">{nextLevelPoints} points to next level</p>
-                </article>
 
-                <article className="surface-card">
-                    <h3 className="section-title mb-2">Quick Actions</h3>
-                    <div className="stack-sm">
-                        <Link to="/scan" className="btn-primary w-full">Open Live Scan</Link>
-                        <Link to="/report" className="btn-ghost w-full">Report Waste Spot</Link>
-                        <Link to="/history" className="btn-ghost w-full">Open Full History</Link>
-                    </div>
-                </article>
-            </section>
-
-            <section className="grid-2">
-                <article className="surface-card">
-                    <h3 className="section-title mb-2">Achievement Badges</h3>
-                    <div className="grid-4">
-                        {badgeItems.map((badge) => (
-                            <div
-                                key={badge.name}
-                                className={`metric-chip text-center ${badge.unlocked ? 'border-emerald-400/45 bg-emerald-400/20 text-emerald-200' : 'border-slate-400/25 bg-slate-400/10 text-slate-400'}`}
-                            >
-                                {badge.name}
+                    <div className="stack-md">
+                        <div className="metric-chip">
+                            <div className="row space mb-2">
+                                <span className="text-sm font-bold text-slate-100">Level Progress</span>
+                                <span className="badge brand">Level {level}</span>
                             </div>
-                        ))}
+                            <div className="progress-track"><div className="progress-fill" style={{ width: `${levelProgress}%` }} /></div>
+                            <div className="help-text mt-2">{nextLevelPoints} XP to the next level.</div>
+                        </div>
+
+                        <div className="metric-chip">
+                            <div className="row space mb-2">
+                                <span className="text-sm font-bold text-slate-100">Daily Quest</span>
+                                <span className="badge warning">{todayActivityCount}/{questTarget}</span>
+                            </div>
+                            <div className="progress-track"><div className="progress-fill" style={{ width: `${questProgress}%` }} /></div>
+                            <div className="help-text mt-2">Hit today&apos;s target to protect your momentum.</div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                            <div className="metric-chip">
+                                <div className="game-stat-label">Next Reward</div>
+                                <div className="game-stat-value">{nextLevelPoints} XP</div>
+                            </div>
+                            <div className="metric-chip">
+                                <div className="game-stat-label">Runs Logged</div>
+                                <div className="game-stat-value">{recentActivity.length}</div>
+                            </div>
+                            <div className="metric-chip">
+                                <div className="game-stat-label">Status</div>
+                                <div className="game-stat-value">{stats.currentStreak >= 3 ? 'Hot Streak' : 'Warm Up'}</div>
+                            </div>
+                        </div>
                     </div>
                 </article>
 
                 <article className="surface-card">
-                    <h3 className="section-title mb-2"><Award size={17} className="text-amber-300" /> Daily Quest</h3>
-                    <p className="section-note mb-2">Complete {questTarget} scan-related actions today to keep your activity rhythm going.</p>
-                    <div className="row">
-                        <div className="progress-track h-[9px]"><div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500" style={{ width: `${questProgress}%` }} /></div>
-                        <span className="badge warning">{todayTextScanCount}/{questTarget}</span>
+                    <div className="row space mb-4">
+                        <h2 className="section-title"><ShieldCheck size={18} className="text-blue-300" /> Quick Launch</h2>
+                        <span className="badge brand">Play</span>
                     </div>
-                </article>
-            </section>
 
-            <section className="grid-2">
-                <article className="surface-card">
-                    <h3 className="section-title mb-2"><Globe size={17} className="text-emerald-300" /> Environmental Impact</h3>
-                    <div className="grid-2">
-                        <div className="metric-chip text-center">
-                            <div className="text-3xl font-black">{((stats.totalPoints || 0) * 0.05).toFixed(1)} kg</div>
-                            <p className="help-text">CO2 Saved</p>
-                        </div>
-                        <div className="metric-chip text-center">
-                            <div className="text-3xl font-black">{Math.floor((stats.totalPoints || 0) / 500)}</div>
-                            <p className="help-text">Trees Equivalent</p>
+                    <div className="stack-sm">
+                        <Link to="/scan" className="btn-primary w-full justify-between">
+                            Live Scan
+                            <Camera size={16} />
+                        </Link>
+                        <Link to="/report" className="btn-secondary w-full justify-between">
+                            Report Waste
+                            <Leaf size={16} />
+                        </Link>
+                        <Link to="/history" className="btn-ghost w-full justify-between">
+                            Open History
+                            <History size={16} />
+                        </Link>
+                        <Link to="/leaderboard" className="btn-ghost w-full justify-between">
+                            View Leaderboard
+                            <Trophy size={16} />
+                        </Link>
+                    </div>
+
+                    <div className="mt-5">
+                        <div className="section-note mb-3">Unlocked Titles</div>
+                        <div className="row wrap">
+                            {badgeItems.map((badge) => (
+                                <span
+                                    key={badge.name}
+                                    className={`badge ${badge.unlocked ? 'brand' : 'danger'}`}
+                                >
+                                    {badge.name}
+                                </span>
+                            ))}
                         </div>
                     </div>
-                </article>
-
-                <article className="surface-card quest-side">
-                    <h3 className="section-title mb-2"><TrendingUp size={17} className="text-blue-300" /> Momentum Snapshot</h3>
-                    <p className="section-note mb-4">Your profile gets stronger when scanning, reporting, and reviewing stay consistent across the week.</p>
-                    <div className="grid grid-cols-2 gap-3">
-                        <div className="metric-chip text-center">
-                            <div className="text-3xl font-black text-slate-100">{recentActivity.length}</div>
-                            <p className="help-text">Visible Records</p>
-                        </div>
-                        <div className="metric-chip text-center">
-                            <div className="text-3xl font-black text-slate-100">{badgeItems.filter((badge) => badge.unlocked).length}</div>
-                            <p className="help-text">Unlocked Badges</p>
-                        </div>
-                    </div>
-                </article>
-            </section>
-
-            <section className="grid-2">
-                <article className="surface-card">
-                    <h3 className="section-title mb-2 text-emerald-200"><Leaf size={17} /> Daily Inspiration</h3>
-                    <blockquote className="italic text-slate-100">"The greatest threat to our planet is the belief that someone else will save it."</blockquote>
-                    <p className="help-text mt-2 text-right">Robert Swan</p>
-                </article>
-
-                <article className="surface-card">
-                    <h3 className="section-title mb-2 text-blue-200"><Globe size={17} /> Did You Know?</h3>
-                    <p className="text-slate-100">Recycling one aluminum can saves enough energy to run a TV for around 3 hours.</p>
                 </article>
             </section>
 
             <section className="page-section">
                 <div className="section-head">
                     <div>
-                        <h2 className="section-title"><History size={18} /> Recent Activity</h2>
-                        <p className="section-note">Latest scans are merged from server and local fallback to avoid missing entries.</p>
+                        <h2 className="section-title"><TrendingUp size={18} className="text-emerald-300" /> Recent Runs</h2>
+                        <p className="section-note">Latest confirmed scan and report activity.</p>
                     </div>
-                    <Link to="/history" className="btn-ghost">Open Full History</Link>
+                    <Link to="/history" className="btn-ghost">Full History</Link>
                 </div>
 
                 <div className="surface-card">
                     {recentActivity.length === 0 ? (
                         <div className="empty-state">
-                            No activity yet. Visit <Link to="/scan" className="quick-link">Scan</Link> to submit your first item.
+                            No activity yet. Visit <Link to="/scan" className="quick-link">Scan</Link> to start your first run.
                         </div>
                     ) : (
                         <div className="stack-sm">

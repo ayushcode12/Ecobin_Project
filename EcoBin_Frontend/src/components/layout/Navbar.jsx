@@ -90,8 +90,6 @@ const Navbar = () => {
         setIsAdmin(false);
     };
 
-    const userLabel = isAdmin ? 'Admin Console' : 'Eco User';
-
     const renderNavLinks = () => (
         <>
             {navItems.map((item) => {
@@ -114,7 +112,7 @@ const Navbar = () => {
                     </span>
                     <span className="brand-copy">
                         <span className="brand-name">EcoBin</span>
-                        <span className="brand-meta">AI Waste Sorting</span>
+                        <span className="brand-meta">Scan. Score. Streak.</span>
                     </span>
                 </button>
 
@@ -129,7 +127,7 @@ const Navbar = () => {
                     </div>
                 ) : (
                     <div className="nav-actions hidden xl:inline-flex">
-                        <span className={`badge ${isAdmin ? 'warning' : 'accent'}`}>{userLabel}</span>
+                        {isAdmin ? <span className="badge warning">Admin</span> : null}
                         <button className="btn-danger" onClick={handleLogout}>
                             <LogOut size={15} /> Logout
                         </button>
@@ -146,9 +144,9 @@ const Navbar = () => {
             </div>
 
             <div className={`nav-mobile ${mobileOpen ? 'open' : ''}`}>
-                {isAuthenticated ? (
+                {isAuthenticated && isAdmin ? (
                     <div className="mb-4 row wrap">
-                        <span className={`badge ${isAdmin ? 'warning' : 'accent'}`}>{userLabel}</span>
+                        <span className="badge warning">Admin</span>
                     </div>
                 ) : null}
 
