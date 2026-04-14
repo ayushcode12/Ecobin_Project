@@ -10,6 +10,10 @@ const api = axios.create({
     },
 });
 
+export const clearStoredToken = () => {
+    localStorage.removeItem('token');
+};
+
 const LOCAL_SCAN_ACTIVITY_KEY = 'ecobin_local_scan_activity';
 
 const readLocalScanActivitySafe = () => {
@@ -109,7 +113,7 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error?.response?.status === 401) {
-            localStorage.removeItem('token');
+            clearStoredToken();
             // Avoid redirect loop if already on login/signup
             const currentPath = window.location.pathname;
             if (currentPath !== '/login' && currentPath !== '/signup') {
@@ -134,6 +138,21 @@ export const signup = async (user) => {
 
 export const getCurrentUser = async () => {
     return await api.get('/users/me');
+};
+
+export const validateSession = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        return false;
+    }
+
+    try {
+        await getCurrentUser();
+        return true;
+    } catch (error) {
+        clearStoredToken();
+        return false;
+    }
 };
 
 export const getUserStats = async () => {
@@ -256,7 +275,7 @@ export const previewClassification = async (text) => {
 };
 
 export const logout = () => {
-    localStorage.removeItem('token');
+    clearStoredToken();
     window.location.href = '/login';
 };
 

@@ -1,8 +1,8 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Lock, Mail, Sparkles, User, Zap } from 'lucide-react';
-import { signup } from '@/services/api';
+import { ArrowRight, Home, Lock, Mail, Sparkles, User, Zap } from 'lucide-react';
+import { signup, validateSession } from '@/services/api';
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -13,8 +13,19 @@ const Signup = () => {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) navigate('/dashboard');
+        let cancelled = false;
+
+        const checkSession = async () => {
+            const valid = await validateSession();
+            if (valid && !cancelled) {
+                navigate('/dashboard');
+            }
+        };
+
+        checkSession();
+        return () => {
+            cancelled = true;
+        };
     }, [navigate]);
 
     const handleSubmit = async (event) => {
@@ -54,6 +65,12 @@ const Signup = () => {
                 <div className="auth-panel">
                     <h2 className="section-title mb-1">Create Account</h2>
                     <p className="section-note mb-4">It takes less than a minute to unlock the full EcoBin experience.</p>
+
+                    <div className="mb-4">
+                        <Link to="/" className="btn-ghost">
+                            <Home size={15} /> Back To Home
+                        </Link>
+                    </div>
 
                     {error && <div className="alert error mb-4">{error}</div>}
 

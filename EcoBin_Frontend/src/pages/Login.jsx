@@ -1,8 +1,8 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Lock, Mail, ShieldCheck, Sparkles, Trophy } from 'lucide-react';
-import { login } from '@/services/api';
+import { ArrowRight, Home, Lock, Mail, ShieldCheck, Sparkles, Trophy } from 'lucide-react';
+import { login, validateSession } from '@/services/api';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -12,8 +12,19 @@ const Login = () => {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) navigate('/dashboard');
+        let cancelled = false;
+
+        const checkSession = async () => {
+            const valid = await validateSession();
+            if (valid && !cancelled) {
+                navigate('/dashboard');
+            }
+        };
+
+        checkSession();
+        return () => {
+            cancelled = true;
+        };
     }, [navigate]);
 
     const handleSubmit = async (event) => {
@@ -54,6 +65,12 @@ const Login = () => {
                 <div className="auth-panel">
                     <h2 className="section-title mb-1">Account Login</h2>
                     <p className="section-note mb-4">Use your registered email and password to reopen your dashboard.</p>
+
+                    <div className="mb-4">
+                        <Link to="/" className="btn-ghost">
+                            <Home size={15} /> Back To Home
+                        </Link>
+                    </div>
 
                     {error && <div className="alert error mb-4">{error}</div>}
 
