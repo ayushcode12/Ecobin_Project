@@ -108,7 +108,7 @@ const Navbar = () => {
             <div className="top-nav-inner">
                 <button className="brand-link" onClick={() => navigate(isAuthenticated ? '/dashboard' : '/')}>
                     <span className="brand-mark">
-                        <ScanEye size={22} className="text-emerald-200" />
+                        <img src="/ecobin-mark.svg" alt="EcoBin logo" className="brand-logo-img" />
                     </span>
                     <span className="brand-copy">
                         <span className="brand-name">EcoBin</span>

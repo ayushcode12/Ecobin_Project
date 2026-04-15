@@ -567,6 +567,11 @@
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 
+  .brand-logo-img {
+    @apply h-7 w-7 object-contain;
+    filter: drop-shadow(0 4px 10px rgba(104, 213, 163, 0.24));
+  }
+
   .brand-copy {
     @apply grid gap-0.5;
   }
@@ -780,6 +785,203 @@
     background: rgba(255, 255, 255, 0.025);
   }
 
+  .dashboard-hero {
+    @apply grid gap-5 xl:grid-cols-[1.12fr_0.88fr];
+  }
+
+  .dashboard-hero-main {
+    @apply flex flex-col gap-5;
+  }
+
+  .dashboard-hero-title {
+    @apply max-w-[11ch];
+  }
+
+  .dashboard-hero-subtitle {
+    @apply max-w-[42rem];
+  }
+
+  .dashboard-hero-strip {
+    @apply grid gap-3 md:grid-cols-3;
+  }
+
+  .dashboard-hero-strip-item {
+    @apply rounded-[14px] px-4 py-4;
+    border: 1px solid rgba(247, 239, 225, 0.08);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02)),
+      radial-gradient(circle at top right, rgba(104, 213, 163, 0.08), transparent 34%);
+  }
+
+  .dashboard-hero-strip-item strong {
+    @apply mt-2 block text-base font-black text-slate-100;
+    font-family: var(--ec-heading-font);
+    letter-spacing: -0.02em;
+  }
+
+  .dashboard-focus-panel {
+    @apply rounded-[18px] p-5;
+    border: 1px solid rgba(247, 239, 225, 0.08);
+    background:
+      linear-gradient(180deg, rgba(8, 22, 31, 0.96), rgba(8, 20, 29, 0.92)),
+      radial-gradient(circle at top right, rgba(120, 198, 240, 0.12), transparent 36%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.03),
+      0 18px 40px rgba(0, 0, 0, 0.14);
+  }
+
+  .dashboard-focus-badge {
+    @apply mb-4 flex items-start gap-4 rounded-[16px] px-4 py-4;
+    border: 1px solid rgba(247, 239, 225, 0.08);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025));
+  }
+
+  .dashboard-focus-label {
+    @apply text-[11px] font-bold uppercase tracking-[0.22em];
+    color: rgba(197, 209, 210, 0.64);
+  }
+
+  .dashboard-focus-title {
+    @apply mt-2 text-[1.4rem] font-black leading-none text-slate-100;
+    font-family: var(--ec-heading-font);
+    letter-spacing: -0.03em;
+  }
+
+  .dashboard-progress-card {
+    @apply rounded-[14px] px-4 py-4;
+    border: 1px solid rgba(247, 239, 225, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .dashboard-stat-rail {
+    @apply p-5;
+  }
+
+  .dashboard-stat-rail-grid {
+    @apply grid gap-4 md:grid-cols-2 xl:grid-cols-4;
+  }
+
+  .dashboard-stat-pill {
+    @apply rounded-[16px] px-4 py-4;
+    border: 1px solid rgba(247, 239, 225, 0.08);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02)),
+      radial-gradient(circle at top right, rgba(241, 179, 101, 0.08), transparent 36%);
+  }
+
+  .dashboard-main-grid {
+    @apply grid grid-cols-1 gap-5 xl:grid-cols-[1.05fr_0.95fr];
+  }
+
+  .dashboard-quest-grid {
+    @apply grid gap-4;
+  }
+
+  .dashboard-profile-head {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02)),
+      radial-gradient(circle at top right, rgba(120, 198, 240, 0.08), transparent 36%);
+  }
+
+  .dashboard-profile-form {
+    @apply grid gap-3 lg:grid-cols-[1fr_auto] lg:items-end;
+  }
+
+  .dashboard-profile-save {
+    @apply lg:min-w-[220px];
+  }
+
+  .dashboard-profile-meta {
+    @apply grid gap-3 md:grid-cols-2;
+  }
+
+  .launch-grid {
+    @apply grid gap-3 md:grid-cols-2;
+  }
+
+  .launch-card {
+    @apply flex items-start gap-4 rounded-[16px] p-4 transition-all duration-300;
+    border: 1px solid rgba(247, 239, 225, 0.08);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+      radial-gradient(circle at top right, rgba(104, 213, 163, 0.08), transparent 36%);
+  }
+
+  .launch-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(104, 213, 163, 0.18);
+    box-shadow: 0 18px 34px rgba(1, 8, 13, 0.18);
+  }
+
+  .launch-card.featured {
+    border-color: rgba(104, 213, 163, 0.18);
+    background:
+      linear-gradient(135deg, rgba(104, 213, 163, 0.16), rgba(241, 179, 101, 0.12)),
+      linear-gradient(180deg, rgba(10, 25, 35, 0.92), rgba(8, 21, 30, 0.9));
+  }
+
+  .launch-card-title {
+    @apply text-base font-black leading-tight text-slate-100;
+    font-family: var(--ec-heading-font);
+    letter-spacing: -0.02em;
+  }
+
+  .badge-track {
+    @apply grid gap-3 md:grid-cols-2;
+  }
+
+  .streak-mini-card {
+    @apply rounded-[16px] border px-4 py-4 transition-all duration-300;
+    border-color: rgba(247, 239, 225, 0.08);
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  .streak-mini-card.unlocked {
+    border-color: rgba(104, 213, 163, 0.18);
+    background:
+      linear-gradient(180deg, rgba(104, 213, 163, 0.08), rgba(255, 255, 255, 0.02)),
+      rgba(255, 255, 255, 0.025);
+  }
+
+  .streak-mini-card.current {
+    border-color: rgba(241, 179, 101, 0.24);
+    box-shadow:
+      0 18px 36px rgba(104, 213, 163, 0.12),
+      0 0 0 1px rgba(241, 179, 101, 0.16);
+  }
+
+  .streak-mini-card.locked {
+    opacity: 0.84;
+  }
+
+  .streak-badge-grid {
+    @apply grid gap-3;
+  }
+
+  .streak-badge-card {
+    @apply rounded-[14px] border px-4 py-4 transition-all duration-300;
+    border-color: rgba(247, 239, 225, 0.08);
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  .streak-badge-card.unlocked {
+    border-color: rgba(104, 213, 163, 0.18);
+    background:
+      linear-gradient(180deg, rgba(104, 213, 163, 0.08), rgba(255, 255, 255, 0.02)),
+      rgba(255, 255, 255, 0.025);
+  }
+
+  .streak-badge-card.current {
+    box-shadow:
+      0 16px 34px rgba(104, 213, 163, 0.12),
+      0 0 0 1px rgba(241, 179, 101, 0.18);
+    border-color: rgba(241, 179, 101, 0.24);
+  }
+
+  .streak-badge-card.locked {
+    opacity: 0.82;
+  }
+
   .auth-shell {
     @apply flex min-h-screen items-center justify-center px-4 pb-10 pt-[112px];
   }
@@ -984,6 +1186,11 @@
   .page-shell {
     @apply pt-[104px];
   }
+
+  .dashboard-hero,
+  .dashboard-main-grid {
+    @apply grid-cols-1;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -1015,6 +1222,14 @@
 
   .page-title {
     @apply text-[2.4rem];
+  }
+
+  .dashboard-hero-strip,
+  .dashboard-stat-rail-grid,
+  .dashboard-profile-meta,
+  .launch-grid,
+  .badge-track {
+    @apply grid-cols-1;
   }
 
   .auth-panel {

@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Leaf } from 'lucide-react';
+import { Github } from 'lucide-react';
 import Navbar from './Navbar';
 
 const Footer = () => {
@@ -12,7 +12,7 @@ const Footer = () => {
                 <div>
                     <div className="mb-3 flex items-center gap-3">
                         <span className="brand-mark">
-                            <Leaf size={20} className="text-emerald-200" />
+                            <img src="/ecobin-mark.svg" alt="EcoBin logo" className="brand-logo-img" />
                         </span>
                         <div>
                             <div className="brand-name">EcoBin</div>

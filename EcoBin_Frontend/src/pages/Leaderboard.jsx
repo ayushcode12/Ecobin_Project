@@ -99,7 +99,7 @@ const Leaderboard = () => {
                                         <div className="mb-1 font-bold">{user.name}</div>
                                         <div className="badge accent mb-1">#{position}</div>
                                         <div className="font-bold text-emerald-200">{(user.totalPoints || 0).toLocaleString()} pts</div>
-                                        <p className="help-text mt-2">Strong recent contribution across the platform.</p>
+                                        <div className="badge warning mt-2">{user.currentStreak || 0}-day streak</div>
                                     </motion.article>
                                 );
                             })}
@@ -113,6 +113,7 @@ const Leaderboard = () => {
                                             <th>Rank</th>
                                             <th>User</th>
                                             <th>Total Points</th>
+                                            <th>Streak</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -133,13 +134,14 @@ const Leaderboard = () => {
                                                         </div>
                                                     </td>
                                                     <td className="font-bold text-emerald-200">{(user.totalPoints || 0).toLocaleString()}</td>
+                                                    <td><span className="badge warning">{user.currentStreak || 0}d</span></td>
                                                 </tr>
                                             );
                                         })}
 
                                         {users.length <= 3 && (
                                             <tr>
-                                                <td colSpan={3}><div className="empty-state">Keep scanning and reporting to rise in rankings.</div></td>
+                                                <td colSpan={4}><div className="empty-state">Keep scanning and reporting to rise in rankings.</div></td>
                                             </tr>
                                         )}
                                     </tbody>

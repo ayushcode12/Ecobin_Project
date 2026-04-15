@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public interface ScanHistoryRepository extends JpaRepository<ScanHistory, Long> {
 
+    long countByUser(User user);
+
     @Query("""
             select s from ScanHistory s
             where s.user = :user

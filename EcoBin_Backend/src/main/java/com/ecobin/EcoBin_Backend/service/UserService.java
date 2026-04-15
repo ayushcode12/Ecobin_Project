@@ -78,6 +78,22 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Find")) ;
     }
 
+    public User updateDisplayName(String email, String requestedName) {
+        User user = getUserByEmail(email);
+
+        String sanitizedName = requestedName == null ? "" : requestedName.trim().replaceAll("\\s+", " ");
+        if (sanitizedName.length() < 2) {
+            throw new IllegalArgumentException("Name must be at least 2 characters long.");
+        }
+
+        if (sanitizedName.length() > 30) {
+            throw new IllegalArgumentException("Name must be 30 characters or fewer.");
+        }
+
+        user.setName(sanitizedName);
+        return userRepository.save(user);
+    }
+
     private void ensureUserStats(User user) {
         if (userStatsRepository.findByUser(user).isPresent()) {
             return;

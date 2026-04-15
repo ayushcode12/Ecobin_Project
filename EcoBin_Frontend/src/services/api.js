@@ -140,6 +140,10 @@ export const getCurrentUser = async () => {
     return await api.get('/users/me');
 };
 
+export const updateMyProfileName = async (name) => {
+    return await api.put('/users/me', { name });
+};
+
 export const validateSession = async () => {
     const token = localStorage.getItem('token');
     if (!token) {

@@ -1,6 +1,7 @@
 package com.ecobin.EcoBin_Backend.controller;
 
 import com.ecobin.EcoBin_Backend.dto.CreateUserRequestDTO;
+import com.ecobin.EcoBin_Backend.dto.UpdateProfileRequestDTO;
 import com.ecobin.EcoBin_Backend.dto.UserResponseDTO;
 import com.ecobin.EcoBin_Backend.mapper.UserMapper;
 import com.ecobin.EcoBin_Backend.model.User;
@@ -63,6 +64,14 @@ public class UserController {
         String email = authentication.getName();
         User user = userService.getUserByEmail(email);
         return userMapper.toDto(user);
+    }
+
+    @PutMapping("/me")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public UserResponseDTO updateMyProfile(@RequestBody UpdateProfileRequestDTO dto, Authentication authentication) {
+        String email = authentication.getName();
+        User updatedUser = userService.updateDisplayName(email, dto.getName());
+        return userMapper.toDto(updatedUser);
     }
 
 }

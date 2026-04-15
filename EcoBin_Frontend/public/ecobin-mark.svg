@@ -1,0 +1,26 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ecobinGlow" x1="18" y1="18" x2="110" y2="110" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6AD8A5"/>
+      <stop offset="1" stop-color="#F0B66A"/>
+    </linearGradient>
+    <linearGradient id="ecobinCore" x1="28" y1="24" x2="98" y2="106" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0E2531"/>
+      <stop offset="1" stop-color="#122D3B"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="10" y="10" width="108" height="108" rx="28" fill="#071722"/>
+  <rect x="14" y="14" width="100" height="100" rx="24" fill="url(#ecobinGlow)" fill-opacity="0.18" stroke="url(#ecobinGlow)" stroke-opacity="0.45" stroke-width="2"/>
+  <rect x="24" y="24" width="80" height="80" rx="22" fill="url(#ecobinCore)"/>
+
+  <path d="M40 49V41C40 38.7909 41.7909 37 44 37H52" stroke="url(#ecobinGlow)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M88 49V41C88 38.7909 86.2091 37 84 37H76" stroke="url(#ecobinGlow)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M40 79V87C40 89.2091 41.7909 91 44 91H52" stroke="url(#ecobinGlow)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M88 79V87C88 89.2091 86.2091 91 84 91H76" stroke="url(#ecobinGlow)" stroke-width="6" stroke-linecap="round"/>
+
+  <path d="M64 45C55.4913 45 48.5 51.9913 48.5 60.5C48.5 69.0087 55.4913 76 64 76C72.5087 76 79.5 69.0087 79.5 60.5C79.5 58.5967 79.1543 56.7743 78.5218 55.0926" stroke="#E9FFF4" stroke-width="5" stroke-linecap="round"/>
+  <path d="M66 48C71.866 49.1062 76 54.2249 76 60.5" stroke="url(#ecobinGlow)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M64 53C60.1076 57.1067 58.7772 63.1992 60.5905 68.5536C67.0219 68.3412 73.1071 65.3615 77 60.5C72.214 55.5743 68.9453 53 64 53Z" fill="url(#ecobinGlow)"/>
+  <path d="M64.5 53.5C65.8124 59.1857 64.5374 64.7108 60.5903 68.5534" stroke="#0B1E27" stroke-width="3.5" stroke-linecap="round"/>
+</svg>
