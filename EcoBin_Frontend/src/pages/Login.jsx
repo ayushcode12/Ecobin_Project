@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Home, Lock, Mail, ShieldCheck, Sparkles, Trophy } from 'lucide-react';
+import { ArrowRight, Home, Lock, Mail, Sparkles, Zap } from 'lucide-react';
 import { login, validateSession } from '@/services/api';
 
 const Login = () => {
@@ -36,7 +36,7 @@ const Login = () => {
             await login(email, password);
             navigate('/dashboard');
         } catch (err) {
-            setError('Invalid email or password. Please try again.');
+            setError('Login failed. Please check your credentials and try again.');
         } finally {
             setSubmitting(false);
         }
@@ -52,19 +52,24 @@ const Login = () => {
             >
                 <div className="auth-panel showcase">
                     <span className="section-kicker mb-4">Welcome Back</span>
-                    <h1 className="auth-title">Sign in and continue your smart waste workflow.</h1>
-                    <p className="auth-subtitle">Access live camera scanning, waste reporting, admin-ready history, and a cleaner dashboard designed for strong project demos.</p>
+                    <h1 className="auth-title">Continue your sustainability journey with EcoBin.</h1>
+                    <p className="auth-subtitle">Sign in to access your dashboard, track your points, and manage your waste reports.</p>
 
                     <div className="stack-sm">
-                        <div className="metric-chip row"><ShieldCheck size={16} className="text-blue-300" /><span className="help-text">Role-aware access for users and admins</span></div>
-                        <div className="metric-chip row"><Trophy size={16} className="text-blue-300" /><span className="help-text">Points, streaks, and leaderboard progression</span></div>
-                        <div className="metric-chip row"><Sparkles size={16} className="text-blue-300" /><span className="help-text">Live AI scan review before final point assignment</span></div>
+                        <div className="metric-chip row">
+                            <Sparkles size={16} className="text-blue-300" />
+                            <span className="help-text">View your scanned history and impact</span>
+                        </div>
+                        <div className="metric-chip row">
+                            <Zap size={16} className="text-blue-300" />
+                            <span className="help-text">Redeem points for local rewards</span>
+                        </div>
                     </div>
                 </div>
 
                 <div className="auth-panel">
-                    <h2 className="section-title mb-1">Account Login</h2>
-                    <p className="section-note mb-4">Use your registered email and password to reopen your dashboard.</p>
+                    <h2 className="section-title mb-1">Sign In</h2>
+                    <p className="section-note mb-4">Enter your credentials to access your account.</p>
 
                     <div className="mb-4">
                         <Link to="/" className="btn-ghost">
@@ -76,7 +81,7 @@ const Login = () => {
 
                     <form className="auth-form" onSubmit={handleSubmit}>
                         <div>
-                            <label className="form-label">Email</label>
+                            <label className="form-label">Email Address</label>
                             <div className="input-icon-wrap">
                                 <Mail size={16} className="input-icon" />
                                 <input
@@ -97,7 +102,7 @@ const Login = () => {
                                 <input
                                     type="password"
                                     className="input-control"
-                                    placeholder="Enter password"
+                                    placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
@@ -106,12 +111,12 @@ const Login = () => {
                         </div>
 
                         <button type="submit" className="btn-primary" disabled={submitting}>
-                            {submitting ? 'Signing In...' : 'Sign In'} <ArrowRight size={16} />
+                            {submitting ? 'Signing in...' : 'Sign In'} <ArrowRight size={16} />
                         </button>
                     </form>
 
                     <div className="help-text mt-4">
-                        New here? <Link to="/signup" className="quick-link">Create an account</Link>.
+                        Don't have an account? <Link to="/signup" className="quick-link">Create one here</Link>.
                     </div>
                 </div>
             </motion.div>
