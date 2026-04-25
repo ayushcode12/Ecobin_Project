@@ -54,7 +54,7 @@ public class ScanService {
             matchedKeyword = aiPrediction.confidence() == null
                     ? "AI-Model-Predicted"
                     : "AI-Model-Predicted (" + String.format("%.2f", aiPrediction.confidence()) + ")";
-            points = 10;
+            points = calculatePoints(categoryType);
             aiUsed = true;
             rulePriority = 1000;
             System.out.println("AI prediction: " + categoryType);
@@ -63,7 +63,7 @@ public class ScanService {
         if (!aiUsed) {
             ClassificationPreviewDTO classification = classificationRuleService.classifyText(textDescription);
             categoryType = classification.getCategoryType();
-            points = classification.getPoints() == null ? 3 : classification.getPoints();
+            points = calculatePoints(categoryType);
             matchedKeyword = classification.getMatchedKeyword();
             rulePriority = classification.getRulePriority();
         }
@@ -181,6 +181,23 @@ public class ScanService {
         }
 
         return "Grey";
+    }
+
+    private int calculatePoints(String categoryType) {
+        if (categoryType == null) return 1;
+        String normalized = categoryType.trim().toLowerCase();
+
+        if (normalized.contains("non-biodegradable") || normalized.contains("non biodegradable") || normalized.contains("nonbiodegradable")) {
+            return 10;
+        }
+        if (normalized.contains("recyclable")) {
+            return 7;
+        }
+        if (normalized.contains("biodegradable")) {
+            return 5;
+        }
+        
+        return 1;
     }
 
     private String buildLiveStatusMessage(String categoryType, Double confidence) {

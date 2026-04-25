@@ -258,7 +258,7 @@
   .btn-ghost,
   .btn-danger,
   .btn-soft {
-    @apply inline-flex items-center justify-center gap-2 rounded-[14px] border px-5 py-3 text-sm font-bold tracking-[0.03em] transition-all duration-300 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-3 rounded-[16px] border px-7 py-4 text-base font-bold tracking-[0.03em] transition-all duration-300 active:scale-[0.98];
   }
 
   .btn-primary {
@@ -411,25 +411,25 @@
   .input-control,
   .select-control,
   .textarea-control {
-    @apply w-full rounded-[14px] px-4 py-3 text-sm outline-none transition-all duration-200;
-    border: 1px solid rgba(247, 239, 225, 0.12);
-    background: linear-gradient(180deg, rgba(5, 16, 24, 0.92), rgba(12, 30, 40, 0.84));
+    @apply w-full rounded-[16px] px-5 py-4 text-base outline-none transition-all duration-200;
+    border: 1px solid rgba(247, 239, 225, 0.14);
+    background: linear-gradient(180deg, rgba(5, 16, 24, 0.94), rgba(12, 30, 40, 0.88));
     color: #f5f8f7;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 
   .input-control::placeholder,
   .textarea-control::placeholder {
-    color: rgba(188, 201, 203, 0.54);
+    color: rgba(188, 201, 203, 0.48);
   }
 
   .input-control:focus,
   .select-control:focus,
   .textarea-control:focus {
-    border-color: rgba(104, 213, 163, 0.38);
+    border-color: rgba(104, 213, 163, 0.45);
     box-shadow:
-      0 0 0 4px rgba(104, 213, 163, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      0 0 0 5px rgba(104, 213, 163, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .textarea-control {
@@ -983,43 +983,46 @@
   }
 
   .auth-shell {
-    @apply flex min-h-screen items-center justify-center px-4 pb-10 pt-[112px];
+    @apply flex min-h-screen items-center justify-center px-4 pb-16 pt-[132px];
   }
 
   .auth-card {
-    @apply grid w-full max-w-6xl grid-cols-1 overflow-hidden rounded-[18px] lg:grid-cols-[1.02fr_0.98fr];
-    border: 1px solid rgba(247, 239, 225, 0.1);
+    @apply grid w-full max-w-[1280px] min-h-[660px] grid-cols-1 overflow-hidden rounded-[32px] lg:grid-cols-[1.05fr_0.95fr];
+    border: 1px solid rgba(247, 239, 225, 0.14);
     background:
-      linear-gradient(135deg, rgba(11, 25, 35, 0.98), rgba(7, 17, 25, 0.94)),
-      radial-gradient(circle at top left, rgba(104, 213, 163, 0.1), transparent 34%);
-    box-shadow: 0 38px 80px rgba(1, 8, 13, 0.36);
+      linear-gradient(135deg, rgba(11, 25, 35, 0.98), rgba(7, 17, 25, 0.96)),
+      radial-gradient(circle at top left, rgba(104, 213, 163, 0.14), transparent 45%);
+    box-shadow:
+      0 60px 120px rgba(1, 8, 13, 0.5),
+      0 18px 48px rgba(0, 0, 0, 0.25);
   }
 
   .auth-panel {
-    @apply p-8 md:p-10;
+    @apply p-12 md:p-20;
   }
 
   .auth-panel.showcase {
-    @apply border-b lg:border-b-0 lg:border-r;
-    border-color: rgba(247, 239, 225, 0.08);
+    @apply flex flex-col justify-center border-b lg:border-b-0 lg:border-r;
+    border-color: rgba(247, 239, 225, 0.12);
     background:
-      linear-gradient(135deg, rgba(104, 213, 163, 0.12), rgba(120, 198, 240, 0.08)),
-      radial-gradient(circle at top right, rgba(241, 179, 101, 0.12), transparent 36%);
+      linear-gradient(135deg, rgba(104, 213, 163, 0.16), rgba(120, 198, 240, 0.12)),
+      radial-gradient(circle at 10% 10%, rgba(241, 179, 101, 0.18), transparent 48%);
   }
 
   .auth-title {
-    @apply text-[2.2rem] font-black leading-[1.02];
+    @apply text-[3.2rem] font-black leading-[1.02] tracking-tight;
     font-family: var(--ec-heading-font);
-    letter-spacing: -0.045em;
+    letter-spacing: -0.055em;
+    color: #fdfaf3;
   }
 
   .auth-subtitle {
-    @apply mb-6 mt-3 max-w-xl;
-    color: rgba(224, 234, 233, 0.78);
+    @apply mb-12 mt-6 max-w-xl text-[1.08rem] leading-relaxed;
+    color: rgba(224, 234, 233, 0.86);
   }
 
   .auth-form {
-    @apply grid gap-4;
+    @apply grid gap-6;
   }
 
   .activity-row {

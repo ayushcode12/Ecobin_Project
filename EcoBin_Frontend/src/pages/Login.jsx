@@ -51,36 +51,49 @@ const Login = () => {
                 transition={{ duration: 0.4 }}
             >
                 <div className="auth-panel showcase">
-                    <span className="section-kicker mb-4">Welcome Back</span>
-                    <h1 className="auth-title">Continue your sustainability journey with EcoBin.</h1>
-                    <p className="auth-subtitle">Sign in to access your dashboard, track your points, and manage your waste reports.</p>
+                    <span className="section-kicker mb-6">Welcome Back</span>
+                    <h1 className="auth-title">
+                        Continue your
+                        <br />
+                        <span className="hero-gradient-text">sustainability journey.</span>
+                    </h1>
+                    <p className="auth-subtitle">
+                        Sign in to access your personalized dashboard, track your impact points, and manage your waste reports in real-time.
+                    </p>
 
-                    <div className="stack-sm">
-                        <div className="metric-chip row">
-                            <Sparkles size={16} className="text-blue-300" />
-                            <span className="help-text">View your scanned history and impact</span>
+                    <div className="stack-md">
+                        <div className="game-loop-row">
+                            <span className="icon-pill"><Sparkles size={18} className="text-blue-300" /></span>
+                            <div className="min-w-0">
+                                <div className="text-sm font-bold text-slate-100">Impact Tracking</div>
+                                <div className="help-text">View your scanned history and environmental contribution</div>
+                            </div>
                         </div>
-                        <div className="metric-chip row">
-                            <Zap size={16} className="text-blue-300" />
-                            <span className="help-text">Redeem points for local rewards</span>
+                        <div className="game-loop-row">
+                            <span className="icon-pill"><Zap size={18} className="text-amber-300" /></span>
+                            <div className="min-w-0">
+                                <div className="text-sm font-bold text-slate-100">Reward System</div>
+                                <div className="help-text">Redeem your earned points for exclusive local rewards</div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div className="auth-panel">
-                    <h2 className="section-title mb-1">Sign In</h2>
-                    <p className="section-note mb-4">Enter your credentials to access your account.</p>
-
-                    <div className="mb-4">
-                        <Link to="/" className="btn-ghost">
-                            <Home size={15} /> Back To Home
+                    <div className="row space mb-6">
+                        <div>
+                            <h2 className="section-title mb-1">Sign In</h2>
+                            <p className="section-note">Secure access to your EcoBin account</p>
+                        </div>
+                        <Link to="/" className="icon-pill hover:scale-110 transition-transform" title="Back to Home">
+                            <Home size={18} className="text-emerald-400" />
                         </Link>
                     </div>
 
-                    {error && <div className="alert error mb-4">{error}</div>}
+                    {error && <div className="alert error mb-6">{error}</div>}
 
                     <form className="auth-form" onSubmit={handleSubmit}>
-                        <div>
+                        <div className="stack-sm">
                             <label className="form-label">Email Address</label>
                             <div className="input-icon-wrap">
                                 <Mail size={16} className="input-icon" />
@@ -95,7 +108,7 @@ const Login = () => {
                             </div>
                         </div>
 
-                        <div>
+                        <div className="stack-sm">
                             <label className="form-label">Password</label>
                             <div className="input-icon-wrap">
                                 <Lock size={16} className="input-icon" />
@@ -110,13 +123,13 @@ const Login = () => {
                             </div>
                         </div>
 
-                        <button type="submit" className="btn-primary" disabled={submitting}>
+                        <button type="submit" className="btn-primary mt-4" disabled={submitting}>
                             {submitting ? 'Signing in...' : 'Sign In'} <ArrowRight size={16} />
                         </button>
                     </form>
 
-                    <div className="help-text mt-4">
-                        Don't have an account? <Link to="/signup" className="quick-link">Create one here</Link>.
+                    <div className="help-text mt-8 text-center">
+                        Don&apos;t have an account? <Link to="/signup" className="quick-link">Create one here</Link>
                     </div>
                 </div>
             </motion.div>

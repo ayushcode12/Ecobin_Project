@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Home, Lock, Mail, Sparkles, User, Zap } from 'lucide-react';
+import { ArrowRight, Home, Lock, Mail, ScanEye, Sparkles, Trophy, User, Zap } from 'lucide-react';
 import { signup, validateSession } from '@/services/api';
 
 const Signup = () => {
@@ -52,30 +52,49 @@ const Signup = () => {
                 transition={{ duration: 0.4 }}
             >
                 <div className="auth-panel showcase">
-                    <span className="section-kicker mb-4">Join EcoBin</span>
-                    <h1 className="auth-title">Create an account for live scanning, reporting, and impact tracking.</h1>
-                    <p className="auth-subtitle">Sign up once and unlock the full project flow: AI waste classification, report submission, history export, and gamified engagement.</p>
+                    <span className="section-kicker mb-6">Join EcoBin</span>
+                    <h1 className="auth-title">
+                        Create your
+                        <br />
+                        <span className="hero-gradient-text">player profile.</span>
+                    </h1>
+                    <p className="auth-subtitle">
+                        Join the community of eco-conscious users. Start scanning waste, earning points, and climbing the global leaderboard today.
+                    </p>
 
-                    <div className="stack-sm">
-                        <div className="metric-chip row"><Sparkles size={16} className="text-blue-300" /><span className="help-text">Use live camera scan with review before saving points</span></div>
-                        <div className="metric-chip row"><Zap size={16} className="text-blue-300" /><span className="help-text">Earn points on scans and maintain your daily streak</span></div>
+                    <div className="stack-md">
+                        <div className="game-loop-row">
+                            <span className="icon-pill"><ScanEye size={18} className="text-blue-300" /></span>
+                            <div className="min-w-0">
+                                <div className="text-sm font-bold text-slate-100">Live Scanning</div>
+                                <div className="help-text">Use AI-powered camera to identify waste types instantly</div>
+                            </div>
+                        </div>
+                        <div className="game-loop-row">
+                            <span className="icon-pill"><Trophy size={18} className="text-amber-300" /></span>
+                            <div className="min-w-0">
+                                <div className="text-sm font-bold text-slate-100">Gamified Experience</div>
+                                <div className="help-text">Earn badges, maintain streaks, and compete with others</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div className="auth-panel">
-                    <h2 className="section-title mb-1">Create Account</h2>
-                    <p className="section-note mb-4">It takes less than a minute to unlock the full EcoBin experience.</p>
-
-                    <div className="mb-4">
-                        <Link to="/" className="btn-ghost">
-                            <Home size={15} /> Back To Home
+                    <div className="row space mb-6">
+                        <div>
+                            <h2 className="section-title mb-1">Create Account</h2>
+                            <p className="section-note">It takes less than a minute to start.</p>
+                        </div>
+                        <Link to="/" className="icon-pill hover:scale-110 transition-transform" title="Back to Home">
+                            <Home size={18} className="text-emerald-400" />
                         </Link>
                     </div>
 
-                    {error && <div className="alert error mb-4">{error}</div>}
+                    {error && <div className="alert error mb-6">{error}</div>}
 
                     <form className="auth-form" onSubmit={handleSubmit}>
-                        <div>
+                        <div className="stack-sm">
                             <label className="form-label">Full Name</label>
                             <div className="input-icon-wrap">
                                 <User size={16} className="input-icon" />
@@ -90,8 +109,8 @@ const Signup = () => {
                             </div>
                         </div>
 
-                        <div>
-                            <label className="form-label">Email</label>
+                        <div className="stack-sm">
+                            <label className="form-label">Email Address</label>
                             <div className="input-icon-wrap">
                                 <Mail size={16} className="input-icon" />
                                 <input
@@ -105,7 +124,7 @@ const Signup = () => {
                             </div>
                         </div>
 
-                        <div>
+                        <div className="stack-sm">
                             <label className="form-label">Password</label>
                             <div className="input-icon-wrap">
                                 <Lock size={16} className="input-icon" />
@@ -120,13 +139,13 @@ const Signup = () => {
                             </div>
                         </div>
 
-                        <button type="submit" className="btn-primary" disabled={submitting}>
+                        <button type="submit" className="btn-primary mt-4" disabled={submitting}>
                             {submitting ? 'Creating Account...' : 'Create Account'} <ArrowRight size={16} />
                         </button>
                     </form>
 
-                    <div className="help-text mt-4">
-                        Already have an account? <Link to="/login" className="quick-link">Sign in</Link>.
+                    <div className="help-text mt-8 text-center">
+                        Already have an account? <Link to="/login" className="quick-link">Sign in</Link>
                     </div>
                 </div>
             </motion.div>

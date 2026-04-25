@@ -15,4 +15,7 @@ public interface UserStatsRepository extends JpaRepository<UserStats, Long> {
 
     List<UserStats> findAllByOrderByTotalPointsDesc();
 
+    @org.springframework.data.jpa.repository.Query("SELECT us FROM UserStats us WHERE us.user.role NOT LIKE '%ADMIN%' ORDER BY us.totalPoints DESC")
+    List<UserStats> findLeaderboardExcludingAdmins();
+
 }

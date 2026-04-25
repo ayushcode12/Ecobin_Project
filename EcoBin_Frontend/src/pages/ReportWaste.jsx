@@ -1,14 +1,11 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { createWasteRequest, getCategories } from '@/services/api';
-import { LocateFixed, MapPin, SendHorizontal } from 'lucide-react';
+import { Aperture, Camera, ImagePlus, Loader2, LocateFixed, MapPin, RotateCcw, SendHorizontal, X } from 'lucide-react';
 
 const defaultForm = {
     categoryId: '',
     textDescription: '',
-    imageUrl: '',
     severity: 'MEDIUM',
-    estimatedQuantity: 1,
     address: '',
     latitude: '',
     longitude: '',
@@ -21,6 +18,90 @@ const ReportWaste = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [form, setForm] = useState(defaultForm);
+    const [preview, setPreview] = useState(null);
+    const [imageBase64, setImageBase64] = useState('');
+    const [useCamera, setUseCamera] = useState(false);
+    const videoRef = useRef(null);
+    const streamRef = useRef(null);
+
+    const stopCamera = () => {
+        if (streamRef.current) {
+            streamRef.current.getTracks().forEach((track) => track.stop());
+            streamRef.current = null;
+        }
+        setUseCamera(false);
+    };
+
+    const startCamera = async () => {
+        setError('');
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            streamRef.current = stream;
+            setUseCamera(true);
+            setPreview(null);
+            setImageBase64('');
+        } catch (err) {
+            setError('Camera access denied or unavailable. Please upload a photo instead.');
+        }
+    };
+
+    const captureFrame = () => {
+        if (videoRef.current) {
+            const canvas = document.createElement('canvas');
+            canvas.width = videoRef.current.videoWidth || 640;
+            canvas.height = videoRef.current.videoHeight || 480;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+            
+            const maxW = 800;
+            const scale = maxW / canvas.width;
+            const finalCanvas = document.createElement('canvas');
+            finalCanvas.width = maxW;
+            finalCanvas.height = canvas.height * scale;
+            const finalCtx = finalCanvas.getContext('2d');
+            finalCtx.drawImage(canvas, 0, 0, finalCanvas.width, finalCanvas.height);
+            
+            const b64 = finalCanvas.toDataURL('image/jpeg', 0.8);
+            setImageBase64(b64);
+            setPreview(b64);
+            stopCamera();
+        }
+    };
+
+    const handleImageChange = (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        
+        setPreview(URL.createObjectURL(file));
+        
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 800;
+                const scaleSize = MAX_WIDTH / img.width;
+                canvas.width = MAX_WIDTH;
+                canvas.height = img.height * scaleSize;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const b64 = canvas.toDataURL('image/jpeg', 0.8);
+                setImageBase64(b64);
+            };
+            img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    };
+
+    useEffect(() => {
+        if (useCamera && videoRef.current && streamRef.current) {
+            videoRef.current.srcObject = streamRef.current;
+        }
+    }, [useCamera]);
+
+    useEffect(() => {
+        return () => stopCamera();
+    }, []);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -71,9 +152,8 @@ const ReportWaste = () => {
         const payload = {
             categoryId: form.categoryId ? Number(form.categoryId) : null,
             textDescription: form.textDescription.trim(),
-            imageUrl: form.imageUrl.trim() || null,
+            imageUrl: imageBase64 || null,
             severity: form.severity,
-            estimatedQuantity: Number(form.estimatedQuantity || 1),
             address: form.address.trim() || null,
             latitude: form.latitude === '' ? null : Number(form.latitude),
             longitude: form.longitude === '' ? null : Number(form.longitude),
@@ -107,7 +187,40 @@ const ReportWaste = () => {
                     {success && <div className="alert success mb-4">{success}</div>}
 
                     <form className="form-grid" onSubmit={handleSubmit}>
-                        <div className="form-grid cols-2">
+                        {useCamera ? (
+                            <div className="relative w-full overflow-hidden rounded-[20px] border border-emerald-400/30 bg-black/60 shadow-inner">
+                                <video ref={videoRef} autoPlay playsInline muted className="w-full h-[300px] object-cover" />
+                                <div className="absolute inset-0 flex flex-col items-center justify-end pb-4 bg-gradient-to-t from-black/80 to-transparent">
+                                    <button className="btn-primary mb-2 shadow-xl shadow-emerald-500/50" type="button" onClick={captureFrame}>
+                                        <Aperture size={20} className="mr-2" /> Capture Proof
+                                    </button>
+                                    <button className="text-white/60 hover:text-white transition-colors flex items-center text-xs" type="button" onClick={stopCamera}>
+                                        <X size={14} className="mr-1" /> Close Camera
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div onClick={startCamera} className="h-[120px] border-2 border-dashed border-emerald-400/20 rounded-[15px] flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-400/5 hover:border-emerald-400/40 transition-all group">
+                                    <Camera size={24} className="text-emerald-400 mb-2 group-hover:scale-110 transition-transform" />
+                                    <span className="text-xs font-semibold text-emerald-100">Take Photo</span>
+                                </div>
+
+                                <div className="image-drop h-[120px] flex-col justify-center m-0 relative">
+                                    {preview ? (
+                                        <img src={preview} alt="Preview" className="object-cover w-full h-full absolute inset-0 z-0 opacity-80 rounded-[15px]" />
+                                    ) : (
+                                        <div className="image-drop-hint z-10 relative">
+                                            <ImagePlus size={20} className="mx-auto mb-1" />
+                                            Upload Photo
+                                        </div>
+                                    )}
+                                    <input type="file" accept="image/*" onChange={handleImageChange} className="z-20 cursor-pointer" />
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="form-grid cols-2 mt-2">
                             <div>
                                 <label className="form-label">Category (Optional)</label>
                                 <select
@@ -134,46 +247,35 @@ const ReportWaste = () => {
                         </div>
 
                         <div>
-                            <label className="form-label">Description</label>
+                            <label className="form-label">Description & Waste Details</label>
                             <textarea
                                 className="textarea-control"
-                                rows={4}
-                                placeholder="Example: Mixed plastic and food waste piled near bus stand."
+                                rows={3}
+                                placeholder="Describe the waste (e.g., a bunch of mixed garbage, plastic pile, etc.)"
                                 value={form.textDescription}
                                 onChange={(e) => updateField('textDescription', e.target.value)}
                             />
                         </div>
 
-                        <div className="form-grid cols-2">
-                            <div>
-                                <label className="form-label">Image URL (Optional)</label>
-                                <input className="input-control" type="url" value={form.imageUrl} onChange={(e) => updateField('imageUrl', e.target.value)} placeholder="https://..." />
-                            </div>
-
-                            <div>
-                                <label className="form-label">Estimated Quantity</label>
-                                <input className="input-control" type="number" min="1" value={form.estimatedQuantity} onChange={(e) => updateField('estimatedQuantity', e.target.value)} />
-                            </div>
-                        </div>
-
                         <div>
-                            <label className="form-label"><MapPin size={15} className="mr-1 inline-block align-middle" />Address (Optional)</label>
-                            <input className="input-control" type="text" value={form.address} onChange={(e) => updateField('address', e.target.value)} placeholder="Street, landmark, or area" />
+                            <div className="flex items-center justify-between mb-2">
+                                <label className="form-label m-0"><MapPin size={14} className="mr-1 inline-block" />Location / Address</label>
+                                <button type="button" className="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 transition-colors uppercase tracking-wider flex items-center" onClick={detectLocation}>
+                                    <LocateFixed size={12} className="mr-1" /> Auto-Detect GPS
+                                </button>
+                            </div>
+                            <input className="input-control" type="text" value={form.address} onChange={(e) => updateField('address', e.target.value)} placeholder="Street name, landmark, or area" />
+                            {(form.latitude || form.longitude) && (
+                                <p className="text-[10px] mt-1 text-emerald-400/70 font-medium tracking-wide">
+                                    ✓ GPS Coordinates Captured: {form.latitude}, {form.longitude}
+                                </p>
+                            )}
                         </div>
 
-                        <div className="form-grid cols-3 items-end">
-                            <div>
-                                <label className="form-label">Latitude</label>
-                                <input className="input-control" type="text" value={form.latitude} onChange={(e) => updateField('latitude', e.target.value)} placeholder="Optional" />
-                            </div>
-                            <div>
-                                <label className="form-label">Longitude</label>
-                                <input className="input-control" type="text" value={form.longitude} onChange={(e) => updateField('longitude', e.target.value)} placeholder="Optional" />
-                            </div>
-                            <button type="button" className="btn-ghost" onClick={detectLocation}><LocateFixed size={15} /> Use GPS</button>
-                        </div>
-
-                        <button type="submit" className="btn-primary" disabled={submitting}><SendHorizontal size={16} />{submitting ? 'Submitting...' : 'Submit Report'}</button>
+                        <button type="submit" className="btn-primary mt-2" disabled={submitting}>
+                            {submitting ? <Loader2 size={16} className="animate-spin" /> : <SendHorizontal size={16} />}
+                            {submitting ? 'Reporting...' : 'Submit Waste Report'}
+                        </button>
                     </form>
                 </div>
 

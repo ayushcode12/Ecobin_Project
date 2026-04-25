@@ -36,6 +36,38 @@ const TONE_BY_BIN = {
     },
 };
 
+const BIN_INFO = {
+    Biodegradable: {
+        color: 'Green',
+        label: 'Green Bin',
+        motivation: 'Great choice! This will return to the earth as rich compost.',
+        iconColor: 'text-emerald-400',
+        bgPill: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+    },
+    Recyclable: {
+        color: 'Blue',
+        label: 'Blue Bin',
+        motivation: 'Awesome! You just saved resources from being wasted.',
+        iconColor: 'text-blue-400',
+        bgPill: 'bg-blue-500/10 border-blue-500/20 text-blue-400'
+    },
+    'Non-Biodegradable': {
+        color: 'Black',
+        label: 'Black Bin',
+        motivation: 'Disposed safely. Thank you for keeping our streets clean.',
+        iconColor: 'text-slate-400',
+        bgPill: 'bg-slate-500/10 border-slate-500/20 text-slate-400'
+    },
+    Unknown: {
+        color: 'Grey',
+        label: 'General Bin',
+        motivation: 'Every small action counts toward a cleaner planet.',
+        iconColor: 'text-gray-400',
+        bgPill: 'bg-gray-500/10 border-gray-500/20 text-gray-400'
+    }
+};
+
+const getBinInfo = (categoryType) => BIN_INFO[categoryType] || BIN_INFO.Unknown;
 const getLiveTone = (binColor) => TONE_BY_BIN[binColor] || TONE_BY_BIN.Grey;
 
 const formatConfidence = (confidence) => {
@@ -708,8 +740,19 @@ const Scan = () => {
                         <CheckCircle2 size={30} className="absolute text-emerald-300" />
                     </div>
 
-                    <h2 className="page-title mb-2 bg-gradient-to-r from-emerald-200 to-sky-200 bg-clip-text text-[2.2rem] text-transparent">{result.categoryType || 'Unknown Category'}</h2>
-                    <p className="page-subtitle mx-auto mb-4 font-medium text-emerald-100/70">{result.motivationalMessage || 'Classification completed successfully.'}</p>
+                    <div className="flex flex-col items-center gap-2 mb-4">
+                        <h2 className="page-title bg-gradient-to-r from-emerald-200 to-sky-200 bg-clip-text text-[2.4rem] text-transparent leading-tight">
+                            {result.categoryType || 'Unknown Category'}
+                        </h2>
+                        
+                        <div className={`px-4 py-1.5 rounded-full border text-sm font-bold tracking-wide uppercase ${getBinInfo(result.categoryType).bgPill}`}>
+                            Dispose in: {getBinInfo(result.categoryType).label}
+                        </div>
+                    </div>
+
+                    <p className="text-lg mx-auto mb-6 font-semibold text-emerald-100/90 italic">
+                        &quot;{result.motivationalMessage || getBinInfo(result.categoryType).motivation}&quot;
+                    </p>
 
                     <div className="grid-3 mb-6 rounded-[15px] border border-white/5 bg-black/20 p-4">
                         <div className="metric-chip border-0 bg-transparent"><p className="help-text">Points Earned</p><div className="text-3xl font-black text-emerald-300">+{result.pointsAwarded || 0}</div></div>

@@ -15,7 +15,7 @@ public class LeaderboardService {
     private UserStatsRepository userStatsRepository;
 
     public List<LeaderboardEntryDTO> getLeaderboard(){
-        List<UserStats> stats = userStatsRepository.findAllByOrderByTotalPointsDesc();
+        List<UserStats> stats = userStatsRepository.findLeaderboardExcludingAdmins();
 
         return stats.stream()
                 .map(s -> new LeaderboardEntryDTO(
