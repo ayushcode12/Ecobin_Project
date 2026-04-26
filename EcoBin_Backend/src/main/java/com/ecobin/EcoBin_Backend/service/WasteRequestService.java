@@ -77,6 +77,18 @@ public class WasteRequestService {
         return saved;
     }
 
+    private UserStats getOrCreateUserStats(User user) {
+        return userStatsRepository.findByUser(user)
+                .orElseGet(() -> {
+                    UserStats newStats = new UserStats();
+                    newStats.setUser(user);
+                    newStats.setTotalPoints(0);
+                    newStats.setCurrentStreak(0);
+                    newStats.setLastSubmissionDate(null);
+                    return userStatsRepository.save(newStats);
+                });
+    }
+
     public WasteRequest updateStatus(Long id, UpdateWasteRequestStatusDTO statusUpdate) {
         WasteRequest request = wasteRequestRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Waste request not found"));
@@ -224,9 +236,7 @@ public class WasteRequestService {
     }
 
     private void addBonusPoints(User user, int points) {
-        UserStats stats = userStatsRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("UserStats not found"));
-
+        UserStats stats = getOrCreateUserStats(user);
         stats.setTotalPoints(stats.getTotalPoints() + points);
         userStatsRepository.save(stats);
     }

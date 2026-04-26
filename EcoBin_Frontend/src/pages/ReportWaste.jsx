@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Aperture, Camera, ImagePlus, Loader2, LocateFixed, MapPin, RotateCcw, SendHorizontal, X } from 'lucide-react';
+import { getCategories, createWasteRequest } from '@/services/api';
 
 const defaultForm = {
     categoryId: '',

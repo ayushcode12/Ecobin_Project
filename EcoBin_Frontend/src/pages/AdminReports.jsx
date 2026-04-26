@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -248,62 +248,130 @@ const AdminReports = () => {
 
                         return (
                             <motion.article key={reportId} className="surface-card" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                                <div className="row wrap space mb-3">
+                                <div className="row wrap space mb-4 border-b border-white/5 pb-4">
                                     <div>
-                                        <h3 className="section-title">Report #{reportId}</h3>
-                                        <p className="help-text">Created {formatDate(report.createdAt)}</p>
+                                        <h3 className="section-title text-xl">Report #{reportId}</h3>
+                                        <p className="help-text">Submitted {formatDate(report.createdAt)}</p>
                                     </div>
-                                    <span className={`status-chip ${getStatusClass(currentStatus)}`}>{currentStatus}</span>
+                                    <div className="flex items-center gap-3">
+                                        <span className={`status-chip ${getStatusClass(currentStatus)}`}>{currentStatus}</span>
+                                        <div className={`badge ${report.severity === 'HIGH' ? 'danger' : report.severity === 'MEDIUM' ? 'warning' : 'accent'}`}>
+                                            {report.severity || 'MEDIUM'}
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div className="grid-2 gap-4">
-                                    <div className="stack-sm">
-                                        <div><strong>Reporter:</strong> {report?.user?.name || 'Unknown'} ({report?.user?.email || 'N/A'})</div>
-                                        <div><strong>Description:</strong> {report?.textDescription || 'No description'}</div>
-                                        <div><strong>Category:</strong> {report?.category?.name || report?.category?.categoryType || 'Not provided'}</div>
-                                        <div><strong>Severity:</strong> {report?.severity || 'MEDIUM'} | <strong>Quantity:</strong> {report?.estimatedQuantity || 1}</div>
-                                        <div><strong>Address:</strong> {report?.address || 'N/A'}</div>
-                                        <div><strong>Coordinates:</strong> {report?.latitude ?? 'N/A'}, {report?.longitude ?? 'N/A'}</div>
-                                        <div><strong>Pickup:</strong> {formatDate(report?.pickupDate)}</div>
-                                        <div><strong>Points:</strong> {report?.points ?? 0}</div>
+                                <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+                                    {/* Left Column: Details & Images */}
+                                    <div className="stack-md">
+                                        <div className="grid-2 gap-5">
+                                            <div className="surface-card inset p-4 stack-sm">
+                                                <h4 className="text-[11px] font-bold uppercase tracking-wider text-emerald-400/80">Issue Details</h4>
+                                                <p className="text-sm font-medium leading-relaxed text-slate-100">{report?.textDescription || 'No description provided.'}</p>
+                                                <div className="mt-2 grid grid-cols-2 gap-3 text-xs">
+                                                    <div>
+                                                        <span className="help-text block">Category</span>
+                                                        <span className="font-semibold text-slate-200">{report?.category?.name || report?.category?.categoryType || 'Uncategorized'}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span className="help-text block">Quantity</span>
+                                                        <span className="font-semibold text-slate-200">{report?.estimatedQuantity || 1} units</span>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                        <div className="row wrap">
-                                            {report?.imageUrl && (
-                                                <a href={report.imageUrl} target="_blank" rel="noreferrer" className="btn-soft"><LocateFixed size={14} /> Open Uploaded Image</a>
-                                            )}
-                                            {report?.resolutionProofUrl && (
-                                                <a href={report.resolutionProofUrl} target="_blank" rel="noreferrer" className="btn-secondary"><CheckCircle2 size={14} /> Resolution Proof</a>
-                                            )}
+                                            <div className="surface-card inset p-4 stack-sm">
+                                                <h4 className="text-[11px] font-bold uppercase tracking-wider text-sky-400/80">Location & Impact</h4>
+                                                <div className="stack-sm text-xs">
+                                                    <div className="flex items-start gap-2">
+                                                        <LocateFixed size={14} className="mt-0.5 shrink-0 text-sky-400/60" />
+                                                        <span className="text-slate-200">{report?.address || 'No address provided'}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-4 border-t border-white/5 pt-2 mt-1">
+                                                        <div>
+                                                            <span className="help-text block">Impact Points</span>
+                                                            <span className="font-bold text-emerald-400">+{report?.points ?? 0}</span>
+                                                        </div>
+                                                        <div>
+                                                            <span className="help-text block">Reporter</span>
+                                                            <span className="font-semibold text-slate-200">{report?.user?.name || 'Unknown'}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Image Gallery */}
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div className="stack-sm">
+                                                <span className="form-label text-xs">User Evidence</span>
+                                                {report?.imageUrl ? (
+                                                    <div className="group relative aspect-video overflow-hidden rounded-xl border border-white/10 bg-black/20">
+                                                        <img src={report.imageUrl} alt="User proof" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                                        <a href={report.imageUrl} target="_blank" rel="noreferrer" className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                                                            <span className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-bold backdrop-blur-md">View Original</span>
+                                                        </a>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex aspect-video items-center justify-center rounded-xl border border-dashed border-white/5 bg-white/[0.02] text-xs text-slate-500">
+                                                        No image evidence
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="stack-sm">
+                                                <span className="form-label text-xs">Resolution Proof</span>
+                                                {report?.resolutionProofUrl ? (
+                                                    <div className="group relative aspect-video overflow-hidden rounded-xl border border-emerald-500/20 bg-emerald-500/5">
+                                                        <img src={report.resolutionProofUrl} alt="Resolution" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                                        <a href={report.resolutionProofUrl} target="_blank" rel="noreferrer" className="absolute inset-0 flex items-center justify-center bg-emerald-900/40 opacity-0 transition-opacity group-hover:opacity-100">
+                                                            <span className="rounded-lg bg-emerald-400/20 px-3 py-1.5 text-xs font-bold backdrop-blur-md text-emerald-100">View Proof</span>
+                                                        </a>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex aspect-video items-center justify-center rounded-xl border border-dashed border-white/5 bg-white/[0.02] text-xs text-slate-500">
+                                                        Pending resolution
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="surface-card inset">
+                                    {/* Right Column: Actions */}
+                                    <div className="surface-card inset border-emerald-400/10 bg-emerald-400/[0.02]">
                                         <div className="form-grid">
+                                            <h4 className="text-[11px] font-bold uppercase tracking-wider text-emerald-400/80 mb-1">Administrative Actions</h4>
                                             <div>
-                                                <label className="form-label">Update Status</label>
-                                                <select className="select-control" value={statusDrafts[reportId] || currentStatus} onChange={(e) => setStatusDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))}>
+                                                <label className="form-label text-xs">Current Status Flow</label>
+                                                <select className="select-control py-2.5 text-sm" value={statusDrafts[reportId] || currentStatus} onChange={(e) => setStatusDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))}>
                                                     {selectable.map((status) => <option key={status} value={status}>{status}</option>)}
                                                 </select>
                                             </div>
 
                                             <div>
-                                                <label className="form-label">Admin Note</label>
-                                                <textarea className="textarea-control" rows={3} value={noteDrafts[reportId] || ''} onChange={(e) => setNoteDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} placeholder="Add action note (required for COMPLETED/REJECTED)" />
+                                                <label className="form-label text-xs">Internal Notes</label>
+                                                <textarea className="textarea-control min-h-[80px] py-3 text-sm" value={noteDrafts[reportId] || ''} onChange={(e) => setNoteDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} placeholder="Action taken or reason for rejection..." />
                                             </div>
 
                                             <div>
-                                                <label className="form-label">Resolution Proof URL</label>
-                                                <input className="input-control" type="url" value={proofDrafts[reportId] || ''} onChange={(e) => setProofDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} placeholder="https://..." />
+                                                <label className="form-label text-xs">Proof URL (Image/Link)</label>
+                                                <input className="input-control py-2.5 text-sm" type="url" value={proofDrafts[reportId] || ''} onChange={(e) => setProofDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} placeholder="https://cloudinary.com/..." />
                                             </div>
 
-                                            <button className="btn-primary" onClick={() => handleStatusUpdate(report)} disabled={busy}><SendHorizontal size={15} /> {busy ? 'Saving...' : 'Apply Status'}</button>
+                                            <button className="btn-primary py-3 text-sm mt-1" onClick={() => handleStatusUpdate(report)} disabled={busy}>
+                                                {busy ? <RefreshCcw size={15} className="animate-spin" /> : <SendHorizontal size={15} />}
+                                                {busy ? 'Processing...' : 'Apply Status Update'}
+                                            </button>
 
-                                            <div>
-                                                <label className="form-label">Assign Pickup Date</label>
-                                                <input type="datetime-local" className="input-control" value={pickupDrafts[reportId] || ''} onChange={(e) => setPickupDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} />
+                                            <div className="border-t border-white/5 pt-4 mt-2">
+                                                <label className="form-label text-xs">Assign Cleanup Schedule</label>
+                                                <div className="flex gap-2">
+                                                    <input type="datetime-local" className="input-control py-2 text-xs flex-1" value={pickupDrafts[reportId] || ''} onChange={(e) => setPickupDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} />
+                                                    <button className="btn-ghost py-2 px-4 text-xs" onClick={() => handlePickupAssign(reportId)} disabled={busy}>
+                                                        <CalendarClock size={14} />
+                                                    </button>
+                                                </div>
                                             </div>
-
-                                            <button className="btn-ghost" onClick={() => handlePickupAssign(reportId)} disabled={busy}><CalendarClock size={15} /> {busy ? 'Saving...' : 'Assign Pickup'}</button>
                                         </div>
                                     </div>
                                 </div>
