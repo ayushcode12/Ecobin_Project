@@ -1,5 +1,9 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
+    BarChart3,
+    ClipboardList,
+    FileText,
+    History,
     Home,
     LayoutDashboard,
     LogOut,
@@ -9,6 +13,7 @@ import {
     ShieldCheck,
     Trophy,
     UserCircle2,
+    Users,
     X,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -72,10 +77,14 @@ const Navbar = () => {
 
         if (!isAdmin) return common;
 
+        // Clean, focused Admin Navbar
         return [
-            ...common,
-            { to: '/admin/reports', label: 'Admin Reports', icon: ShieldCheck },
-            { to: '/admin/rules', label: 'Admin Rules', icon: ShieldCheck },
+            { to: '/admin/dashboard', label: 'Dashboard', icon: BarChart3 },
+            { to: '/admin/users', label: 'Users', icon: Users },
+            { to: '/admin/reports', label: 'Reports', icon: ShieldCheck },
+            { to: '/admin/scans', label: 'AI Audit', icon: ScanEye },
+            { to: '/admin/content', label: 'Content', icon: FileText },
+            { to: '/admin/logs', label: 'Activity Logs', icon: ClipboardList },
         ];
     }, [isAuthenticated, isAdmin]);
 

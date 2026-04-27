@@ -48,4 +48,10 @@ public class ScanController {
         return scanHistoryService.getMyRecentScans(email, limit);
     }
 
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<ScanHistoryDTO> getAllScans() {
+        return scanHistoryService.getAllScans();
+    }
+
 }

@@ -278,6 +278,60 @@ export const previewClassification = async (text) => {
     return await api.get('/rules/preview', { params: { text } });
 };
 
+// --- ADMIN API ---
+
+export const getAdminDashboardStats = async () => {
+    return await api.get('/admin/analytics/summary');
+};
+
+export const getAllUsers = async () => {
+    return await api.get('/users');
+};
+
+export const updateUserStatus = async (userId, enabled) => {
+    return await api.patch(`/users/${userId}/status`, null, { params: { enabled } });
+};
+
+export const resetUserScore = async (userId) => {
+    return await api.post(`/users/${userId}/reset-score`);
+};
+
+export const deleteUserByAdmin = async (userId) => {
+    return await api.delete(`/users/${userId}`);
+};
+
+export const getAllTips = async () => {
+    return await api.get('/admin/content/tips');
+};
+
+export const createTip = async (tip) => {
+    return await api.post('/admin/content/tips', tip);
+};
+
+export const deleteTip = async (tipId) => {
+    return await api.delete(`/admin/content/tips/${tipId}`);
+};
+
+export const getAllAnnouncements = async () => {
+    return await api.get('/admin/content/announcements');
+};
+
+export const createAnnouncement = async (announcement) => {
+    return await api.post('/admin/content/announcements', announcement);
+};
+
+export const deleteAnnouncement = async (announcementId) => {
+    return await api.delete(`/admin/content/announcements/${announcementId}`);
+};
+
+export const getAdminLogs = async () => {
+    return await api.get('/admin/logs');
+};
+
+export const getAllScansAdmin = async () => {
+    return await api.get('/scan/all');
+};
+
 export const logout = () => {
     clearStoredToken();
     window.location.href = '/login';

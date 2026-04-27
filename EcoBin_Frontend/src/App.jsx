@@ -7,6 +7,11 @@ import Scan from '@/pages/Scan';
 import Leaderboard from '@/pages/Leaderboard';
 import AdminReports from '@/pages/AdminReports';
 import AdminRules from '@/pages/AdminRules';
+import AdminDashboard from '@/pages/AdminDashboard';
+import AdminUsers from '@/pages/AdminUsers';
+import AdminScans from '@/pages/AdminScans';
+import AdminContent from '@/pages/AdminContent';
+import AdminLogs from '@/pages/AdminLogs';
 import ReportWaste from '@/pages/ReportWaste';
 import History from '@/pages/History';
 import Layout from '@/components/layout/Layout';
@@ -44,12 +49,32 @@ function App() {
                     />
 
                     <Route
+                        path="/admin/dashboard"
+                        element={<AdminRoute><AdminDashboard /></AdminRoute>}
+                    />
+                    <Route
                         path="/admin/reports"
                         element={<AdminRoute><AdminReports /></AdminRoute>}
                     />
                     <Route
+                        path="/admin/users"
+                        element={<AdminRoute><AdminUsers /></AdminRoute>}
+                    />
+                    <Route
+                        path="/admin/scans"
+                        element={<AdminRoute><AdminScans /></AdminRoute>}
+                    />
+                    <Route
+                        path="/admin/content"
+                        element={<AdminRoute><AdminContent /></AdminRoute>}
+                    />
+                    <Route
                         path="/admin/rules"
                         element={<AdminRoute><AdminRules /></AdminRoute>}
+                    />
+                    <Route
+                        path="/admin/logs"
+                        element={<AdminRoute><AdminLogs /></AdminRoute>}
                     />
                 </Routes>
             </Layout>

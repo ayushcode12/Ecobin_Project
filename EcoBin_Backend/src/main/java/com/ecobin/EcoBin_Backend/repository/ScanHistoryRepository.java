@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public interface ScanHistoryRepository extends JpaRepository<ScanHistory, Long> {
 
+    List<ScanHistory> findAllByOrderByCreatedAtDesc();
+
     long countByUser(User user);
 
     @Query("""
@@ -28,5 +30,12 @@ public interface ScanHistoryRepository extends JpaRepository<ScanHistory, Long> 
             @Param("categoryType") String categoryType,
             @Param("fromDate") LocalDateTime fromDate,
             @Param("toDate") LocalDateTime toDate
-    );
+    );    @Query("SELECT COUNT(s) FROM ScanHistory s WHERE s.categoryType = :categoryType")
+    long countByCategoryType(@Param("categoryType") String categoryType);
+
+    @Query("SELECT COUNT(s) FROM ScanHistory s WHERE s.createdAt >= :since")
+    long countRecentScans(@Param("since") LocalDateTime since);
+
+    @Query("SELECT COUNT(s) FROM ScanHistory s WHERE s.categoryType = :categoryType AND s.createdAt >= :since")
+    long countRecentScansByCategory(@Param("categoryType") String categoryType, @Param("since") LocalDateTime since);
 }

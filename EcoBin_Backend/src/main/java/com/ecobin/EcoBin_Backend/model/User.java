@@ -26,6 +26,8 @@ public class User {
     @NotBlank(message = "Password is required")
     private String password;
     private String role;
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean enabled = true;
     private LocalDateTime createdAt;
 
     @PrePersist

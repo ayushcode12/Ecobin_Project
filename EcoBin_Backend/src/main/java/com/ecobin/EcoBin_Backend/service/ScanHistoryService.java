@@ -68,6 +68,13 @@ public class ScanHistoryService {
                 .toList();
     }
 
+    public List<ScanHistoryDTO> getAllScans() {
+        return scanHistoryRepository.findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
     public String exportMyScansCsv(
             String loggedInEmail,
             String categoryType,

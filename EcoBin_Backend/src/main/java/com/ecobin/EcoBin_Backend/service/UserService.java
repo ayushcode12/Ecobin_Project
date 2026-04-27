@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+
 import java.util.List;
 
 @Service
@@ -23,6 +26,14 @@ public class UserService {
 
     @Autowired
     private UserStatsRepository userStatsRepository;
+
+    @Autowired
+    private LoggingService loggingService;
+
+    private String getAdminEmail() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null ? auth.getName() : "system";
+    }
 
     public User createUser(User user){
         User savedUser = userRepository.save(user);
@@ -47,7 +58,34 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
+        String adminEmail = getAdminEmail();
+        User target = userRepository.findById(id).orElse(null);
         userRepository.deleteById(id);
+        if (target != null) {
+            loggingService.logAction(adminEmail, "DELETE_USER", target.getEmail(), "Deleted user account");
+        }
+    }
+
+    public User updateUserStatus(Long id, boolean enabled) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setEnabled(enabled);
+        User saved = userRepository.save(user);
+        loggingService.logAction(getAdminEmail(), "UPDATE_USER_STATUS", user.getEmail(), "Set enabled=" + enabled);
+        return saved;
+    }
+
+    public void resetUserScore(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserStats stats = userStatsRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("User stats not found"));
+
+        stats.setTotalPoints(0);
+        stats.setCurrentStreak(0);
+        stats.setLastSubmissionDate(null);
+        userStatsRepository.save(stats);
+        loggingService.logAction(getAdminEmail(), "RESET_SCORE", user.getEmail(), "Reset total points to 0");
     }
 
     public User createUserByAdmin(CreateUserRequestDTO dto){

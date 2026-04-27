@@ -58,6 +58,18 @@ public class UserController {
         userService.deleteUser(id);
     }
 
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserResponseDTO updateUserStatus(@PathVariable Long id, @RequestParam boolean enabled){
+        return userMapper.toDto(userService.updateUserStatus(id, enabled));
+    }
+
+    @PostMapping("/{id}/reset-score")
+    @PreAuthorize("hasRole('ADMIN')")
+    public void resetUserScore(@PathVariable Long id){
+        userService.resetUserScore(id);
+    }
+
     @GetMapping("/me")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public UserResponseDTO getMyProfile(Authentication authentication){
