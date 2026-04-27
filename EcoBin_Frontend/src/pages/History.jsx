@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
     exportMyReportsCsv,
@@ -71,58 +71,19 @@ const History = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [records, setRecords] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [filters, setFilters] = useState(defaultFilters);
-
-    const setFilter = (field, value) => {
-        setFilters((prev) => ({ ...prev, [field]: value }));
-    };
-
-    const resetFilters = () => {
-        setFilters(defaultFilters);
-    };
-
-    const filterLocalScans = (rows) => {
-        const fromDate = filters.dateFrom ? new Date(filters.dateFrom) : null;
-        const toDate = filters.dateTo ? new Date(filters.dateTo) : null;
-
-        return (rows || [])
-            .filter((row) => {
-                const categoryOk = !filters.categoryType || row?.categoryType === filters.categoryType;
-                const created = row?.createdAt ? new Date(row.createdAt) : null;
-                const fromOk = !fromDate || (created && created >= fromDate);
-                const toOk = !toDate || (created && created <= toDate);
-                return categoryOk && fromOk && toOk;
-            })
-            .sort((a, b) => {
-                const aTime = a?.createdAt ? new Date(a.createdAt).getTime() : 0;
-                const bTime = b?.createdAt ? new Date(b.createdAt).getTime() : 0;
-                return bTime - aTime;
-            });
-    };
-
-    const buildFilterParams = () => {
-        const params = {};
-        if (filters.categoryType) params.categoryType = filters.categoryType;
-        if (filters.status) params.status = filters.status;
-        if (filters.dateFrom) params.dateFrom = filters.dateFrom;
-        if (filters.dateTo) params.dateTo = filters.dateTo;
-        return params;
-    };
 
     const fetchData = async () => {
         setLoading(true);
         setError('');
 
         try {
-            const params = buildFilterParams();
             const response = activeTab === 'scans'
-                ? await getMyScans(params)
-                : await getMyReports(params);
+                ? await getMyScans()
+                : await getMyReports();
             setRecords(response?.data || []);
         } catch (err) {
             if (activeTab === 'scans') {
-                const localScans = filterLocalScans(readLocalScanActivity());
+                const localScans = readLocalScanActivity();
                 if (localScans.length > 0) {
                     setRecords(localScans);
                     setError('Showing local scan history because server scan history is unavailable.');
@@ -139,15 +100,14 @@ const History = () => {
 
     const handleExport = async () => {
         try {
-            const params = buildFilterParams();
             const response = activeTab === 'scans'
-                ? await exportMyScansCsv(params)
-                : await exportMyReportsCsv(params);
+                ? await exportMyScansCsv()
+                : await exportMyReportsCsv();
 
             downloadBlob(response.data, activeTab === 'scans' ? 'my_scans.csv' : 'my_reports.csv');
         } catch (err) {
             if (activeTab === 'scans') {
-                const localScans = filterLocalScans(readLocalScanActivity());
+                const localScans = readLocalScanActivity();
                 if (localScans.length > 0) {
                     const csvText = exportLocalScansCsv(localScans);
                     const blob = new Blob([csvText], { type: 'text/csv' });
@@ -159,19 +119,6 @@ const History = () => {
             setError('Export failed. Please try again.');
         }
     };
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const response = await getCategories();
-                setCategories(response?.data || []);
-            } catch (err) {
-                // optional; keep page usable
-            }
-        };
-
-        fetchCategories();
-    }, []);
 
     useEffect(() => {
         fetchData();
@@ -210,59 +157,8 @@ const History = () => {
                         <button className={`pill-tab ${activeTab === 'reports' ? 'active' : ''}`} onClick={() => setActiveTab('reports')}>My Reports</button>
                     </div>
                     <div className="row wrap">
-                        <button className="btn-ghost" onClick={fetchData}><Filter size={15} /> Apply Filters</button>
+                        <button className="btn-ghost" onClick={fetchData}><RotateCcw size={15} /> Refresh List</button>
                         <button className="btn-secondary" onClick={handleExport}><Download size={15} /> Export CSV</button>
-                        <button
-                            className="btn-soft"
-                            onClick={() => {
-                                resetFilters();
-                                setTimeout(fetchData, 0);
-                            }}
-                        ><RotateCcw size={15} /> Reset</button>
-                    </div>
-                </div>
-
-                <div className="form-grid cols-2">
-                    <div>
-                        <label className="form-label">Category</label>
-                        <select className="select-control" value={filters.categoryType} onChange={(e) => setFilter('categoryType', e.target.value)}>
-                            <option value="">All</option>
-                            <option value="Biodegradable">Biodegradable</option>
-                            <option value="Recyclable">Recyclable</option>
-                            <option value="Non-Biodegradable">Non-Biodegradable</option>
-                            {categories.map((cat) => (
-                                <option key={cat.id} value={cat.categoryType}>{cat.categoryType}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {activeTab === 'reports' ? (
-                        <div>
-                            <label className="form-label">Status</label>
-                            <select className="select-control" value={filters.status} onChange={(e) => setFilter('status', e.target.value)}>
-                                <option value="">All</option>
-                                <option value="PENDING">PENDING</option>
-                                <option value="APPROVED">APPROVED</option>
-                                <option value="IN_PROGRESS">IN_PROGRESS</option>
-                                <option value="COMPLETED">COMPLETED</option>
-                                <option value="REJECTED">REJECTED</option>
-                            </select>
-                        </div>
-                    ) : (
-                        <div>
-                            <label className="form-label">Status</label>
-                            <input className="input-control" value="N/A for scans" disabled />
-                        </div>
-                    )}
-
-                    <div>
-                        <label className="form-label">From</label>
-                        <input className="input-control" type="datetime-local" value={filters.dateFrom} onChange={(e) => setFilter('dateFrom', e.target.value)} />
-                    </div>
-
-                    <div>
-                        <label className="form-label">To</label>
-                        <input className="input-control" type="datetime-local" value={filters.dateTo} onChange={(e) => setFilter('dateTo', e.target.value)} />
                     </div>
                 </div>
             </section>

@@ -30,7 +30,9 @@ public interface ScanHistoryRepository extends JpaRepository<ScanHistory, Long> 
             @Param("categoryType") String categoryType,
             @Param("fromDate") LocalDateTime fromDate,
             @Param("toDate") LocalDateTime toDate
-    );    @Query("SELECT COUNT(s) FROM ScanHistory s WHERE s.categoryType = :categoryType")
+    );
+
+    @Query("SELECT COUNT(s) FROM ScanHistory s WHERE s.categoryType = :categoryType")
     long countByCategoryType(@Param("categoryType") String categoryType);
 
     @Query("SELECT COUNT(s) FROM ScanHistory s WHERE s.createdAt >= :since")

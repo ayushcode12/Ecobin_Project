@@ -15,7 +15,7 @@ import {
     User,
     Zap,
 } from 'lucide-react';
-import { getCurrentUser, getRecentActivity, getUserStats, updateMyProfileName } from '@/services/api';
+import { getCurrentUser, getMyReports, getRecentActivity, getUserStats, updateMyProfileName } from '@/services/api';
 
 const LOCAL_SCAN_ACTIVITY_KEY = 'ecobin_local_scan_activity';
 
@@ -94,9 +94,10 @@ const Dashboard = () => {
 
     const fetchDashboard = async () => {
         setLoading(true);
-        const [statsResult, activityResult, userResult] = await Promise.allSettled([
+        const [statsResult, activityResult, reportsResult, userResult] = await Promise.allSettled([
             getUserStats(),
             getRecentActivity(),
+            getMyReports({ limit: 10 }),
             getCurrentUser(),
         ]);
 
@@ -109,32 +110,23 @@ const Dashboard = () => {
                 treeProgressPercent: statsResult.value?.data?.treeProgressPercent || 0,
                 totalScans: statsResult.value?.data?.totalScans || 0,
             });
-        } else {
-            setStats({
-                totalPoints: 0,
-                currentStreak: 0,
-                treesPlanted: 0,
-                pointsToNextTree: 30,
-                treeProgressPercent: 0,
-                totalScans: 0,
-            });
         }
 
+        let combinedActivity = [];
         if (activityResult.status === 'fulfilled') {
-            const serverActivity = activityResult.value?.data || [];
-            const localActivity = readLocalScanActivity();
-            setRecentActivity(sortAndLimitActivity([...serverActivity, ...localActivity]));
-        } else {
-            setRecentActivity(sortAndLimitActivity(readLocalScanActivity()));
+            combinedActivity = [...combinedActivity, ...(activityResult.value?.data || [])];
         }
+        if (reportsResult.status === 'fulfilled') {
+            combinedActivity = [...combinedActivity, ...(reportsResult.value?.data || [])];
+        }
+        
+        const localActivity = readLocalScanActivity();
+        setRecentActivity(sortAndLimitActivity([...combinedActivity, ...localActivity]));
 
         if (userResult.status === 'fulfilled') {
             const nextUser = userResult.value?.data || null;
             setCurrentUser(nextUser);
             setProfileName(nextUser?.name || '');
-        } else {
-            setCurrentUser(null);
-            setProfileName('');
         }
 
         setLoading(false);
@@ -218,6 +210,16 @@ const Dashboard = () => {
         } finally {
             setProfileSaving(false);
         }
+    };
+
+    const getStatusClass = (statusValue) => {
+        const status = String(statusValue || '').toUpperCase();
+        if (status === 'PENDING') return 'pending';
+        if (status === 'APPROVED') return 'approved';
+        if (status === 'IN_PROGRESS') return 'progress';
+        if (status === 'COMPLETED') return 'completed';
+        if (status === 'REJECTED') return 'rejected';
+        return '';
     };
 
     if (loading) {
@@ -529,6 +531,43 @@ const Dashboard = () => {
                                 </div>
                             );
                         })}
+                    </div>
+                </article>
+            </section>
+
+            <section className="dashboard-main-grid">
+                 <article className="surface-card">
+                    <div className="row space mb-4">
+                        <h2 className="section-title"><ShieldCheck size={18} className="text-emerald-300" /> Report Tracking</h2>
+                        <Link to="/history" className="badge accent">View All</Link>
+                    </div>
+
+                    <div className="stack-sm">
+                        {recentActivity.filter(item => item.status).length === 0 ? (
+                            <div className="help-text p-4 text-center">No active reports found in your recent activity.</div>
+                        ) : (
+                            recentActivity.filter(item => item.status).slice(0, 3).map((item, idx) => (
+                                <div key={item.id || idx} className="activity-row">
+                                    <div className="min-w-0">
+                                        <h4 className="truncate">{item.textDescription || 'Report'}</h4>
+                                        <p className="text-[10px] uppercase font-bold tracking-widest mt-1">ID: #{item.id}</p>
+                                    </div>
+                                    <span className={`status-chip ${getStatusClass(item.status)}`}>{item.status}</span>
+                                </div>
+                            ))
+                        )}
+                        <p className="help-text mt-2 px-2">Your field reports move through the queue as admins approve and resolve them.</p>
+                    </div>
+                </article>
+
+                <article className="surface-card">
+                    <div className="row space mb-4">
+                        <h2 className="section-title"><History size={18} className="text-blue-300" /> History Summary</h2>
+                        <span className="badge brand">Recent</span>
+                    </div>
+                    <div className="stack-sm">
+                         <p className="help-text">You have completed <b>{stats.totalScans}</b> scans and <b>{stats.treesPlanted}</b> tree milestones so far.</p>
+                         <Link to="/history" className="btn-ghost w-full mt-2">Open Full History Logs</Link>
                     </div>
                 </article>
             </section>

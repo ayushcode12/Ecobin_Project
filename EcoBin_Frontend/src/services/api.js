@@ -212,11 +212,25 @@ export const createWasteRequest = async (request) => {
 };
 
 export const getMyReports = async (filters = {}) => {
-    return await api.get('/requests/my', { params: filters });
+    try {
+        return await api.get('/requests/my', { params: filters });
+    } catch (error) {
+        if (error?.response?.status === 403 || error?.response?.status === 404) {
+            return await api.get('/request/my', { params: filters });
+        }
+        throw error;
+    }
 };
 
 export const exportMyReportsCsv = async (filters = {}) => {
-    return await api.get('/requests/my/export', { params: filters, responseType: 'blob' });
+    try {
+        return await api.get('/requests/my/export', { params: filters, responseType: 'blob' });
+    } catch (error) {
+        if (error?.response?.status === 403 || error?.response?.status === 404) {
+            return await api.get('/request/my/export', { params: filters, responseType: 'blob' });
+        }
+        throw error;
+    }
 };
 
 export const getAllWasteRequests = async () => {

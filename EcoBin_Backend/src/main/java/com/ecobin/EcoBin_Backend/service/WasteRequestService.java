@@ -189,10 +189,17 @@ public class WasteRequestService {
         User user = userRepository.findByEmail(loggedInEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        String normStatus = normalizeStatus(status);
+        String normCat = normalizeBlank(categoryType);
+
+        if (normStatus == null && normCat == null && fromDate == null && toDate == null) {
+            return wasteRequestRepository.findByUserOrderByCreatedAtDesc(user);
+        }
+
         return wasteRequestRepository.findMyRequestsWithFilters(
                 user,
-                normalizeBlank(status),
-                normalizeBlank(categoryType),
+                normStatus,
+                normCat,
                 fromDate,
                 toDate
         );

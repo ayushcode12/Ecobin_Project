@@ -13,12 +13,13 @@ import java.util.List;
 @Repository
 public interface WasteRequestRepository extends JpaRepository<WasteRequest, Long> {
     List<WasteRequest> findByUser(User user);
+    List<WasteRequest> findByUserOrderByCreatedAtDesc(User user);
 
     @Query("""
             select wr from WasteRequest wr
             where wr.user = :user
-              and (:status is null or upper(wr.status) = upper(:status))
-              and (:categoryType is null or (wr.category is not null and upper(wr.category.categoryType) = upper(:categoryType)))
+              and (:status is null or wr.status = :status)
+              and (:categoryType is null or (wr.category is not null and wr.category.categoryType = :categoryType))
               and (:fromDate is null or wr.createdAt >= :fromDate)
               and (:toDate is null or wr.createdAt <= :toDate)
             order by wr.createdAt desc

@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/requests")
+@RequestMapping({"/api/requests", "/api/request"})
 @CrossOrigin
 public class WasteRequestController {
 
