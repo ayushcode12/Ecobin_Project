@@ -253,6 +253,8 @@ const Scan = () => {
         setPreview(null);
         setResult(null);
         setError('');
+        setAutoConfirmedFrame(null);
+        setLivePrediction(null);
         stopCamera();
     };
 
