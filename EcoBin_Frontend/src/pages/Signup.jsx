@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Home, Lock, Mail, ScanEye, Sparkles, Trophy, User, Zap } from 'lucide-react';
+import { ArrowRight, Home, Lock, Mail, ScanEye, Sparkles, Trophy, User, Zap, Eye, EyeOff } from 'lucide-react';
 import { signup, validateSession } from '@/services/api';
 
 const Signup = () => {
@@ -9,6 +9,7 @@ const Signup = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
@@ -126,16 +127,23 @@ const Signup = () => {
 
                         <div className="stack-sm">
                             <label className="form-label">Password</label>
-                            <div className="input-icon-wrap">
+                            <div className="input-icon-wrap relative">
                                 <Lock size={16} className="input-icon" />
                                 <input
-                                    type="password"
-                                    className="input-control"
+                                    type={showPassword ? "text" : "password"}
+                                    className="input-control pr-10"
                                     placeholder="Choose a strong password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-400 transition-colors focus:outline-none"
+                                >
+                                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
                             </div>
                         </div>
 
