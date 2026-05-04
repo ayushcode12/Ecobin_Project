@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { validateSession } from '@/services/api';
+import { validateSession, getCurrentUser } from '@/services/api';
 
 const ProtectedRoute = ({ children }) => {
     const location = useLocation();
@@ -11,10 +11,27 @@ const ProtectedRoute = ({ children }) => {
         let cancelled = false;
 
         const checkSession = async () => {
-            const valid = await validateSession();
-            if (!cancelled) {
-                setIsAllowed(valid);
-                setChecking(false);
+            try {
+                const response = await getCurrentUser();
+                if (!cancelled) {
+                    if (response.data) {
+                        if (response.data.role === 'ROLE_ADMIN') {
+                            // Admins shouldn't be on user protected routes
+                            setIsAllowed(false);
+                            window.location.href = '/admin/dashboard';
+                        } else {
+                            setIsAllowed(true);
+                        }
+                    } else {
+                        setIsAllowed(false);
+                    }
+                    setChecking(false);
+                }
+            } catch (error) {
+                if (!cancelled) {
+                    setIsAllowed(false);
+                    setChecking(false);
+                }
             }
         };
 

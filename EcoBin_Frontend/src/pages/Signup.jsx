@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Home, Lock, Mail, ScanEye, Sparkles, Trophy, User, Zap, Eye, EyeOff } from 'lucide-react';
-import { signup, validateSession } from '@/services/api';
+import { signup, validateSession, getCurrentUser } from '@/services/api';
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -17,9 +17,17 @@ const Signup = () => {
         let cancelled = false;
 
         const checkSession = async () => {
-            const valid = await validateSession();
-            if (valid && !cancelled) {
-                navigate('/dashboard');
+            try {
+                const response = await getCurrentUser();
+                if (response.data && !cancelled) {
+                    if (response.data.role === 'ROLE_ADMIN') {
+                        navigate('/admin/dashboard');
+                    } else {
+                        navigate('/dashboard');
+                    }
+                }
+            } catch (error) {
+                // Not logged in or session expired
             }
         };
 

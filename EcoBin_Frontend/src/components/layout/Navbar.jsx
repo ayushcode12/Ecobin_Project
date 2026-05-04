@@ -115,7 +115,14 @@ const Navbar = () => {
     return (
         <header className="top-nav">
             <div className="top-nav-inner">
-                <button className="brand-link" onClick={() => navigate(isAuthenticated ? '/dashboard' : '/')}>
+                <button 
+                    className="brand-link" 
+                    onClick={() => {
+                        if (!isAuthenticated) navigate('/');
+                        else if (isAdmin) navigate('/admin/dashboard');
+                        else navigate('/dashboard');
+                    }}
+                >
                     <span className="brand-mark">
                         <img src="/ecobin-mark.svg" alt="EcoBin logo" className="brand-logo-img" />
                     </span>

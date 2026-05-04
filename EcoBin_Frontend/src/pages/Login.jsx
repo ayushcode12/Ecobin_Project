@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Home, Lock, Mail, Sparkles, Zap, Eye, EyeOff } from 'lucide-react';
-import { login, validateSession } from '@/services/api';
+import { login, validateSession, getCurrentUser } from '@/services/api';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -16,9 +16,17 @@ const Login = () => {
         let cancelled = false;
 
         const checkSession = async () => {
-            const valid = await validateSession();
-            if (valid && !cancelled) {
-                navigate('/dashboard');
+            try {
+                const response = await getCurrentUser();
+                if (response.data && !cancelled) {
+                    if (response.data.role === 'ROLE_ADMIN') {
+                        navigate('/admin/dashboard');
+                    } else {
+                        navigate('/dashboard');
+                    }
+                }
+            } catch (error) {
+                // Not logged in or session expired
             }
         };
 
@@ -35,7 +43,14 @@ const Login = () => {
 
         try {
             await login(email, password);
-            navigate('/dashboard');
+            const userResponse = await getCurrentUser();
+            const user = userResponse.data;
+
+            if (user.role === 'ROLE_ADMIN') {
+                navigate('/admin/dashboard');
+            } else {
+                navigate('/dashboard');
+            }
         } catch (err) {
             setError('Login failed. Please check your credentials and try again.');
         } finally {
