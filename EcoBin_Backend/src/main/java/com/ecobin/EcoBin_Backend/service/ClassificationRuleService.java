@@ -134,7 +134,7 @@ public class ClassificationRuleService {
     private int defaultPointsForCategory(String categoryType) {
         String normalizedCategory = normalizeCategory(categoryType);
         if (normalizedCategory.equals("Non-Biodegradable")) return 10;
-        if (normalizedCategory.equals("Recyclable")) return 7;
+        if (normalizedCategory.equals("Recyclable")) return 8;
         return 5;
     }
 

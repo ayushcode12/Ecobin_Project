@@ -191,7 +191,7 @@ public class ScanService {
             return 10;
         }
         if (normalized.contains("recyclable")) {
-            return 7;
+            return 8;
         }
         if (normalized.contains("biodegradable")) {
             return 5;
