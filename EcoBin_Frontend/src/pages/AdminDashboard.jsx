@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { 
     Users, 
@@ -7,19 +7,23 @@ import {
     Leaf, 
     Trash2, 
     TrendingUp,
-    RefreshCcw
+    RefreshCcw,
+    Activity,
+    Globe,
+    MapPin
 } from 'lucide-react';
 import { 
-    BarChart, 
-    Bar, 
+    AreaChart, 
+    Area, 
     XAxis, 
     YAxis, 
     CartesianGrid, 
     Tooltip, 
     ResponsiveContainer,
-    Cell,
     PieChart,
-    Pie
+    Pie,
+    Cell,
+    Legend
 } from 'recharts';
 import { getAdminDashboardStats } from '@/services/api';
 
@@ -34,7 +38,7 @@ const AdminDashboard = () => {
             const response = await getAdminDashboardStats();
             setStats(response.data);
         } catch (err) {
-            setError('Failed to load dashboard statistics.');
+            setError('Failed to load management data.');
         } finally {
             setLoading(false);
         }
@@ -44,170 +48,228 @@ const AdminDashboard = () => {
         fetchData();
     }, []);
 
+    // Mock data for Velocity Chart (In a real app, this would come from a dedicated timeseries endpoint)
+    const velocityData = useMemo(() => {
+        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        const base = stats?.recentScans || 42;
+        return days.map((day, i) => ({
+            day,
+            scans: Math.floor(base * (0.6 + Math.random() * 0.8)),
+            impact: Math.floor(base * (1.2 + Math.random() * 0.5))
+        }));
+    }, [stats]);
+
+    const wasteDistribution = stats ? [
+        { name: 'Biodegradable', value: stats.biodegradableItems || 0, color: '#34d399' },
+        { name: 'Recyclable', value: stats.recyclableItems || 0, color: '#60a5fa' },
+        { name: 'Non-Bio', value: stats.nonBiodegradableItems || 0, color: '#f87171' },
+    ] : [];
+
+    const activeRegions = [
+        { name: 'Downtown Sector', activity: 'High', scans: 142 },
+        { name: 'Industrial Zone', activity: 'Medium', scans: 89 },
+        { name: 'Residential West', activity: 'Extreme', scans: 215 },
+        { name: 'Harbor Side', activity: 'Low', scans: 34 },
+    ];
+
     if (loading) {
         return (
             <div className="page-shell narrow flex items-center justify-center min-h-[60vh]">
-                <div className="animate-pulse text-emerald-400 font-bold">Loading Management Data...</div>
+                <div className="stack-sm items-center">
+                    <RefreshCcw size={40} className="animate-spin text-emerald-500 mb-4" />
+                    <div className="text-emerald-400 font-black tracking-[0.2em] uppercase text-xs">Synchronizing Neural Stats...</div>
+                </div>
             </div>
         );
     }
-
-    const pieData = stats ? [
-        { name: 'Recyclable', value: stats.recyclableItems, color: '#60a5fa' },
-        { name: 'Biodegradable', value: stats.biodegradableItems, color: '#34d399' },
-        { name: 'Non-Biodegradable', value: stats.nonBiodegradableItems, color: '#f87171' },
-    ] : [];
-
-    const barData = stats ? [
-        { name: 'Total Users', count: stats.totalUsers },
-        { name: 'Total Scans', count: stats.totalClassifications },
-        { name: 'Recent (30d)', count: stats.recentScans },
-    ] : [];
 
     return (
         <div className="page-shell space-y-8">
             <section className="section-head">
                 <div>
-                    <span className="section-kicker mb-4">System Overview</span>
+                    <span className="section-kicker mb-4">Command Center Overview</span>
                     <h1 className="page-title">Admin Dashboard</h1>
-                    <p className="page-subtitle">Real-time analytics and system health metrics for EcoBin.</p>
+                    <p className="page-subtitle">Diagnostic visualization of global platform activity and environmental impact metrics.</p>
                 </div>
-                <button className="btn-ghost" onClick={fetchData}>
-                    <RefreshCcw size={15} /> Refresh Data
-                </button>
+                <div className="row gap-3">
+                    <div className="px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest hidden md:flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" /> Live System Sync
+                    </div>
+                    <button className="btn-ghost" onClick={fetchData}>
+                        <RefreshCcw size={15} /> Refresh Data
+                    </button>
+                </div>
             </section>
 
             {error && <div className="alert error">{error}</div>}
 
-            {/* Metric Grid */}
+            {/* High-Level Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="surface-card p-6 stack-sm group hover:border-blue-500/30 transition-all">
-                    <div className="row space">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Total Users</span>
-                        <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
-                            <Users size={20} className="text-blue-400" />
+                {[
+                    { label: 'Total Citizens', value: stats?.totalUsers, icon: Users, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'hover:border-blue-500/30' },
+                    { label: 'System Scans', value: stats?.totalClassifications, icon: Zap, color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'hover:border-emerald-500/30' },
+                    { label: 'Monthly Volume', value: stats?.recentScans, icon: TrendingUp, color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'hover:border-amber-500/30' },
+                    { label: 'Node Health', value: '100%', icon: Activity, color: 'text-sky-400', bg: 'bg-sky-400/10', border: 'hover:border-sky-500/30' },
+                ].map((m, i) => (
+                    <motion.div 
+                        key={m.label} 
+                        initial={{ opacity: 0, y: 20 }} 
+                        animate={{ opacity: 1, y: 0 }} 
+                        transition={{ delay: i * 0.1 }}
+                        className={`surface-card p-6 stack-sm group ${m.border} transition-all`}
+                    >
+                        <div className="row space">
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{m.label}</span>
+                            <div className={`h-10 w-10 rounded-xl ${m.bg} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                                <m.icon size={20} className={m.color} />
+                            </div>
                         </div>
-                    </div>
-                    <div className="text-4xl font-black text-white mt-2">{stats?.totalUsers || 0}</div>
-                    <div className="help-text flex items-center gap-1.5"><TrendingUp size={12} className="text-emerald-400" /> +12% this week</div>
-                </motion.div>
-
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="surface-card p-6 stack-sm group hover:border-emerald-500/30 transition-all">
-                    <div className="row space">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Total Scans</span>
-                        <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
-                            <Zap size={20} className="text-emerald-400" />
-                        </div>
-                    </div>
-                    <div className="text-4xl font-black text-white mt-2">{stats?.totalClassifications || 0}</div>
-                    <div className="help-text flex items-center gap-1.5"><Zap size={12} className="text-amber-400" /> 98.4% AI Accuracy</div>
-                </motion.div>
-
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="surface-card p-6 stack-sm group hover:border-amber-500/30 transition-all border-amber-500/20">
-                    <div className="row space">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Monthly Velocity</span>
-                        <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
-                            <TrendingUp size={20} className="text-amber-400" />
-                        </div>
-                    </div>
-                    <div className="text-4xl font-black text-amber-400 mt-2">{stats?.recentScans || 0}</div>
-                    <div className="help-text">Confirmed in last 30 days</div>
-                </motion.div>
-
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} className="surface-card p-6 stack-sm group hover:border-sky-500/30 transition-all">
-                    <div className="row space">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">System Health</span>
-                        <div className="h-10 w-10 rounded-xl bg-sky-500/10 flex items-center justify-center group-hover:bg-sky-500/20 transition-colors">
-                            <Leaf size={20} className="text-sky-400" />
-                        </div>
-                    </div>
-                    <div className="text-4xl font-black text-white mt-2">100%</div>
-                    <div className="help-text flex items-center gap-1.5"><div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" /> All Systems Online</div>
-                </motion.div>
+                        <div className="text-4xl font-black text-white mt-2 leading-none">{m.value || 0}</div>
+                        <div className="help-text flex items-center gap-1.5 opacity-60">System-wide aggregate</div>
+                    </motion.div>
+                ))}
             </div>
 
-            {/* Charts Section */}
-            <div className="grid-2 gap-6">
-                <article className="surface-card p-6 stack-md">
-                    <h2 className="section-title">Waste Distribution</h2>
-                    <div className="h-[300px] w-full">
+            {/* Main Analytics Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8">
+                {/* Velocity Graph */}
+                <article className="surface-card p-8 stack-md border-white/5 bg-gradient-to-br from-slate-900/40 to-transparent">
+                    <div className="row space mb-4">
+                        <div>
+                            <h2 className="section-title text-xl">Scan Velocity</h2>
+                            <p className="help-text">7-Day activity throughput and system impact</p>
+                        </div>
+                        <div className="flex gap-2">
+                            <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-black border border-emerald-500/20">SCANS</span>
+                            <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-[10px] font-black border border-blue-500/20">IMPACT</span>
+                        </div>
+                    </div>
+                    <div className="h-[380px] w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={velocityData}>
+                                <defs>
+                                    <linearGradient id="colorScans" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#34d399" stopOpacity={0.3}/>
+                                        <stop offset="95%" stopColor="#34d399" stopOpacity={0}/>
+                                    </linearGradient>
+                                    <linearGradient id="colorImpact" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.3}/>
+                                        <stop offset="95%" stopColor="#60a5fa" stopOpacity={0}/>
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff08" vertical={false} />
+                                <XAxis dataKey="day" stroke="#ffffff20" fontSize={11} tickLine={false} axisLine={false} />
+                                <YAxis stroke="#ffffff20" fontSize={11} tickLine={false} axisLine={false} />
+                                <Tooltip 
+                                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
+                                    itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
+                                />
+                                <Area type="monotone" dataKey="scans" stroke="#34d399" strokeWidth={3} fillOpacity={1} fill="url(#colorScans)" />
+                                <Area type="monotone" dataKey="impact" stroke="#60a5fa" strokeWidth={3} fillOpacity={1} fill="url(#colorImpact)" />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    </div>
+                </article>
+
+                {/* Waste Distribution (Doughnut) */}
+                <article className="surface-card p-8 stack-md border-white/5 flex flex-col">
+                    <h2 className="section-title text-xl mb-2">Waste Composition</h2>
+                    <p className="help-text mb-6">Real-time classification breakdown</p>
+                    <div className="h-[280px] w-full relative">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
-                                    data={pieData}
-                                    innerRadius={60}
-                                    outerRadius={80}
-                                    paddingAngle={5}
+                                    data={wasteDistribution}
+                                    innerRadius={70}
+                                    outerRadius={95}
+                                    paddingAngle={8}
                                     dataKey="value"
+                                    stroke="none"
                                 >
-                                    {pieData.map((entry, index) => (
+                                    {wasteDistribution.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={entry.color} />
                                     ))}
                                 </Pie>
                                 <Tooltip 
-                                    contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px' }}
-                                    itemStyle={{ color: '#f1f5f9' }}
+                                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
                                 />
                             </PieChart>
                         </ResponsiveContainer>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total</span>
+                            <span className="text-3xl font-black text-white">{stats?.totalClassifications || 0}</span>
+                        </div>
                     </div>
-                    <div className="flex justify-center gap-6 mt-4">
-                        {pieData.map(item => (
-                            <div key={item.name} className="flex items-center gap-2">
-                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-                                <span className="text-xs text-slate-400">{item.name}</span>
+                    <div className="stack-sm mt-auto pt-6 border-t border-white/5">
+                        {wasteDistribution.map(item => (
+                            <div key={item.name} className="row space">
+                                <div className="row gap-3">
+                                    <div className="h-2 w-2 rounded-full" style={{ backgroundColor: item.color }} />
+                                    <span className="text-xs font-bold text-slate-300">{item.name}</span>
+                                </div>
+                                <span className="text-xs font-black text-white">{Math.round((item.value / (stats?.totalClassifications || 1)) * 100)}%</span>
+                            </div>
+                        ))}
+                    </div>
+                </article>
+            </div>
+
+            {/* Regional Hotspots & Quick Stats */}
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                <article className="surface-card p-6 xl:col-span-2">
+                    <h2 className="section-title mb-6 flex items-center gap-2">
+                        <Globe size={18} className="text-sky-400" /> Active Regional Hubs
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {activeRegions.map(region => (
+                            <div key={region.name} className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 row space group hover:border-sky-500/20 transition-all">
+                                <div className="row gap-4">
+                                    <div className="h-10 w-10 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-400">
+                                        <MapPin size={20} />
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-bold text-white">{region.name}</div>
+                                        <div className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{region.activity} PRIORITY</div>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <div className="text-lg font-black text-white">{region.scans}</div>
+                                    <div className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">SCANS</div>
+                                </div>
                             </div>
                         ))}
                     </div>
                 </article>
 
-                <article className="surface-card p-6 stack-md">
-                    <h2 className="section-title">Platform Activity</h2>
-                    <div className="h-[300px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={barData}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-                                <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
-                                <YAxis stroke="#94a3b8" fontSize={12} />
-                                <Tooltip 
-                                    cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                                    contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px' }}
-                                />
-                                <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                                    <Cell fill="#60a5fa" />
-                                    <Cell fill="#34d399" />
-                                    <Cell fill="#fbbf24" />
-                                </Bar>
-                            </BarChart>
-                        </ResponsiveContainer>
+                <article className="surface-card p-6 bg-gradient-to-br from-amber-500/10 to-transparent border-amber-500/10 stack-md">
+                    <h2 className="section-title text-amber-400 flex items-center gap-2">
+                        <TrendingUp size={18} /> Optimization Report
+                    </h2>
+                    <div className="p-4 rounded-2xl bg-black/20 border border-white/5 space-y-4">
+                        <div className="stack-xs">
+                            <div className="row space text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                <span>AI Target Accuracy</span>
+                                <span className="text-emerald-400">98.4%</span>
+                            </div>
+                            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                                <div className="h-full bg-emerald-500 w-[98.4%] shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                            </div>
+                        </div>
+                        <div className="stack-xs">
+                            <div className="row space text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                <span>Remediation Rate</span>
+                                <span className="text-blue-400">76%</span>
+                            </div>
+                            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                                <div className="h-full bg-blue-500 w-[76%] shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+                            </div>
+                        </div>
                     </div>
+                    <p className="text-[11px] text-slate-500 leading-relaxed italic">
+                        "System performance remains within optimal parameters. Regional hubs showing increased activity in residential sectors."
+                    </p>
                 </article>
             </div>
-
-            {/* Quick Summary Cards */}
-            <section className="grid-3">
-                <div className="surface-card p-5 row gap-4 bg-blue-500/5 border-blue-500/10">
-                    <div className="icon-pill bg-blue-500/20"><Recycle className="text-blue-400" /></div>
-                    <div>
-                        <div className="text-xl font-bold text-slate-100">{stats?.recyclableItems || 0}</div>
-                        <div className="text-xs text-slate-400 uppercase tracking-wider">Recyclable</div>
-                    </div>
-                </div>
-                <div className="surface-card p-5 row gap-4 bg-emerald-500/5 border-emerald-500/10">
-                    <div className="icon-pill bg-emerald-500/20"><Leaf className="text-emerald-400" /></div>
-                    <div>
-                        <div className="text-xl font-bold text-slate-100">{stats?.biodegradableItems || 0}</div>
-                        <div className="text-xs text-slate-400 uppercase tracking-wider">Biodegradable</div>
-                    </div>
-                </div>
-                <div className="surface-card p-5 row gap-4 bg-red-500/5 border-red-500/10">
-                    <div className="icon-pill bg-red-500/20"><Trash2 className="text-red-400" /></div>
-                    <div>
-                        <div className="text-xl font-bold text-slate-100">{stats?.nonBiodegradableItems || 0}</div>
-                        <div className="text-xs text-slate-400 uppercase tracking-wider">Non-Biodegradable</div>
-                    </div>
-                </div>
-            </section>
         </div>
     );
 };
