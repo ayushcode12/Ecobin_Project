@@ -37,20 +37,14 @@ const Scan = () => {
     const [result, setResult] = useState(null);
 
     const [useCamera, setUseCamera] = useState(false);
-    const [livePrediction, setLivePrediction] = useState(null);
-    const [liveMessage, setLiveMessage] = useState('Initialize Optical Sensor');
-    const [liveProcessing, setLiveProcessing] = useState(false);
-    const [autoConfirmedFrame, setAutoConfirmedFrame] = useState(null);
+    const [terminalLogs, setTerminalLogs] = useState([
+        '[SYSTEM_READY]: OPTICAL_SENSOR_ONLINE',
+        '[NEURAL_ENGINE]: STANDBY'
+    ]);
 
-    const videoRef = useRef(null);
-    const streamRef = useRef(null);
-    const liveLoopTimeoutRef = useRef(null);
-
-    const requestImageUrl = useMemo(() => {
-        if (imageUrl.trim()) return imageUrl.trim();
-        if (preview) return preview;
-        return 'https://placehold.co/400';
-    }, [imageUrl, preview]);
+    const addLog = (msg) => {
+        setTerminalLogs(prev => [...prev.slice(-4), `[${new Date().toLocaleTimeString()}]: ${msg}`]);
+    };
 
     const stopCamera = () => {
         if (liveLoopTimeoutRef.current) {
@@ -63,6 +57,7 @@ const Scan = () => {
         }
         setUseCamera(false);
         setLiveProcessing(false);
+        addLog('OPTICAL_SENSOR_OFFLINE');
     };
 
     const startCamera = async () => {
@@ -70,6 +65,7 @@ const Scan = () => {
         setAutoConfirmedFrame(null);
         setLivePrediction(null);
         setLiveMessage('Synchronizing Neural Engine...');
+        addLog('INITIALIZING_OPTICAL_SENSOR...');
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 video: { 
@@ -82,8 +78,10 @@ const Scan = () => {
             setUseCamera(true);
             setPreview(null);
             setImageBase64('');
+            addLog('NEURAL_LINK_ESTABLISHED');
         } catch (err) {
             setError('Optical sensor access denied. Please utilize manual upload mode.');
+            addLog('ERROR: SENSOR_ACCESS_DENIED');
         }
     };
 
@@ -123,8 +121,13 @@ const Scan = () => {
                 const prediction = response.data;
                 setLivePrediction(prediction);
                 setLiveMessage(prediction.statusMessage);
+                
+                if (prediction.confidence > 0.3) {
+                    addLog(`DETECTED_${prediction.categoryType.toUpperCase()} | CONF: ${(prediction.confidence * 100).toFixed(1)}%`);
+                }
 
                 if (prediction.confidence >= LIVE_AUTO_CONFIRM_CONFIDENCE) {
+                    addLog('MATCH_AUTHENTICATED | DATA_LOCKED');
                     setAutoConfirmedFrame(frame);
                     setImageBase64(frame);
                     setPreview(frame);
@@ -135,6 +138,7 @@ const Scan = () => {
                 }
             } catch (err) {
                 setLiveMessage('Neural Link Re-establishing...');
+                addLog('WARNING: LINK_INTERRUPTED');
                 liveLoopTimeoutRef.current = setTimeout(runLivePreview, 2000);
             } finally {
                 setLiveProcessing(false);
@@ -163,6 +167,7 @@ const Scan = () => {
             const b64 = canvas.toDataURL('image/jpeg', 0.8);
             setImageBase64(b64);
             setPreview(b64);
+            addLog('MANUAL_FRAME_CAPTURED');
             stopCamera();
         }
     };
@@ -171,6 +176,7 @@ const Scan = () => {
         const file = event.target.files?.[0];
         if (!file) return;
         setPreview(URL.createObjectURL(file));
+        addLog('LOCAL_DATA_PACKET_LOADED');
         const reader = new FileReader();
         reader.onloadend = () => {
             const img = new Image();
@@ -196,12 +202,15 @@ const Scan = () => {
         }
         setLoading(true);
         setError('');
+        addLog('SUBMITTING_FOR_AUDIT...');
         try {
             const finalImagePayload = imageBase64 || imageUrl.trim() || requestImageUrl;
             const response = await scanWaste(textDescription.trim(), finalImagePayload);
             setResult(response?.data || null);
+            addLog('AUDIT_SUCCESSFUL');
         } catch (err) {
             setError('Submission failed: Neural node connectivity error.');
+            addLog('ERROR: SUBMISSION_FAILED');
         } finally {
             setLoading(false);
         }
@@ -217,6 +226,7 @@ const Scan = () => {
         setAutoConfirmedFrame(null);
         setLivePrediction(null);
         stopCamera();
+        addLog('SYSTEM_RECALIBRATED');
     };
 
     return (
@@ -249,6 +259,17 @@ const Scan = () => {
                                             </div>
                                             <div className="text-[9px] text-slate-500 font-mono mt-1">RES: 1280x720 | FPS: 30</div>
                                         </div>
+
+                                        {/* Neural Terminal Log Overlay */}
+                                        <div className="hidden md:flex flex-col gap-1.5 p-4 bg-black/40 backdrop-blur-sm rounded-2xl border border-white/5 max-w-[280px]">
+                                            <div className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Live Diagnostic Feed</div>
+                                            {terminalLogs.map((log, i) => (
+                                                <div key={i} className={`text-[9px] font-mono leading-none ${log.includes('ERROR') ? 'text-red-400' : log.includes('DETECTED') ? 'text-emerald-400' : 'text-slate-400'}`}>
+                                                    {log}
+                                                </div>
+                                            ))}
+                                        </div>
+
                                         <div className="stack-xs bg-black/60 backdrop-blur-md p-3 rounded-xl border border-white/10 text-right">
                                             <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 justify-end">
                                                 <Cpu size={12} /> Edge Processing
@@ -261,15 +282,22 @@ const Scan = () => {
                                     <div className="absolute inset-0 flex items-center justify-center">
                                         <div className={`w-[320px] h-[320px] border border-white/20 rounded-[40px] relative transition-all duration-700 ${livePrediction?.confidence >= 0.6 ? 'border-emerald-500 shadow-[0_0_80px_rgba(16,185,129,0.3)] scale-105' : ''}`}>
                                             {/* Corner Accents */}
-                                            <div className="absolute -top-1 -left-1 w-8 h-8 border-t-4 border-l-4 border-emerald-500 rounded-tl-2xl" />
-                                            <div className="absolute -top-1 -right-1 w-8 h-8 border-t-4 border-r-4 border-emerald-500 rounded-tr-2xl" />
-                                            <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-4 border-l-4 border-emerald-500 rounded-bl-2xl" />
-                                            <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-4 border-r-4 border-emerald-500 rounded-br-2xl" />
+                                            <div className="absolute -top-2 -left-2 w-10 h-10 border-t-4 border-l-4 border-emerald-500 rounded-tl-2xl shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
+                                            <div className="absolute -top-2 -right-2 w-10 h-10 border-t-4 border-r-4 border-emerald-500 rounded-tr-2xl shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
+                                            <div className="absolute -bottom-2 -left-2 w-10 h-10 border-b-4 border-l-4 border-emerald-500 rounded-bl-2xl shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
+                                            <div className="absolute -bottom-2 -right-2 w-10 h-10 border-b-4 border-r-4 border-emerald-500 rounded-br-2xl shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
                                             
-                                            <div className="absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500 to-transparent top-0 animate-[scan_3s_ease-in-out_infinite]" />
+                                            {/* Moving Scanning Line */}
+                                            <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent shadow-[0_0_20px_rgba(16,185,129,0.8)] opacity-60 animate-[scan_2.5s_linear_infinite]" />
                                             
-                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-emerald-500/10 backdrop-blur-xl border border-emerald-500/30 px-6 py-2 rounded-full">
-                                                <span className="text-[10px] font-black text-emerald-300 uppercase tracking-[0.2em]">{liveMessage}</span>
+                                            {/* Sub-reticle crosshair */}
+                                            <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                                                <div className="h-[20%] w-[1px] bg-white" />
+                                                <div className="w-[20%] h-[1px] bg-white" />
+                                            </div>
+
+                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black/60 backdrop-blur-xl border border-emerald-500/30 px-6 py-2 rounded-full">
+                                                <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em]">{liveMessage}</span>
                                             </div>
                                         </div>
                                     </div>
