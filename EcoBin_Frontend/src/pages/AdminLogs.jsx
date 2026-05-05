@@ -48,7 +48,7 @@ const AdminLogs = () => {
         <div className="page-shell space-y-6">
             <section className="section-head">
                 <div>
-                    <span className="section-kicker mb-4">Audit Trail</span>
+                    <span className="section-kicker mb-4">System Audit</span>
                     <h1 className="page-title"><ClipboardList size={28} className="mr-3 inline-block" />Activity Logs</h1>
                     <p className="page-subtitle">Complete history of administrative actions and system modifications.</p>
                 </div>

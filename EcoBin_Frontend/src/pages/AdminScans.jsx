@@ -45,7 +45,7 @@ const AdminScans = () => {
         <div className="page-shell space-y-6">
             <section className="section-head">
                 <div>
-                    <span className="section-kicker mb-4">Model Performance Audit</span>
+                    <span className="section-kicker mb-4">System Scan Audit</span>
                     <h1 className="page-title"><ScanEye size={28} className="mr-3 inline-block" />AI Classification Audit</h1>
                     <p className="page-subtitle">Review and verify every AI prediction across the platform to ensure accuracy.</p>
                 </div>
@@ -76,7 +76,7 @@ const AdminScans = () => {
                                 ) : (
                                     <div className="stack-xs items-center text-slate-700 group-hover:text-slate-500 transition-colors">
                                         <ImageIcon size={40} className="mb-2" />
-                                        <span className="text-[10px] uppercase font-black tracking-[0.2em]">Neural Data Only</span>
+                                        <span className="text-[10px] uppercase font-black tracking-[0.2em]">Text Only</span>
                                     </div>
                                 )}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -102,7 +102,7 @@ const AdminScans = () => {
 
                                 <div className="grid grid-cols-2 gap-3 mt-auto pt-4 border-t border-white/5">
                                     <div className="stack-xs">
-                                        <span className="text-[9px] text-slate-500 font-black uppercase tracking-[0.15em]">Neural Key</span>
+                                        <span className="text-[9px] text-slate-500 font-black uppercase tracking-[0.15em]">Keyword</span>
                                         <span className="text-sm font-black text-emerald-400 truncate">{scan.matchedKeyword || 'None'}</span>
                                     </div>
                                     <div className="stack-xs text-right">

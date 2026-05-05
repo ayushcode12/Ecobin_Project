@@ -227,9 +227,9 @@ const AdminReports = () => {
         <div className="page-shell space-y-5">
             <section className="section-head">
                 <div>
-                    <span className="section-kicker mb-4">Admin Workflow Control</span>
+                    <span className="section-kicker mb-4">Management Workflow</span>
                     <h1 className="page-title"><ListTodo size={30} className="mr-2 inline-block align-middle" />Admin Report Queue</h1>
-                    <p className="page-subtitle">Review submitted waste issues, enforce status transitions, assign pickups, and close reports with proof.</p>
+                    <p className="page-subtitle">Review submitted waste issues, manage status transitions, and assign pickups for remediation.</p>
                 </div>
                 <button className="btn-ghost" onClick={fetchReports}><RefreshCcw size={15} /> Refresh</button>
             </section>
@@ -351,7 +351,7 @@ const AdminReports = () => {
                                         <div className="form-grid p-2">
                                             <div className="flex items-center gap-2 mb-2">
                                                 <div className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-                                                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-300">Action Control Center</h4>
+                                                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-300">Management Console</h4>
                                             </div>
                                             
                                             <div className="bg-black/20 p-4 rounded-2xl border border-white/5 stack-md">
@@ -377,7 +377,7 @@ const AdminReports = () => {
 
                                                 <button className="btn-primary w-full py-3.5 text-sm font-black shadow-lg shadow-emerald-500/20" onClick={() => handleStatusUpdate(report)} disabled={busy}>
                                                     {busy ? <RefreshCcw size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
-                                                    {busy ? 'SYNCHRONIZING...' : 'COMMIT STATUS UPDATE'}
+                                                    {busy ? 'SYNCHRONIZING...' : 'UPDATE STATUS'}
                                                 </button>
                                             </div>
 

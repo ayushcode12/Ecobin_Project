@@ -75,9 +75,9 @@ const AdminContent = () => {
         <div className="page-shell space-y-6">
             <section className="section-head">
                 <div>
-                    <span className="section-kicker mb-4">Awareness & Engagement</span>
+                    <span className="section-kicker mb-4">Community Engagement</span>
                     <h1 className="page-title"><FileText size={28} className="mr-3 inline-block" />Content Management</h1>
-                    <p className="page-subtitle">Publish ecological tips and broadcast system-wide announcements.</p>
+                    <p className="page-subtitle">Publish ecological tips and broadcast system-wide announcements to the community.</p>
                 </div>
                 <button className="btn-ghost" onClick={fetchData}><RefreshCcw size={15} /> Refresh</button>
             </section>

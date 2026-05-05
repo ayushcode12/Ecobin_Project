@@ -94,9 +94,9 @@ const AdminUsers = () => {
         <div className="page-shell space-y-6">
             <section className="section-head">
                 <div>
-                    <span className="section-kicker mb-4">Identity Management</span>
+                    <span className="section-kicker mb-4">Account Administration</span>
                     <h1 className="page-title"><Users size={28} className="mr-3 inline-block" />User Management</h1>
-                    <p className="page-subtitle">Monitor accounts, moderate behavior, and manage eco-performance scores.</p>
+                    <p className="page-subtitle">Monitor accounts, moderate user activity, and manage community impact scores.</p>
                 </div>
                 <button className="btn-ghost" onClick={fetchUsers}><RefreshCcw size={15} /> Refresh</button>
             </section>
@@ -109,7 +109,7 @@ const AdminUsers = () => {
                         <Users size={24} />
                     </div>
                     <div>
-                        <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total Citizens</div>
+                        <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total Users</div>
                         <div className="text-2xl font-black text-white">{users.length}</div>
                     </div>
                 </div>
@@ -127,7 +127,7 @@ const AdminUsers = () => {
                         <Trophy size={24} />
                     </div>
                     <div>
-                        <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Elite Warriors</div>
+                        <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Top Contributors</div>
                         <div className="text-2xl font-black text-white">{users.filter(u => (u.points || 0) > 500).length}</div>
                     </div>
                 </div>
@@ -138,7 +138,7 @@ const AdminUsers = () => {
                     <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                     <input 
                         type="text" 
-                        placeholder="Search by identity or email sequence..." 
+                        placeholder="Search by name or email address..." 
                         className="input-control border-transparent bg-transparent pl-14 py-4 text-sm font-medium focus:bg-white/[0.02]"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -202,7 +202,7 @@ const AdminUsers = () => {
                                         </button>
                                         <button 
                                             className={`p-2.5 rounded-lg transition-all ${user.role === 'ROLE_ADMIN' ? 'opacity-20 cursor-not-allowed' : 'text-slate-500 hover:text-red-500 hover:bg-red-500/10'}`}
-                                            title="Terminate Identity"
+                                            title="Delete User"
                                             onClick={() => handleDeleteUser(user.id)}
                                             disabled={actionLoading === user.id || user.role === 'ROLE_ADMIN'}
                                         >

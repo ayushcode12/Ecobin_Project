@@ -42,13 +42,13 @@ const AdminSettings = () => {
         <div className="page-shell space-y-8">
             <section className="section-head">
                 <div>
-                    <span className="section-kicker mb-4">Core Orchestration</span>
+                    <span className="section-kicker mb-4">System Control</span>
                     <h1 className="page-title"><Settings size={28} className="mr-3 inline-block" />System Settings</h1>
-                    <p className="page-subtitle">Configure global platform behavior, AI engine parameters, and game loop variables.</p>
+                    <p className="page-subtitle">Configure global platform behavior, AI scanning parameters, and community variables.</p>
                 </div>
                 <button className="btn-primary" onClick={handleSave} disabled={saving}>
                     {saving ? <Database size={15} className="animate-spin" /> : <Save size={15} />}
-                    {saving ? 'Saving...' : 'Commit Changes'}
+                    {saving ? 'Saving...' : 'Save Settings'}
                 </button>
             </section>
 
@@ -63,7 +63,7 @@ const AdminSettings = () => {
                         <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
                             <Cpu size={20} />
                         </div>
-                        <h2 className="text-lg font-black text-white">Engine Parameters</h2>
+                        <h2 className="text-lg font-black text-white">System Parameters</h2>
                     </div>
 
                     <div className="space-y-4">

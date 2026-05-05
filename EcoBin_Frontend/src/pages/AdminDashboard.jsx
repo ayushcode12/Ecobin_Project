@@ -83,7 +83,7 @@ const AdminDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="surface-card p-6 stack-sm group hover:border-blue-500/30 transition-all">
                     <div className="row space">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Global Warriors</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Total Users</span>
                         <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
                             <Users size={20} className="text-blue-400" />
                         </div>
@@ -94,7 +94,7 @@ const AdminDashboard = () => {
 
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="surface-card p-6 stack-sm group hover:border-emerald-500/30 transition-all">
                     <div className="row space">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Neural Sorts</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Total Scans</span>
                         <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
                             <Zap size={20} className="text-emerald-400" />
                         </div>
@@ -116,7 +116,7 @@ const AdminDashboard = () => {
 
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} className="surface-card p-6 stack-sm group hover:border-sky-500/30 transition-all">
                     <div className="row space">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Engine Health</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">System Health</span>
                         <div className="h-10 w-10 rounded-xl bg-sky-500/10 flex items-center justify-center group-hover:bg-sky-500/20 transition-colors">
                             <Leaf size={20} className="text-sky-400" />
                         </div>
