@@ -10,6 +10,7 @@ import {
     MapPinned,
     Menu,
     ScanEye,
+    Settings,
     ShieldCheck,
     Trophy,
     UserCircle2,
@@ -86,6 +87,7 @@ const Navbar = () => {
             { to: '/admin/scans', label: 'AI Audit', icon: ScanEye },
             { to: '/admin/content', label: 'Content', icon: FileText },
             { to: '/admin/logs', label: 'Activity Logs', icon: ClipboardList },
+            { to: '/admin/settings', label: 'Settings', icon: Settings },
         ];
     }, [isAuthenticated, isAdmin]);
 
