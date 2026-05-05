@@ -17,6 +17,7 @@ import AdminSettings from '@/pages/AdminSettings';
 import ReportWaste from '@/pages/ReportWaste';
 import History from '@/pages/History';
 import Profile from '@/pages/Profile';
+import Achievements from '@/pages/Achievements';
 import Layout from '@/components/layout/Layout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import AdminRoute from '@/components/auth/AdminRoute';
@@ -58,6 +59,10 @@ const AppContent = () => {
                         <Route
                             path="/profile"
                             element={<ProtectedRoute><PageTransition><Profile /></PageTransition></ProtectedRoute>}
+                        />
+                        <Route
+                            path="/achievements"
+                            element={<ProtectedRoute><PageTransition><Achievements /></PageTransition></ProtectedRoute>}
                         />
 
                         <Route

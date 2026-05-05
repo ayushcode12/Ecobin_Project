@@ -40,6 +40,7 @@ const STREAK_MILESTONES = [
 
 const DASHBOARD_ACTIONS = [
     { to: '/scan', title: 'Live Scan', note: 'Open the camera and confirm the category live.', icon: Camera, featured: true },
+    { to: '/achievements', title: 'Hall of Fame', note: 'Unlock badges, track milestones, and view your legacy.', icon: Award },
     { to: '/leaderboard', title: 'Chase Rank', note: 'Check your position and catch the leaders.', icon: Trophy },
     { to: '/history', title: 'Review Runs', note: 'Revisit saved scans, scores, and outcomes.', icon: History },
     { to: '/report', title: 'Report Waste', note: 'Push a field report into the admin queue.', icon: ShieldCheck },
@@ -265,6 +266,10 @@ const Dashboard = () => {
                         <Link to="/leaderboard" className="btn-ghost border-white/10 bg-white/5 hover:bg-white/10 py-4 px-8">
                             Node Rankings
                             <Trophy size={18} />
+                        </Link>
+                        <Link to="/achievements" className="btn-ghost border-white/10 bg-white/5 hover:bg-white/10 py-4 px-8">
+                            Hall of Fame
+                            <Award size={18} />
                         </Link>
                     </div>
 
