@@ -1250,6 +1250,67 @@
     border-color: rgba(245, 158, 11, 0.15);
     @apply mb-8;
   }
+
+  /* Leaderboard Podium 3D Styles */
+  .podium-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-6 items-end min-h-[420px] px-4;
+  }
+
+  .podium-stand-wrap {
+    @apply flex flex-col items-center justify-end h-full;
+  }
+
+  .podium-user-info {
+    @apply flex flex-col items-center mb-4 text-center w-full;
+  }
+
+  .podium-bar {
+    @apply w-full rounded-t-[24px] flex flex-col items-center p-4 transition-all duration-700 relative overflow-hidden;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 0;
+  }
+
+  .podium-bar::before {
+    content: "";
+    @apply absolute inset-0 opacity-20 pointer-events-none;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), transparent);
+  }
+
+  .podium-bar.rank-1 {
+    @apply h-[200px] border-amber-500/30;
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.02));
+    box-shadow: 0 -10px 40px rgba(245, 158, 11, 0.1);
+  }
+
+  .podium-bar.rank-2 {
+    @apply h-[150px] border-slate-400/30;
+    background: linear-gradient(180deg, rgba(148, 163, 184, 0.1), rgba(148, 163, 184, 0.02));
+  }
+
+  .podium-bar.rank-3 {
+    @apply h-[110px] border-orange-500/30;
+    background: linear-gradient(180deg, rgba(249, 115, 22, 0.1), rgba(249, 115, 22, 0.02));
+  }
+
+  .rank-number {
+    @apply text-4xl font-black mb-2 opacity-40;
+    font-family: var(--ec-heading-font);
+  }
+
+  .podium-placeholder {
+    @apply flex items-center justify-center h-[120px] rounded-[24px] border border-dashed border-white/10 text-slate-500 text-xs uppercase tracking-widest;
+  }
+
+  @media (max-width: 768px) {
+    .podium-grid {
+      @apply flex flex-col items-stretch gap-8 min-h-0;
+    }
+    .podium-bar {
+      @apply h-auto rounded-[24px] border-b;
+    }
+    .pos-1 { order: -1; }
+  }
 }
 
 @layer utilities {

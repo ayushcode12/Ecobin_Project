@@ -189,14 +189,18 @@ const ReportWaste = () => {
 
                     <form className="form-grid" onSubmit={handleSubmit}>
                         {useCamera ? (
-                            <div className="relative w-full overflow-hidden rounded-[20px] border border-emerald-400/30 bg-black/60 shadow-inner">
-                                <video ref={videoRef} autoPlay playsInline muted className="w-full h-[300px] object-cover" />
-                                <div className="absolute inset-0 flex flex-col items-center justify-end pb-4 bg-gradient-to-t from-black/80 to-transparent">
-                                    <button className="btn-primary mb-2 shadow-xl shadow-emerald-500/50" type="button" onClick={captureFrame}>
+                            <div className="relative w-full overflow-hidden rounded-[24px] border-2 border-emerald-400/30 bg-black shadow-2xl">
+                                <video ref={videoRef} autoPlay playsInline muted className="w-full h-[340px] object-cover" />
+                                <div className="absolute inset-0 pointer-events-none border-[24px] border-black/40" style={{ maskImage: 'radial-gradient(circle at center, transparent 30%, black 100%)' }}></div>
+                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <div className="w-[180px] h-[180px] border-2 border-emerald-500/40 border-dashed rounded-full animate-[spin_10s_linear_infinite]"></div>
+                                </div>
+                                <div className="absolute inset-0 flex flex-col items-center justify-end pb-6 bg-gradient-to-t from-black/80 to-transparent">
+                                    <button className="btn-primary mb-3 shadow-xl shadow-emerald-500/50 scale-110" type="button" onClick={captureFrame}>
                                         <Aperture size={20} className="mr-2" /> Capture Proof
                                     </button>
-                                    <button className="text-white/60 hover:text-white transition-colors flex items-center text-xs" type="button" onClick={stopCamera}>
-                                        <X size={14} className="mr-1" /> Close Camera
+                                    <button className="text-white/60 hover:text-white transition-colors flex items-center text-xs font-bold uppercase tracking-widest" type="button" onClick={stopCamera}>
+                                        <X size={14} className="mr-2" /> Cancel Camera
                                     </button>
                                 </div>
                             </div>
@@ -238,12 +242,23 @@ const ReportWaste = () => {
                             </div>
 
                             <div>
-                                <label className="form-label">Severity</label>
-                                <select className="select-control" value={form.severity} onChange={(e) => updateField('severity', e.target.value)}>
-                                    <option value="LOW">LOW</option>
-                                    <option value="MEDIUM">MEDIUM</option>
-                                    <option value="HIGH">HIGH</option>
-                                </select>
+                                <label className="form-label">Severity Level</label>
+                                <div className="grid grid-cols-3 gap-2">
+                                    {['LOW', 'MEDIUM', 'HIGH'].map(s => (
+                                        <button
+                                            key={s}
+                                            type="button"
+                                            onClick={() => updateField('severity', s)}
+                                            className={`rounded-xl py-3 text-[10px] font-black transition-all border ${
+                                                form.severity === s 
+                                                ? (s === 'HIGH' ? 'bg-red-500/20 border-red-500/50 text-red-300 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : s === 'MEDIUM' ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.2)]' : 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]')
+                                                : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10'
+                                            }`}
+                                        >
+                                            {s}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
@@ -273,9 +288,9 @@ const ReportWaste = () => {
                             )}
                         </div>
 
-                        <button type="submit" className="btn-primary mt-2" disabled={submitting}>
-                            {submitting ? <Loader2 size={16} className="animate-spin" /> : <SendHorizontal size={16} />}
-                            {submitting ? 'Reporting...' : 'Submit Waste Report'}
+                        <button type="submit" className="btn-primary mt-2 w-full" disabled={submitting}>
+                            {submitting ? <Loader2 size={18} className="animate-spin" /> : <SendHorizontal size={18} />}
+                            {submitting ? 'Transmitting Data...' : 'Dispatch Waste Report'}
                         </button>
                     </form>
                 </div>

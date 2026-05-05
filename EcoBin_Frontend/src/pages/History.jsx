@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
     exportMyReportsCsv,
@@ -71,6 +71,26 @@ const History = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [records, setRecords] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const filteredRecords = useMemo(() => {
+        if (!searchQuery.trim()) return records;
+        return records.filter(r => 
+            (r.textDescription?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+            (r.categoryType?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+            (r.category?.categoryType?.toLowerCase() || '').includes(searchQuery.toLowerCase())
+        );
+    }, [records, searchQuery]);
+
+    const stats = useMemo(() => {
+        const totalPoints = records.reduce((acc, curr) => acc + (activeTab === 'reports' ? (curr.points || 0) : (curr.pointsAwarded || 0)), 0);
+        const categories = {};
+        records.forEach(r => {
+            const cat = activeTab === 'reports' ? (r.category?.categoryType || 'Unknown') : (r.categoryType || 'Unknown');
+            categories[cat] = (categories[cat] || 0) + 1;
+        });
+        return { totalPoints, totalCount: records.length, categories };
+    }, [records, activeTab]);
 
     const fetchData = async () => {
         setLoading(true);
@@ -148,6 +168,39 @@ const History = () => {
                     <h1 className="page-title"><HistoryIcon size={30} className="mr-2 inline-block align-middle" />My History</h1>
                     <p className="page-subtitle">Review confirmed scans and waste reports, filter them cleanly, and export your activity for presentation or review.</p>
                 </div>
+                <div className="min-w-[280px]">
+                    <div className="input-icon-wrap">
+                        <Filter size={16} className="input-icon" />
+                        <input 
+                            type="text" 
+                            className="input-control" 
+                            placeholder="Search description..." 
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+                </div>
+            </section>
+
+            {/* History Overview Section */}
+            <section className="grid-3 page-section">
+                <article className="surface-card p-5 stack-sm">
+                    <span className="section-note uppercase tracking-widest text-[10px]">Total Contribution</span>
+                    <div className="text-3xl font-black text-emerald-400">+{stats.totalPoints} <span className="text-xs text-slate-500">XP</span></div>
+                    <p className="help-text">Accumulated impact points.</p>
+                </article>
+                <article className="surface-card p-5 stack-sm">
+                    <span className="section-note uppercase tracking-widest text-[10px]">Activity Count</span>
+                    <div className="text-3xl font-black text-white">{stats.totalCount} <span className="text-xs text-slate-500">{activeTab.toUpperCase()}</span></div>
+                    <p className="help-text">Total entries in your log.</p>
+                </article>
+                <article className="surface-card p-5 stack-sm">
+                    <span className="section-note uppercase tracking-widest text-[10px]">Primary Category</span>
+                    <div className="text-xl font-black text-slate-100 truncate">
+                        {Object.entries(stats.categories).sort((a,b) => b[1]-a[1])[0]?.[0] || 'N/A'}
+                    </div>
+                    <p className="help-text">Most frequent item type.</p>
+                </article>
             </section>
 
             <section className="surface-card page-section">
@@ -176,16 +229,16 @@ const History = () => {
                             <table className="data-table">
                                 <thead>
                                     <tr>
-                                        <th>Date</th>
+                                        <th className="pl-6">Date</th>
                                         <th>Category</th>
                                         <th>Description</th>
                                         {activeTab === 'reports' && <th>Status</th>}
                                         {activeTab === 'scans' && <th>Matched Rule</th>}
-                                        <th>Points</th>
+                                        <th className="pr-6 text-right">Points</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {records.map((row) => {
+                                    {filteredRecords.map((row) => {
                                         const points = activeTab === 'reports' ? (row.points || 0) : (row.pointsAwarded || 0);
                                         const category = activeTab === 'reports'
                                             ? (row.category?.categoryType || 'Unknown')
@@ -193,12 +246,12 @@ const History = () => {
 
                                         return (
                                             <tr key={row.id}>
-                                                <td>{formatDate(row.createdAt)}</td>
-                                                <td>{category}</td>
-                                                <td>{row.textDescription || '-'}</td>
+                                                <td className="pl-6">{formatDate(row.createdAt)}</td>
+                                                <td><span className={`badge ${category === 'Biodegradable' ? 'brand' : category === 'Recyclable' ? 'accent' : 'soft'}`}>{category}</span></td>
+                                                <td className="max-w-[200px] truncate">{row.textDescription || '-'}</td>
                                                 {activeTab === 'reports' && <td><span className={`status-chip ${getStatusClass(row.status)}`}>{row.status || 'UNKNOWN'}</span></td>}
                                                 {activeTab === 'scans' && <td>{row.matchedKeyword || '-'}</td>}
-                                                <td className="font-bold text-emerald-200">+{points}</td>
+                                                <td className="pr-6 text-right font-black text-emerald-400">+{points}</td>
                                             </tr>
                                         );
                                     })}

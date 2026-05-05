@@ -1,6 +1,6 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Medal, Trophy } from 'lucide-react';
+import { Medal, Trophy, Search } from 'lucide-react';
 import { getLeaderboard } from '@/services/api';
 
 const stringToHue = (value = '') => {
@@ -16,6 +16,12 @@ const nameInitial = (name) => String(name || '?').charAt(0).toUpperCase();
 const Leaderboard = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const filteredUsers = useMemo(() => {
+        if (!searchQuery.trim()) return users;
+        return users.filter(u => u.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    }, [users, searchQuery]);
 
     useEffect(() => {
         const fetchLeaderboard = async () => {
@@ -60,9 +66,21 @@ const Leaderboard = () => {
         <div className="page-shell narrow">
             <section className="section-head">
                 <div>
-                    <span className="section-kicker mb-4">Points, Ranking, Recognition</span>
+                    <span className="section-kicker mb-4">Eco Rankings</span>
                     <h1 className="page-title">Leaderboard</h1>
-                    <p className="page-subtitle">Top Eco Warriors making daily impact through live scans, responsible reporting, and consistent community activity.</p>
+                    <p className="page-subtitle">Compete with fellow eco-warriors and climb the ranks by scanning waste and reporting incidents.</p>
+                </div>
+                <div className="min-w-[280px]">
+                    <div className="input-icon-wrap">
+                        <Search size={16} className="input-icon" />
+                        <input 
+                            type="text" 
+                            className="input-control" 
+                            placeholder="Search warrior..." 
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
                 </div>
             </section>
 
@@ -73,33 +91,35 @@ const Leaderboard = () => {
                     <div className="empty-state">No leaderboard data available yet.</div>
                 ) : (
                     <>
-                        <div className="podium mb-4">
+                        <div className="podium-grid mb-10">
                             {[2, 1, 3].map((position) => {
                                 const user = users[position - 1];
-                                if (!user) {
-                                    return <div key={position} className="podium-card opacity-45">Waiting for rank #{position}</div>;
-                                }
+                                if (!user) return <div key={position} className="podium-placeholder">Rank #{position} Empty</div>;
 
                                 const champion = position === 1;
 
                                 return (
                                     <motion.article
                                         key={position}
-                                        className={`podium-card ${champion ? '-translate-y-2 bg-gradient-to-br from-amber-500/20 to-slate-900/85' : ''}`}
-                                        initial={{ opacity: 0, y: 16 }}
+                                        className={`podium-stand-wrap pos-${position}`}
+                                        initial={{ opacity: 0, y: 30 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: position * 0.08 }}
+                                        transition={{ delay: position * 0.1 }}
                                     >
-                                        {champion ? (
-                                            <Trophy size={24} className="mx-auto mb-1.5 text-amber-300" />
-                                        ) : (
-                                            <Medal size={20} className={`mx-auto mb-1.5 ${position === 2 ? 'text-slate-300' : 'text-orange-400'}`} />
-                                        )}
-                                        {renderAvatar(user.name, position)}
-                                        <div className="mb-1 font-bold">{user.name}</div>
-                                        <div className="badge accent mb-1">#{position}</div>
-                                        <div className="font-bold text-emerald-200">{(user.totalPoints || 0).toLocaleString()} pts</div>
-                                        <div className="badge warning mt-2">{user.currentStreak || 0}-day streak</div>
+                                        <div className="podium-user-info">
+                                            {champion ? (
+                                                <Trophy size={28} className="mx-auto mb-2 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+                                            ) : (
+                                                <Medal size={22} className={`mx-auto mb-2 ${position === 2 ? 'text-slate-300' : 'text-orange-400'}`} />
+                                            )}
+                                            {renderAvatar(user.name, position)}
+                                            <div className="text-lg font-black text-slate-100 mt-2 truncate w-full">{user.name}</div>
+                                            <div className="font-black text-emerald-400 text-lg">{(user.totalPoints || 0).toLocaleString()} <span className="text-[10px] text-slate-500 uppercase">XP</span></div>
+                                        </div>
+                                        <div className={`podium-bar rank-${position}`}>
+                                            <div className="rank-number">#{position}</div>
+                                            <div className="badge warning mt-auto mb-4">{user.currentStreak || 0}d Streak</div>
+                                        </div>
                                     </motion.article>
                                 );
                             })}
@@ -117,11 +137,16 @@ const Leaderboard = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {users.map((user, index) => {
+                                        {filteredUsers.map((user, index) => {
                                             const rank = index + 1;
                                             return (
-                                                <tr key={`${user.name}-${rank}`}>
-                                                    <td className="font-bold">#{rank}</td>
+                                                <tr key={`${user.name}-${rank}`} className={user.name === searchQuery ? 'bg-emerald-500/10' : ''}>
+                                                    <td className="font-bold">
+                                                        <div className="flex items-center gap-2">
+                                                            {rank <= 3 ? <Trophy size={14} className={rank === 1 ? 'text-amber-400' : rank === 2 ? 'text-slate-300' : 'text-orange-400'} /> : null}
+                                                            #{rank}
+                                                        </div>
+                                                    </td>
                                                     <td>
                                                         <div className="row">
                                                             <div
