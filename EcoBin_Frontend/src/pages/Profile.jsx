@@ -14,6 +14,7 @@ import {
     Star
 } from 'lucide-react';
 import { getCurrentUser, getUserStats, updateMyProfileName } from '@/services/api';
+import { useToast } from '@/components/ui/ToastProvider';
 
 const BADGES = [
   { id: 'early_adopter', name: 'First Sort', desc: 'Completed your first AI scan', icon: Award, color: 'text-blue-400', threshold: 1 },
@@ -30,6 +31,7 @@ const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState('');
     const [updating, setUpdating] = useState(false);
+    const { showToast } = useToast();
 
     const fetchData = async () => {
         setLoading(true);
@@ -49,6 +51,12 @@ const Profile = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        if (stats && stats.totalPoints >= 500) {
+            showToast('Eco Legend Status Detected: You are in the top 1% of contributors!', 'info');
+        }
+    }, [stats]);
+
     const handleUpdateName = async () => {
         if (!newName.trim() || newName === user.name) {
             setIsEditing(false);
@@ -60,8 +68,9 @@ const Profile = () => {
             await updateMyProfileName(newName);
             setUser({ ...user, name: newName });
             setIsEditing(false);
+            showToast(`Identity synchronized: Welcome, ${newName}!`, 'success');
         } catch (err) {
-            alert('Failed to update name');
+            showToast('Failed to update neural identity record.', 'error');
         } finally {
             setUpdating(false);
         }

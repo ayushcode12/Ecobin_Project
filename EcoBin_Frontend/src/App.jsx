@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Signup from '@/pages/Signup';
@@ -20,77 +21,88 @@ import Layout from '@/components/layout/Layout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import AdminRoute from '@/components/auth/AdminRoute';
 import { ToastProvider } from '@/components/ui/ToastProvider';
+import PageTransition from '@/components/layout/PageTransition';
 
-function App() {
+const AppContent = () => {
+    const location = useLocation();
+    
     return (
-        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <ToastProvider>
-                <Layout>
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/signup" element={<Signup />} />
+        <ToastProvider>
+            <Layout>
+                <AnimatePresence mode="wait">
+                    <Routes location={location} key={location.pathname}>
+                        <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+                        <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+                        <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
 
                         <Route
                             path="/dashboard"
-                            element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
+                            element={<ProtectedRoute><PageTransition><Dashboard /></PageTransition></ProtectedRoute>}
                         />
                         <Route
                             path="/scan"
-                            element={<ProtectedRoute><Scan /></ProtectedRoute>}
+                            element={<ProtectedRoute><PageTransition><Scan /></PageTransition></ProtectedRoute>}
                         />
                         <Route
                             path="/report"
-                            element={<ProtectedRoute><ReportWaste /></ProtectedRoute>}
+                            element={<ProtectedRoute><PageTransition><ReportWaste /></PageTransition></ProtectedRoute>}
                         />
                         <Route
                             path="/history"
-                            element={<ProtectedRoute><History /></ProtectedRoute>}
+                            element={<ProtectedRoute><PageTransition><History /></PageTransition></ProtectedRoute>}
                         />
                         <Route
                             path="/leaderboard"
-                            element={<ProtectedRoute><Leaderboard /></ProtectedRoute>}
+                            element={<ProtectedRoute><PageTransition><Leaderboard /></PageTransition></ProtectedRoute>}
                         />
                         <Route
                             path="/profile"
-                            element={<ProtectedRoute><Profile /></ProtectedRoute>}
+                            element={<ProtectedRoute><PageTransition><Profile /></PageTransition></ProtectedRoute>}
                         />
 
                         <Route
                             path="/admin/dashboard"
-                            element={<AdminRoute><AdminDashboard /></AdminRoute>}
+                            element={<AdminRoute><PageTransition><AdminDashboard /></PageTransition></AdminRoute>}
                         />
                         <Route
                             path="/admin/reports"
-                            element={<AdminRoute><AdminReports /></AdminRoute>}
+                            element={<AdminRoute><PageTransition><AdminReports /></PageTransition></AdminRoute>}
                         />
                         <Route
                             path="/admin/users"
-                            element={<AdminRoute><AdminUsers /></AdminRoute>}
+                            element={<AdminRoute><PageTransition><AdminUsers /></PageTransition></AdminRoute>}
                         />
                         <Route
                             path="/admin/scans"
-                            element={<AdminRoute><AdminScans /></AdminRoute>}
+                            element={<AdminRoute><PageTransition><AdminScans /></PageTransition></AdminRoute>}
                         />
                         <Route
                             path="/admin/content"
-                            element={<AdminRoute><AdminContent /></AdminRoute>}
+                            element={<AdminRoute><PageTransition><AdminContent /></PageTransition></AdminRoute>}
                         />
                         <Route
                             path="/admin/rules"
-                            element={<AdminRoute><AdminRules /></AdminRoute>}
+                            element={<AdminRoute><PageTransition><AdminRules /></PageTransition></AdminRoute>}
                         />
                         <Route
                             path="/admin/logs"
-                            element={<AdminRoute><AdminLogs /></AdminRoute>}
+                            element={<AdminRoute><PageTransition><AdminLogs /></PageTransition></AdminRoute>}
                         />
                         <Route
                             path="/admin/settings"
-                            element={<AdminRoute><AdminSettings /></AdminRoute>}
+                            element={<AdminRoute><PageTransition><AdminSettings /></PageTransition></AdminRoute>}
                         />
                     </Routes>
-                </Layout>
-            </ToastProvider>
+                </AnimatePresence>
+            </Layout>
+        </ToastProvider>
+    );
+};
+
+function App() {
+    return (
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <AppContent />
         </Router>
     );
 }

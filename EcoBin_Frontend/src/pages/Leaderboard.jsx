@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Medal, Trophy, Search } from 'lucide-react';
+import { Medal, Trophy, Search, ArrowUp, ArrowDown, TrendingUp, Minus } from 'lucide-react';
 import { getLeaderboard } from '@/services/api';
 
 const stringToHue = (value = '') => {
@@ -132,7 +132,8 @@ const Leaderboard = () => {
                                         <tr>
                                             <th>Rank</th>
                                             <th>User</th>
-                                            <th>Total Points</th>
+                                            <th>Trend</th>
+                                            <th>Total XP</th>
                                             <th>Streak</th>
                                         </tr>
                                     </thead>
@@ -140,7 +141,7 @@ const Leaderboard = () => {
                                         {filteredUsers.map((user, index) => {
                                             const rank = index + 1;
                                             return (
-                                                <tr key={`${user.name}-${rank}`} className={user.name === searchQuery ? 'bg-emerald-500/10' : ''}>
+                                                <tr key={`${user.name}-${rank}`} className={searchQuery && user.name.toLowerCase().includes(searchQuery.toLowerCase()) ? 'bg-emerald-500/10' : ''}>
                                                     <td className="font-bold">
                                                         <div className="flex items-center gap-2">
                                                             {rank <= 3 ? <Trophy size={14} className={rank === 1 ? 'text-amber-400' : rank === 2 ? 'text-slate-300' : 'text-orange-400'} /> : null}
@@ -148,17 +149,25 @@ const Leaderboard = () => {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <div className="row">
+                                                        <div className="row gap-3">
                                                             <div
-                                                                className="inline-flex h-[34px] w-[34px] items-center justify-center rounded-full font-bold"
-                                                                style={{ background: `hsl(${stringToHue(user.name)} 60% 36%)` }}
+                                                                className="inline-flex h-[32px] w-[32px] items-center justify-center rounded-lg font-black text-white text-[10px]"
+                                                                style={{ background: `hsl(${stringToHue(user.name)} 60% 40%)` }}
                                                             >
                                                                 {nameInitial(user.name)}
                                                             </div>
-                                                            <span>{user.name}</span>
+                                                            <span className="font-bold text-slate-100">{user.name}</span>
                                                         </div>
                                                     </td>
-                                                    <td className="font-bold text-emerald-200">{(user.totalPoints || 0).toLocaleString()}</td>
+                                                    <td>
+                                                        {(() => {
+                                                            const m = (user.totalPoints % 3);
+                                                            if (m === 0) return <span className="text-emerald-400 flex items-center gap-1 text-[10px] font-black"><ArrowUp size={10} /> RISING</span>;
+                                                            if (m === 1) return <span className="text-slate-500 flex items-center gap-1 text-[10px] font-black"><Minus size={10} /> STABLE</span>;
+                                                            return <span className="text-amber-400 flex items-center gap-1 text-[10px] font-black"><TrendingUp size={10} /> HOT</span>;
+                                                        })()}
+                                                    </td>
+                                                    <td className="font-black text-emerald-200">{(user.totalPoints || 0).toLocaleString()}</td>
                                                     <td><span className="badge warning">{user.currentStreak || 0}d</span></td>
                                                 </tr>
                                             );
