@@ -17,7 +17,9 @@ import {
     Zap,
     Activity,
     Maximize,
-    Settings
+    Settings,
+    Trash2,
+    Lightbulb
 } from 'lucide-react';
 import { previewLiveWaste, scanWaste } from '@/services/api';
 
@@ -471,6 +473,62 @@ const Scan = () => {
                             <div className="text-4xl font-black text-blue-400">{(result.confidence * 100 || 98.4).toFixed(1)}%</div>
                         </div>
                     </div>
+
+                    {/* Bin Classification & Disposal Guide */}
+                    {(() => {
+                        const cat = String(result.categoryType || '').toLowerCase();
+                        let binColor = 'Grey';
+                        let binClass = 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+                        let iconColor = 'text-slate-400';
+                        let instruction = 'Dispose in the general waste bin.';
+                        let motivation = 'Every step counts toward a cleaner planet.';
+
+                        if (cat.includes('bio')) {
+                            binColor = 'Green';
+                            binClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+                            iconColor = 'text-emerald-400';
+                            instruction = 'Dispose in the Green Bin. Suitable for composting.';
+                            motivation = 'Your organic waste is returning to the earth!';
+                        } else if (cat.includes('recycle')) {
+                            binColor = 'Blue';
+                            binClass = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+                            iconColor = 'text-blue-400';
+                            instruction = 'Dispose in the Blue Bin. Ensure it is clean and dry.';
+                            motivation = 'You just saved energy by recycling!';
+                        } else if (cat.includes('hazard')) {
+                            binColor = 'Red';
+                            binClass = 'bg-red-500/10 text-red-400 border-red-500/20';
+                            iconColor = 'text-red-400';
+                            instruction = 'Dispose in the Red Bin. Handle with extreme caution.';
+                            motivation = 'Safety first! Thank you for protecting the environment.';
+                        }
+
+                        return (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto w-full">
+                                <div className={`p-8 rounded-[32px] border ${binClass} flex flex-col items-center justify-center text-center space-y-4`}>
+                                    <div className={`h-20 w-20 rounded-2xl ${binClass} flex items-center justify-center border-2`}>
+                                        <Trash2 size={40} className={iconColor} />
+                                    </div>
+                                    <div>
+                                        <div className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Target Receptacle</div>
+                                        <h4 className="text-2xl font-black">{binColor} Bin</h4>
+                                    </div>
+                                </div>
+                                <div className="p-8 rounded-[32px] bg-white/[0.03] border border-white/5 flex flex-col justify-center text-left space-y-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400">
+                                            <Lightbulb size={18} />
+                                        </div>
+                                        <h4 className="text-sm font-black uppercase tracking-widest text-white">Disposal Protocol</h4>
+                                    </div>
+                                    <p className="text-slate-400 text-sm leading-relaxed">{instruction}</p>
+                                    <div className="pt-4 border-t border-white/5 italic text-xs text-slate-500">
+                                        "{motivation}"
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })()}
 
                     <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 max-w-xl mx-auto">
                         <p className="text-slate-300 italic">"{result.motivationalMessage || 'Your contribution has been synchronized with the EcoBin community database.'}"</p>
