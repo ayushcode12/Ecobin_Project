@@ -62,6 +62,34 @@
     mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 92%);
   }
 
+  @keyframes float-orb {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(2%, 4%) scale(1.05); }
+    66% { transform: translate(-1%, 2%) scale(0.95); }
+  }
+
+  @keyframes float-orb-reverse {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-3%, -2%) scale(0.98); }
+    66% { transform: translate(2%, -4%) scale(1.08); }
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--ec-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(104, 213, 163, 0.2);
+    border-radius: 10px;
+    border: 2px solid var(--ec-bg);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(104, 213, 163, 0.4);
+  }
+
   a {
     @apply text-inherit no-underline;
   }
@@ -116,11 +144,13 @@
   .bg-orb.left {
     @apply -left-[12vw] -top-[16vw] h-[54vw] w-[54vw];
     background: radial-gradient(circle, rgba(104, 213, 163, 0.22), transparent 72%);
+    animation: float-orb 25s ease-in-out infinite;
   }
 
   .bg-orb.right {
     @apply -bottom-[18vw] -right-[15vw] h-[60vw] w-[60vw];
     background: radial-gradient(circle, rgba(241, 179, 101, 0.19), transparent 72%);
+    animation: float-orb-reverse 30s ease-in-out infinite;
   }
 
   .page-shell {
@@ -137,7 +167,7 @@
   }
 
   .surface-card {
-    @apply relative overflow-hidden rounded-[18px] p-6 transition-all duration-300;
+    @apply relative overflow-hidden rounded-[18px] p-6 transition-all duration-500;
     border: 1px solid var(--ec-line);
     background:
       linear-gradient(180deg, rgba(14, 32, 42, 0.94), rgba(8, 23, 31, 0.9)),
@@ -146,6 +176,7 @@
       0 28px 70px var(--ec-shadow),
       0 8px 26px rgba(0, 0, 0, 0.16),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
   }
 
   .surface-card::after {
@@ -173,12 +204,12 @@
   }
 
   .surface-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--ec-line-strong);
+    transform: translateY(-5px) scale(1.01);
+    border-color: rgba(104, 213, 163, 0.35);
     box-shadow:
-      0 34px 88px rgba(1, 8, 13, 0.38),
-      0 0 0 1px rgba(104, 213, 163, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      0 40px 100px rgba(1, 8, 13, 0.5),
+      0 0 20px rgba(104, 213, 163, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   .section-head {
@@ -1134,6 +1165,91 @@
     background: rgba(239, 146, 115, 0.14);
     color: #ffe8df;
   }
+
+  /* Community Goal Styles */
+  .community-goal-card {
+    background: 
+      linear-gradient(135deg, rgba(20, 44, 56, 0.98), rgba(8, 22, 31, 0.94)),
+      radial-gradient(circle at 10% 10%, rgba(104, 213, 163, 0.15), transparent 40%);
+    border: 1px solid rgba(104, 213, 163, 0.2);
+  }
+
+  .community-glow {
+    box-shadow: 
+      0 0 20px rgba(104, 213, 163, 0.3),
+      0 0 40px rgba(104, 213, 163, 0.1);
+    position: relative;
+  }
+
+  .community-glow::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shine-progress 3s infinite;
+  }
+
+  @keyframes shine-progress {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* Trophy Card Styles */
+  .trophy-card {
+    @apply flex flex-col items-center text-center p-6 relative overflow-hidden transition-all duration-500;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .trophy-card.unlocked {
+    border-color: rgba(104, 213, 163, 0.2);
+    background: linear-gradient(180deg, rgba(104, 213, 163, 0.08), rgba(255, 255, 255, 0.02));
+  }
+
+  .trophy-card.current {
+    border-color: rgba(241, 179, 101, 0.4);
+    background: linear-gradient(180deg, rgba(241, 179, 101, 0.1), rgba(255, 255, 255, 0.02));
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(241, 179, 101, 0.1);
+  }
+
+  .trophy-glow {
+    @apply absolute inset-0 opacity-0 transition-opacity duration-500 pointer-events-none;
+    background: radial-gradient(circle at center, rgba(104, 213, 163, 0.15), transparent 70%);
+  }
+
+  .trophy-card.unlocked:hover .trophy-glow {
+    @apply opacity-100;
+  }
+
+  .trophy-icon-wrap {
+    @apply flex h-16 w-16 items-center justify-center rounded-full transition-all duration-500;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .trophy-icon-wrap.active {
+    background: rgba(104, 213, 163, 0.15);
+    border-color: rgba(104, 213, 163, 0.3);
+    box-shadow: 0 0 15px rgba(104, 213, 163, 0.2);
+  }
+
+  .trophy-lock-overlay {
+    @apply absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] flex items-center justify-center transition-all duration-500;
+    mask-image: radial-gradient(circle at center, transparent 30%, black 100%);
+  }
+
+  .trophy-card.locked:hover .trophy-lock-overlay {
+    @apply backdrop-blur-0 bg-slate-900/40;
+  }
+
+  .eco-tip-card {
+    background: 
+      linear-gradient(135deg, rgba(30, 41, 59, 0.94), rgba(15, 23, 42, 0.9)),
+      radial-gradient(circle at right, rgba(245, 158, 11, 0.05), transparent 40%);
+    border-color: rgba(245, 158, 11, 0.15);
+    @apply mb-8;
+  }
 }
 
 @layer utilities {
@@ -1164,6 +1280,11 @@
     50% {
       transform: translateY(-6px);
     }
+  }
+
+  @keyframes scan {
+    0%, 100% { top: 0; opacity: 0.8; }
+    50% { top: 100%; opacity: 1; }
   }
 }
 

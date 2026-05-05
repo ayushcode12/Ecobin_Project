@@ -366,8 +366,75 @@ const Dashboard = () => {
                         <div className="stat-value accent">{stats.totalScans || 0}</div>
                         <div className="help-text mt-2">Confirmed scans saved.</div>
                     </article>
+
+                    <article className="dashboard-stat-pill">
+                        <div className="row space mb-3">
+                            <span className="section-note">Impact</span>
+                            <span className="icon-pill"><Leaf size={16} className="text-emerald-300" /></span>
+                        </div>
+                        <div className="stat-value brand">{(stats.totalPoints * 0.12).toFixed(1)}kg</div>
+                        <div className="help-text mt-2">Estimated CO₂ Offset.</div>
+                    </article>
                 </div>
             </section>
+
+            {/* Daily Eco-Tip Section */}
+            <section className="surface-card eco-tip-card">
+                <div className="row gap-4">
+                    <div className="h-12 w-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+                        <Sparkles size={20} className="text-amber-400" />
+                    </div>
+                    <div>
+                        <h4 className="text-sm font-black text-amber-200 uppercase tracking-widest">Eco Tip of the Day</h4>
+                        <p className="help-text mt-1 text-slate-100">
+                            {(() => {
+                                const tips = [
+                                    "Removing plastic bottle caps helps sorting machines process them faster.",
+                                    "Composting food waste reduces methane emissions from landfills.",
+                                    "Rinsing food containers prevents contamination in recycling bins.",
+                                    "E-waste contains precious metals that can be recovered through proper disposal.",
+                                    "Using reusable bags can save up to 500 plastic bags per year!"
+                                ];
+                                const today = new Date().getDate() % tips.length;
+                                return tips[today];
+                            })()}
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+            {/* Community Challenge Section */}
+            <motion.section 
+                className="surface-card community-goal-card"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 }}
+            >
+                <div className="row space mb-4">
+                    <div className="stack-xs">
+                        <h2 className="section-title"><Sparkles size={18} className="text-amber-300" /> Community Challenge</h2>
+                        <p className="help-text">Together we can make a difference. Help reach this month's goal!</p>
+                    </div>
+                    <div className="badge warning">Global Goal</div>
+                </div>
+
+                <div className="community-progress-wrap">
+                    <div className="row space mb-2">
+                        <span className="text-sm font-bold text-slate-100">Monthly CO₂ Offset Goal</span>
+                        <span className="text-sm font-black text-emerald-400">74% Reached</span>
+                    </div>
+                    <div className="progress-track h-4">
+                        <div className="progress-fill community-glow" style={{ width: '74%' }} />
+                    </div>
+                    <div className="row space mt-3">
+                        <div className="row gap-2">
+                            <Leaf size={14} className="text-emerald-400" />
+                            <span className="help-text"><b>3,420kg</b> saved so far</span>
+                        </div>
+                        <div className="help-text">Goal: 5,000kg</div>
+                    </div>
+                </div>
+            </motion.section>
 
             <section className="dashboard-main-grid">
                 <article className="surface-card">
@@ -514,20 +581,24 @@ const Dashboard = () => {
                             return (
                                 <div
                                     key={badge.title}
-                                    className={`streak-mini-card ${unlocked ? 'unlocked' : 'locked'} ${isCurrent ? 'current' : ''}`}
+                                    className={`streak-mini-card trophy-card ${unlocked ? 'unlocked' : 'locked'} ${isCurrent ? 'current' : ''}`}
                                 >
-                                    <div className="row space">
-                                        <span className="icon-pill"><Icon size={16} className="text-emerald-300" /></span>
-                                        <span className={`badge ${unlocked ? 'brand' : 'danger'}`}>{badge.days}d</span>
+                                    <div className="trophy-glow"></div>
+                                    <div className="row space relative z-10">
+                                        <div className={`trophy-icon-wrap ${unlocked ? 'active' : ''}`}>
+                                            <Icon size={20} className={unlocked ? 'text-emerald-300' : 'text-slate-500'} />
+                                        </div>
+                                        <span className={`badge ${unlocked ? 'brand' : 'soft'}`}>{badge.days}d</span>
                                     </div>
-                                    <div className="launch-card-title mt-4">{badge.title}</div>
-                                    <div className="help-text mt-1">
+                                    <div className="launch-card-title mt-4 relative z-10">{badge.title}</div>
+                                    <div className="help-text mt-1 relative z-10">
                                         {isCurrent
-                                            ? 'Active title.'
+                                            ? 'Currently Active'
                                             : unlocked
-                                                ? 'Unlocked.'
-                                                : `${Math.max(0, badge.days - (stats.currentStreak || 0))} day(s) left.`}
+                                                ? 'Milestone Unlocked'
+                                                : `${Math.max(0, badge.days - (stats.currentStreak || 0))} days to go`}
                                     </div>
+                                    {!unlocked && <div className="trophy-lock-overlay"></div>}
                                 </div>
                             );
                         })}
