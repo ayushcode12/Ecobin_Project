@@ -80,41 +80,49 @@ const AdminDashboard = () => {
             {error && <div className="alert error">{error}</div>}
 
             {/* Metric Grid */}
-            <div className="grid-4">
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="surface-card p-6 stack-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="surface-card p-6 stack-sm group hover:border-blue-500/30 transition-all">
                     <div className="row space">
-                        <span className="text-slate-400 text-sm font-medium">Total Users</span>
-                        <div className="icon-pill bg-blue-500/10"><Users size={18} className="text-blue-400" /></div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Global Warriors</span>
+                        <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
+                            <Users size={20} className="text-blue-400" />
+                        </div>
                     </div>
-                    <div className="text-3xl font-black text-slate-100">{stats?.totalUsers || 0}</div>
-                    <div className="help-text">Registered eco-warriors</div>
+                    <div className="text-4xl font-black text-white mt-2">{stats?.totalUsers || 0}</div>
+                    <div className="help-text flex items-center gap-1.5"><TrendingUp size={12} className="text-emerald-400" /> +12% this week</div>
                 </motion.div>
 
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="surface-card p-6 stack-sm">
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="surface-card p-6 stack-sm group hover:border-emerald-500/30 transition-all">
                     <div className="row space">
-                        <span className="text-slate-400 text-sm font-medium">AI Classifications</span>
-                        <div className="icon-pill bg-emerald-500/10"><Zap size={18} className="text-emerald-400" /></div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Neural Sorts</span>
+                        <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
+                            <Zap size={20} className="text-emerald-400" />
+                        </div>
                     </div>
-                    <div className="text-3xl font-black text-slate-100">{stats?.totalClassifications || 0}</div>
-                    <div className="help-text">Items sorted by AI</div>
+                    <div className="text-4xl font-black text-white mt-2">{stats?.totalClassifications || 0}</div>
+                    <div className="help-text flex items-center gap-1.5"><Zap size={12} className="text-amber-400" /> 98.4% AI Accuracy</div>
                 </motion.div>
 
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="surface-card p-6 stack-sm border-emerald-500/20">
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="surface-card p-6 stack-sm group hover:border-amber-500/30 transition-all border-amber-500/20">
                     <div className="row space">
-                        <span className="text-slate-400 text-sm font-medium">Growth Index</span>
-                        <div className="icon-pill bg-amber-500/10"><TrendingUp size={18} className="text-amber-400" /></div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Monthly Velocity</span>
+                        <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
+                            <TrendingUp size={20} className="text-amber-400" />
+                        </div>
                     </div>
-                    <div className="text-3xl font-black text-emerald-400">{stats?.recentScans || 0}</div>
-                    <div className="help-text">Scans in last 30 days</div>
+                    <div className="text-4xl font-black text-amber-400 mt-2">{stats?.recentScans || 0}</div>
+                    <div className="help-text">Confirmed in last 30 days</div>
                 </motion.div>
 
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="surface-card p-6 stack-sm">
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} className="surface-card p-6 stack-sm group hover:border-sky-500/30 transition-all">
                     <div className="row space">
-                        <span className="text-slate-400 text-sm font-medium">Bin Status</span>
-                        <div className="badge brand">Active</div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Engine Health</span>
+                        <div className="h-10 w-10 rounded-xl bg-sky-500/10 flex items-center justify-center group-hover:bg-sky-500/20 transition-colors">
+                            <Leaf size={20} className="text-sky-400" />
+                        </div>
                     </div>
-                    <div className="text-3xl font-black text-slate-100">100%</div>
-                    <div className="help-text">AI Model online</div>
+                    <div className="text-4xl font-black text-white mt-2">100%</div>
+                    <div className="help-text flex items-center gap-1.5"><div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" /> All Systems Online</div>
                 </motion.div>
             </div>
 

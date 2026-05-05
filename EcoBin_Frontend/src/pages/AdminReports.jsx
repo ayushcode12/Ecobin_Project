@@ -248,16 +248,25 @@ const AdminReports = () => {
 
                         return (
                             <motion.article key={reportId} className="surface-card" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                                <div className="row wrap space mb-4 border-b border-white/5 pb-4">
-                                    <div>
-                                        <h3 className="section-title text-xl">Report #{reportId}</h3>
-                                        <p className="help-text">Submitted {formatDate(report.createdAt)}</p>
+                                <div className="row wrap space mb-4 border-b border-white/10 pb-5">
+                                    <div className="flex items-center gap-4">
+                                        <div className="h-12 w-12 rounded-2xl bg-slate-800 border border-white/10 flex items-center justify-center text-lg font-black text-slate-400">
+                                            #{reportId}
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-black text-white leading-none mb-1">Issue Reported</h3>
+                                            <p className="help-text flex items-center gap-1.5"><CalendarClock size={12} /> {formatDate(report.createdAt)}</p>
+                                        </div>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <span className={`status-chip ${getStatusClass(currentStatus)}`}>{currentStatus}</span>
-                                        <div className={`badge ${report.severity === 'HIGH' ? 'danger' : report.severity === 'MEDIUM' ? 'warning' : 'accent'}`}>
-                                            {report.severity || 'MEDIUM'}
+                                        <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${
+                                            report.severity === 'HIGH' ? 'bg-red-500/10 border-red-500/30 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : 
+                                            report.severity === 'MEDIUM' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 
+                                            'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                                        }`}>
+                                            {report.severity || 'MEDIUM'} SEVERITY
                                         </div>
+                                        <span className={`status-chip ${getStatusClass(currentStatus)} px-4 py-1.5`}>{currentStatus}</span>
                                     </div>
                                 </div>
 
@@ -338,37 +347,46 @@ const AdminReports = () => {
                                     </div>
 
                                     {/* Right Column: Actions */}
-                                    <div className="surface-card inset border-emerald-400/10 bg-emerald-400/[0.02]">
-                                        <div className="form-grid">
-                                            <h4 className="text-[11px] font-bold uppercase tracking-wider text-emerald-400/80 mb-1">Administrative Actions</h4>
-                                            <div>
-                                                <label className="form-label text-xs">Current Status Flow</label>
-                                                <select className="select-control py-2.5 text-sm" value={statusDrafts[reportId] || currentStatus} onChange={(e) => setStatusDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))}>
-                                                    {selectable.map((status) => <option key={status} value={status}>{status}</option>)}
-                                                </select>
+                                    <div className="surface-card inset border-emerald-500/20 bg-emerald-500/[0.03] shadow-inner">
+                                        <div className="form-grid p-2">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                                                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-300">Action Control Center</h4>
+                                            </div>
+                                            
+                                            <div className="bg-black/20 p-4 rounded-2xl border border-white/5 stack-md">
+                                                <div>
+                                                    <label className="form-label text-[10px] text-slate-500 mb-1.5">Transition Status</label>
+                                                    <select className="select-control py-3 text-sm bg-slate-900 border-white/10" value={statusDrafts[reportId] || currentStatus} onChange={(e) => setStatusDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))}>
+                                                        {selectable.map((status) => <option key={status} value={status}>{status}</option>)}
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <label className="form-label text-[10px] text-slate-500 mb-1.5">Official Admin Notes</label>
+                                                    <textarea className="textarea-control min-h-[100px] py-3 text-sm bg-slate-900 border-white/10" value={noteDrafts[reportId] || ''} onChange={(e) => setNoteDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} placeholder="Explain the decision or provide instructions..." />
+                                                </div>
+
+                                                <div>
+                                                    <label className="form-label text-[10px] text-slate-500 mb-1.5">Resolution Proof (Image URL)</label>
+                                                    <div className="input-icon-wrap">
+                                                        <SendHorizontal size={14} className="input-icon text-slate-500" />
+                                                        <input className="input-control py-3 text-sm bg-slate-900 border-white/10 pl-10" type="url" value={proofDrafts[reportId] || ''} onChange={(e) => setProofDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} placeholder="https://..." />
+                                                    </div>
+                                                </div>
+
+                                                <button className="btn-primary w-full py-3.5 text-sm font-black shadow-lg shadow-emerald-500/20" onClick={() => handleStatusUpdate(report)} disabled={busy}>
+                                                    {busy ? <RefreshCcw size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
+                                                    {busy ? 'SYNCHRONIZING...' : 'COMMIT STATUS UPDATE'}
+                                                </button>
                                             </div>
 
-                                            <div>
-                                                <label className="form-label text-xs">Internal Notes</label>
-                                                <textarea className="textarea-control min-h-[80px] py-3 text-sm" value={noteDrafts[reportId] || ''} onChange={(e) => setNoteDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} placeholder="Action taken or reason for rejection..." />
-                                            </div>
-
-                                            <div>
-                                                <label className="form-label text-xs">Proof URL (Image/Link)</label>
-                                                <input className="input-control py-2.5 text-sm" type="url" value={proofDrafts[reportId] || ''} onChange={(e) => setProofDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} placeholder="https://cloudinary.com/..." />
-                                            </div>
-
-                                            <button className="btn-primary py-3 text-sm mt-1" onClick={() => handleStatusUpdate(report)} disabled={busy}>
-                                                {busy ? <RefreshCcw size={15} className="animate-spin" /> : <SendHorizontal size={15} />}
-                                                {busy ? 'Processing...' : 'Apply Status Update'}
-                                            </button>
-
-                                            <div className="border-t border-white/5 pt-4 mt-2">
-                                                <label className="form-label text-xs">Assign Cleanup Schedule</label>
+                                            <div className="border-t border-white/10 pt-5 mt-2">
+                                                <label className="form-label text-[10px] text-slate-500 mb-2">Assign Fleet Schedule</label>
                                                 <div className="flex gap-2">
-                                                    <input type="datetime-local" className="input-control py-2 text-xs flex-1" value={pickupDrafts[reportId] || ''} onChange={(e) => setPickupDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} />
-                                                    <button className="btn-ghost py-2 px-4 text-xs" onClick={() => handlePickupAssign(reportId)} disabled={busy}>
-                                                        <CalendarClock size={14} />
+                                                    <input type="datetime-local" className="input-control py-2.5 text-[11px] flex-1 bg-slate-900 border-white/10" value={pickupDrafts[reportId] || ''} onChange={(e) => setPickupDrafts((prev) => ({ ...prev, [reportId]: e.target.value }))} />
+                                                    <button className="btn-ghost py-2.5 px-4 text-xs border-white/10 bg-white/5" onClick={() => handlePickupAssign(reportId)} disabled={busy} title="Assign Schedule">
+                                                        <CalendarClock size={16} className="text-sky-400" />
                                                     </button>
                                                 </div>
                                             </div>
