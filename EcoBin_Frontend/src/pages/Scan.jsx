@@ -42,6 +42,21 @@ const Scan = () => {
         '[NEURAL_ENGINE]: STANDBY'
     ]);
 
+    const [livePrediction, setLivePrediction] = useState(null);
+    const [liveMessage, setLiveMessage] = useState('Initialize Optical Sensor');
+    const [liveProcessing, setLiveProcessing] = useState(false);
+    const [autoConfirmedFrame, setAutoConfirmedFrame] = useState(null);
+
+    const videoRef = useRef(null);
+    const streamRef = useRef(null);
+    const liveLoopTimeoutRef = useRef(null);
+
+    const requestImageUrl = useMemo(() => {
+        if (imageUrl.trim()) return imageUrl.trim();
+        if (preview) return preview;
+        return 'https://placehold.co/400';
+    }, [imageUrl, preview]);
+
     const addLog = (msg) => {
         setTerminalLogs(prev => [...prev.slice(-4), `[${new Date().toLocaleTimeString()}]: ${msg}`]);
     };
