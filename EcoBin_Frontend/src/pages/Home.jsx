@@ -11,48 +11,49 @@ import {
     Sparkles,
     Trophy,
     Zap,
+    Globe,
+    Cpu,
+    Leaf,
+    LineChart
 } from 'lucide-react';
 
 const heroStats = [
-    { label: 'Mode', value: 'Live AI Scan' },
-    { label: 'Reward', value: 'XP + Streak' },
-    { label: 'Goal', value: 'Climb Leaderboard' },
+    { label: 'EcoBin Active', value: 'Live AI Sorting' },
+    { label: 'Economy', value: 'XP + Incentives' },
+    { label: 'Scale', value: 'Global Leaderboard' },
 ];
 
-const playerLoop = [
-    { step: '01', title: 'Scan', note: 'Show the item inside the frame.', icon: ScanEye },
-    { step: '02', title: 'Confirm', note: 'Review the category before saving.', icon: Sparkles },
-    { step: '03', title: 'Score', note: 'Earn points and keep the streak alive.', icon: Trophy },
+const processEngine = [
+    { step: '01', title: 'AI Scan', note: 'AI-driven object detection and classification.', icon: ScanEye },
+    { step: '02', title: 'Validation', note: 'Human-in-the-loop verification of bin categories.', icon: Sparkles },
+    { step: '03', title: 'Optimization', note: 'Earn impact points and maintain sorting streaks.', icon: Trophy },
 ];
 
-const gameModes = [
+const platformModes = [
     {
-        title: 'Scan Mode',
-        note: 'Fast live camera classification with final review.',
+        title: 'Waste Classification',
+        note: 'Real-time AI camera interface for instant waste classification and sorting guidance.',
         icon: Camera,
         action: '/scan',
-        actionLabel: 'Open Scan',
+        actionLabel: 'Start AI Scan',
+        color: 'text-emerald-400'
     },
     {
-        title: 'Quest Mode',
-        note: 'Daily activity, streak pressure, and leaderboard progress.',
-        icon: Flame,
+        title: 'User Dashboard',
+        note: 'Monitor your environmental footprint, track streaks, and analyze community rankings.',
+        icon: LineChart,
         action: '/dashboard',
-        actionLabel: 'Open Dashboard',
+        actionLabel: 'View Dashboard',
+        color: 'text-blue-400'
     },
     {
-        title: 'Street Mode',
-        note: 'Report public waste and push it into the admin queue.',
+        title: 'Field Report',
+        note: 'Submit waste reports to local authorities and track remediation progress.',
         icon: LocateFixed,
         action: '/report',
-        actionLabel: 'Report Waste',
+        actionLabel: 'Submit Report',
+        color: 'text-amber-400'
     },
-];
-
-const systemTiles = [
-    { label: 'Streak Engine', value: 'Daily use matters', icon: Zap },
-    { label: 'Admin Flow', value: 'Track report action', icon: ShieldCheck },
-    { label: 'Rank Chase', value: 'Compete on points', icon: Trophy },
 ];
 
 const Home = () => {
@@ -66,146 +67,135 @@ const Home = () => {
 
     const primaryAction = useMemo(() => {
         return isAuthenticated
-            ? { label: 'Play Scan Mode', action: () => navigate('/scan') }
-            : { label: 'Start Playing', action: () => navigate('/signup') };
+            ? { label: 'Launch AI Scan', action: () => navigate('/scan') }
+            : { label: 'Get Started', action: () => navigate('/signup') };
     }, [isAuthenticated, navigate]);
 
     return (
-        <div className="page-shell narrow space-y-6">
+        <div className="page-shell space-y-12">
             <motion.section
                 className="game-hero"
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35 }}
+                transition={{ duration: 0.5 }}
             >
-                <div className="stack-md">
-                    <article className="surface-card game-command">
-                        <span className="section-kicker mb-4">Gamified Waste Sorting</span>
-                        <h1 className="hero-title mb-4">
-                            Scan waste.
+                <div className="stack-lg">
+                    <article className="surface-card p-10 bg-gradient-to-br from-slate-900/50 to-emerald-950/20 border-emerald-500/10">
+                        <span className="section-kicker mb-6 border-emerald-500/20 bg-emerald-500/10 text-emerald-300">Intelligent Waste Management</span>
+                        <h1 className="hero-title mb-6">
+                            Next-Gen Waste
                             <br />
-                            <span className="hero-gradient-text">Stack streaks. Score higher.</span>
+                            <span className="hero-gradient-text">Management.</span>
                         </h1>
 
-                        <p className="hero-subtitle">
-                            EcoBin turns waste classification into a game loop: scan live, confirm the right bin, earn XP, and keep your streak alive.
+                        <p className="hero-subtitle text-lg text-slate-300 max-w-2xl leading-relaxed">
+                            EcoBin leverages edge-AI to transform waste classification into a high-performance environmental loop. Scan, validate, and optimize the planet's resource recovery in real-time.
                         </p>
 
-                        <div className="hero-cta">
-                            <button className="btn-primary" onClick={primaryAction.action}>
-                                {primaryAction.label} <ArrowRight size={16} />
+                        <div className="hero-cta gap-4 mt-10">
+                            <button className="btn-primary px-10 py-5 text-lg" onClick={primaryAction.action}>
+                                {primaryAction.label} <ArrowRight size={20} />
                             </button>
-                            <Link to={isAuthenticated ? '/leaderboard' : '/login'} className="btn-ghost">
-                                {isAuthenticated ? 'See Leaderboard' : 'Login'}
+                            <Link to={isAuthenticated ? '/leaderboard' : '/login'} className="btn-ghost px-10 py-5 text-lg border-white/5 bg-white/5">
+                                {isAuthenticated ? 'Global Leaderboard' : 'Login'}
                             </Link>
                         </div>
                     </article>
 
-                    <div className="game-stat-grid">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {heroStats.map((item) => (
-                            <div key={item.label} className="game-stat-card">
-                                <div className="game-stat-label">{item.label}</div>
-                                <div className="game-stat-value">{item.value}</div>
+                            <div key={item.label} className="surface-card p-6 bg-white/[0.02] border-white/5">
+                                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">{item.label}</div>
+                                <div className="text-xl font-black text-white tracking-tight">{item.value}</div>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                <article className="surface-card inset game-side-panel">
-                    <div className="row space mb-4">
-                        <h2 className="section-title">Player Loop</h2>
-                        <span className="badge brand">Fast Run</span>
+                <article className="surface-card p-8 bg-slate-900/40 border-white/5 stack-lg">
+                    <div className="row space border-b border-white/5 pb-6">
+                        <div>
+                            <h2 className="text-xl font-black text-white">EcoBin Process</h2>
+                            <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Optimized Workflow</p>
+                        </div>
+                        <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                            <Cpu size={20} />
+                        </div>
                     </div>
 
-                    <div className="stack-sm mb-5">
-                        {playerLoop.map((item) => {
+                    <div className="stack-md">
+                        {processEngine.map((item) => {
                             const Icon = item.icon;
                             return (
-                                <div key={item.step} className="game-loop-row">
-                                    <div className="game-loop-step">{item.step}</div>
-                                    <span className="icon-pill"><Icon size={16} className="text-emerald-300" /></span>
+                                <div key={item.step} className="flex gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5 group hover:border-emerald-500/30 transition-all">
+                                    <div className="h-10 w-10 shrink-0 rounded-lg bg-emerald-500/10 flex items-center justify-center text-xs font-black text-emerald-400 border border-emerald-500/20">
+                                        {item.step}
+                                    </div>
                                     <div className="min-w-0">
-                                        <div className="text-sm font-bold text-slate-100">{item.title}</div>
-                                        <div className="help-text">{item.note}</div>
+                                        <div className="text-sm font-bold text-slate-100 flex items-center gap-2">
+                                            {item.title} <Icon size={14} className="text-emerald-500/50" />
+                                        </div>
+                                        <div className="text-xs text-slate-500 mt-0.5 leading-relaxed">{item.note}</div>
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
 
-                    <div className="row space mb-4">
-                        <h2 className="section-title">Why It Feels Playable</h2>
-                        <span className="badge warning">XP Loop</span>
-                    </div>
-
-                    <div className="game-tile-grid">
-                        {systemTiles.map((tile) => {
-                            const Icon = tile.icon;
-                            return (
-                                <div key={tile.label} className="metric-chip">
-                                    <div className="row mb-3">
-                                        <span className="icon-pill"><Icon size={15} className="text-blue-300" /></span>
-                                        <span className="text-sm font-bold text-slate-100">{tile.label}</span>
-                                    </div>
-                                    <div className="help-text">{tile.value}</div>
-                                </div>
-                            );
-                        })}
+                    <div className="p-6 rounded-2xl bg-blue-500/5 border border-blue-500/10 mt-auto">
+                        <div className="row gap-3 mb-2">
+                            <Globe size={16} className="text-blue-400" />
+                            <span className="text-xs font-bold text-blue-300 uppercase tracking-widest">Global Impact</span>
+                        </div>
+                        <p className="text-xs text-slate-400 leading-relaxed">Connecting 12,000+ users across 4 major regions for intelligent waste management.</p>
                     </div>
                 </article>
             </motion.section>
 
-            <motion.section
-                className="surface-card game-highlight-bar"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.08 }}
-            >
-                <div className="game-highlight-grid">
-                    <div className="game-highlight-item">
-                        <div className="game-stat-label">Core Loop</div>
-                        <div className="game-stat-value">Scan to confirm to score</div>
+            {/* Impact Metrics Strip */}
+            <section className="grid grid-cols-2 md:grid-cols-4 gap-6 py-6 border-y border-white/5">
+                {[
+                    { label: 'Items Sorted', value: '842.1k', icon: ScanEye, color: 'text-emerald-400' },
+                    { label: 'CO2 Offset', value: '42.8 Tons', icon: Leaf, color: 'text-blue-400' },
+                    { label: 'Active Users', value: '12.4k', icon: Globe, color: 'text-amber-400' },
+                    { label: 'Success Rate', value: '98.2%', icon: ShieldCheck, color: 'text-purple-400' },
+                ].map(m => (
+                    <div key={m.label} className="text-center md:text-left">
+                        <div className="row gap-2 mb-1 justify-center md:justify-start">
+                            <m.icon size={14} className={m.color} />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{m.label}</span>
+                        </div>
+                        <div className="text-2xl font-black text-white">{m.value}</div>
                     </div>
-                    <div className="game-highlight-item">
-                        <div className="game-stat-label">Motivation</div>
-                        <div className="game-stat-value">XP, streaks, badges</div>
-                    </div>
-                    <div className="game-highlight-item">
-                        <div className="game-stat-label">Field Action</div>
-                        <div className="game-stat-value">Report waste to admins</div>
-                    </div>
-                </div>
-            </motion.section>
+                ))}
+            </section>
 
-            <section className="page-section">
-                <div className="section-head">
-                    <div>
-                        <h2 className="section-title">Choose A Mode</h2>
-                        <p className="section-note">Less reading, more action.</p>
-                    </div>
+            <section className="space-y-8">
+                <div className="text-center max-w-2xl mx-auto space-y-4">
+                    <h2 className="text-3xl font-black text-white tracking-tight">Platform Modules</h2>
+                    <p className="text-slate-500">Access specialized interfaces designed for maximum environmental impact and efficiency.</p>
                 </div>
 
-                <div className="grid-3">
-                    {gameModes.map((mode, index) => {
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {platformModes.map((mode, index) => {
                         const Icon = mode.icon;
                         return (
                             <motion.article
                                 key={mode.title}
-                                className="surface-card"
-                                initial={{ opacity: 0, y: 16 }}
+                                className="surface-card p-8 group hover:border-white/20"
+                                initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, margin: '-40px' }}
-                                transition={{ delay: index * 0.08, duration: 0.35 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.1 }}
                             >
-                                <div className="row space mb-5">
-                                    <span className="icon-pill"><Icon size={18} className="text-emerald-300" /></span>
-                                    <span className="badge accent">{mode.title}</span>
+                                <div className="h-14 w-14 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                    <Icon size={28} className={mode.color} />
                                 </div>
-                                <h3 className="mb-2 text-xl font-black text-slate-100">{mode.title}</h3>
-                                <p className="section-note mb-5">{mode.note}</p>
-                                <Link to={mode.action} className="btn-secondary w-full justify-between">
+                                <h3 className="text-xl font-black text-white mb-3 tracking-tight">{mode.title}</h3>
+                                <p className="text-sm text-slate-500 leading-relaxed mb-8">{mode.note}</p>
+                                <Link to={mode.action} className="btn-ghost w-full border-white/5 bg-white/5 hover:bg-white/10 group-hover:border-emerald-500/20">
                                     {mode.actionLabel}
-                                    <ArrowRight size={15} />
+                                    <ArrowRight size={16} className="ml-auto opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                                 </Link>
                             </motion.article>
                         );
@@ -213,18 +203,18 @@ const Home = () => {
                 </div>
             </section>
 
-            <section className="surface-card game-cta-strip">
-                <div className="row wrap space gap-4">
-                    <div>
-                        <div className="section-title mb-2">Today&apos;s mission: scan, confirm, score.</div>
-                        <div className="help-text">Open the camera and start the loop.</div>
+            <section className="surface-card p-12 bg-gradient-to-r from-emerald-500/10 via-blue-500/5 to-transparent border-emerald-500/10">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+                    <div className="space-y-4 text-center md:text-left">
+                        <h2 className="text-4xl font-black text-white tracking-tight leading-tight">Ready to start<br /><span className="text-emerald-400">your EcoBin journey?</span></h2>
+                        <p className="text-slate-400 max-w-md">Join EcoBin today and start contributing to the global resource recovery system.</p>
                     </div>
-                    <div className="row wrap">
-                        <button className="btn-primary" onClick={primaryAction.action}>
+                    <div className="flex flex-wrap justify-center gap-4">
+                        <button className="btn-primary px-12 py-5 text-lg" onClick={primaryAction.action}>
                             {primaryAction.label}
                         </button>
-                        <Link to={isAuthenticated ? '/dashboard' : '/signup'} className="btn-ghost">
-                            {isAuthenticated ? 'View Progress' : 'Create Account'}
+                        <Link to={isAuthenticated ? '/dashboard' : '/signup'} className="btn-ghost px-12 py-5 text-lg border-white/5 bg-white/5">
+                            {isAuthenticated ? 'Dashboard' : 'Sign Up'}
                         </Link>
                     </div>
                 </div>
@@ -234,3 +224,4 @@ const Home = () => {
 };
 
 export default Home;
+

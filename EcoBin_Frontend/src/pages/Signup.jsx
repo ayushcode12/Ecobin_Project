@@ -1,8 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Home, Lock, Mail, ScanEye, Sparkles, Trophy, User, Zap, Eye, EyeOff } from 'lucide-react';
-import { signup, validateSession, getCurrentUser } from '@/services/api';
+import { 
+    ArrowRight, 
+    Home, 
+    Lock, 
+    Mail, 
+    ScanEye, 
+    Cpu, 
+    Trophy, 
+    User, 
+    Eye, 
+    EyeOff,
+    Activity
+} from 'lucide-react';
+import { signup, getCurrentUser } from '@/services/api';
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -27,14 +39,12 @@ const Signup = () => {
                     }
                 }
             } catch (error) {
-                // Not logged in or session expired
+                // Not logged in
             }
         };
 
         checkSession();
-        return () => {
-            cancelled = true;
-        };
+        return () => { cancelled = true; };
     }, [navigate]);
 
     const handleSubmit = async (event) => {
@@ -46,7 +56,7 @@ const Signup = () => {
             await signup({ name, email, password });
             navigate('/login');
         } catch (err) {
-            setError('Registration failed. Please check your details and retry.');
+            setError('Registration failed. Please check your details.');
         } finally {
             setSubmitting(false);
         }
@@ -55,62 +65,66 @@ const Signup = () => {
     return (
         <div className="auth-shell">
             <motion.div
-                className="auth-card"
-                initial={{ opacity: 0, y: 10 }}
+                className="auth-card max-w-[1000px] border-white/5"
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.5 }}
             >
-                <div className="auth-panel showcase">
-                    <span className="section-kicker mb-6">Join EcoBin</span>
-                    <h1 className="auth-title">
-                        Create your
+                <div className="auth-panel showcase bg-gradient-to-br from-slate-900 to-emerald-950/40">
+                    <span className="section-kicker mb-8 border-emerald-500/20 bg-emerald-500/10 text-emerald-400">EcoBin Registration</span>
+                    <h1 className="text-4xl font-black text-white leading-tight mb-6">
+                        Join the
                         <br />
-                        <span className="hero-gradient-text">player profile.</span>
+                        <span className="hero-gradient-text text-5xl">Sustainable Network.</span>
                     </h1>
-                    <p className="auth-subtitle">
-                        Join the community of eco-conscious users. Start scanning waste, earning points, and climbing the global leaderboard today.
+                    <p className="text-slate-400 text-sm leading-relaxed mb-10 max-w-[320px]">
+                        Register your identity to begin neural waste classification and contribute to the global resource orchestration ledger.
                     </p>
 
                     <div className="stack-md">
-                        <div className="game-loop-row">
-                            <span className="icon-pill"><ScanEye size={18} className="text-blue-300" /></span>
-                            <div className="min-w-0">
-                                <div className="text-sm font-bold text-slate-100">Live Scanning</div>
-                                <div className="help-text">Use AI-powered camera to identify waste types instantly</div>
+                        <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/5">
+                            <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+                                <ScanEye size={18} />
+                            </div>
+                            <div>
+                                <div className="text-sm font-bold text-slate-100">Neural Scan</div>
+                                <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">AI-Powered Classification</div>
                             </div>
                         </div>
-                        <div className="game-loop-row">
-                            <span className="icon-pill"><Trophy size={18} className="text-amber-300" /></span>
-                            <div className="min-w-0">
-                                <div className="text-sm font-bold text-slate-100">Gamified Experience</div>
-                                <div className="help-text">Earn badges, maintain streaks, and compete with others</div>
+                        <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/5">
+                            <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                                <Activity size={18} />
+                            </div>
+                            <div>
+                                <div className="text-sm font-bold text-slate-100">Process Optimization</div>
+                                <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">Resource Flow Analytics</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="auth-panel">
-                    <div className="row space mb-6">
+                <div className="auth-panel p-10 md:p-14">
+                    <div className="flex items-center justify-between mb-10">
                         <div>
-                            <h2 className="section-title mb-1">Create Account</h2>
-                            <p className="section-note">It takes less than a minute to start.</p>
+                            <h2 className="text-2xl font-black text-white tracking-tight">Join EcoBin</h2>
+                            <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Create Your Account</p>
                         </div>
-                        <Link to="/" className="icon-pill hover:scale-110 transition-transform" title="Back to Home">
-                            <Home size={18} className="text-emerald-400" />
+                        <Link to="/" className="h-10 w-10 rounded-xl border border-white/5 bg-white/5 flex items-center justify-center text-emerald-400 hover:bg-white/10 transition-colors">
+                            <Home size={18} />
                         </Link>
                     </div>
 
-                    {error && <div className="alert error mb-6">{error}</div>}
+                    {error && <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5 text-red-400 text-xs font-bold mb-8">{error}</div>}
 
-                    <form className="auth-form" onSubmit={handleSubmit}>
+                    <form className="stack-lg" onSubmit={handleSubmit}>
                         <div className="stack-sm">
-                            <label className="form-label">Full Name</label>
-                            <div className="input-icon-wrap">
-                                <User size={16} className="input-icon" />
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Full Identity Name</label>
+                            <div className="relative">
+                                <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <input
                                     type="text"
-                                    className="input-control"
-                                    placeholder="Your name"
+                                    className="input-control pl-12"
+                                    placeholder="Enter your name"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     required
@@ -119,13 +133,13 @@ const Signup = () => {
                         </div>
 
                         <div className="stack-sm">
-                            <label className="form-label">Email Address</label>
-                            <div className="input-icon-wrap">
-                                <Mail size={16} className="input-icon" />
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Neural Identifier (Email)</label>
+                            <div className="relative">
+                                <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <input
                                     type="email"
-                                    className="input-control"
-                                    placeholder="you@example.com"
+                                    className="input-control pl-12"
+                                    placeholder="node@network.org"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
@@ -134,13 +148,13 @@ const Signup = () => {
                         </div>
 
                         <div className="stack-sm">
-                            <label className="form-label">Password</label>
-                            <div className="input-icon-wrap relative">
-                                <Lock size={16} className="input-icon" />
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Access Key (Password)</label>
+                            <div className="relative">
+                                <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    className="input-control pr-10"
-                                    placeholder="Choose a strong password"
+                                    className="input-control pl-12 pr-12"
+                                    placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
@@ -148,20 +162,21 @@ const Signup = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-400 transition-colors focus:outline-none"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-emerald-400 transition-colors"
                                 >
                                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                 </button>
                             </div>
                         </div>
 
-                        <button type="submit" className="btn-primary mt-4" disabled={submitting}>
-                            {submitting ? 'Creating Account...' : 'Create Account'} <ArrowRight size={16} />
+                        <button type="submit" className="btn-primary py-5 text-lg" disabled={submitting}>
+                            {submitting ? 'Initializing Node...' : 'Initialize Identity'} <Cpu size={20} className="ml-2" />
                         </button>
                     </form>
 
-                    <div className="help-text mt-8 text-center">
-                        Already have an account? <Link to="/login" className="quick-link">Sign in</Link>
+                    <div className="mt-12 pt-8 border-t border-white/5 text-center">
+                        <span className="text-xs text-slate-500">Already a network node? </span>
+                        <Link to="/login" className="text-xs font-bold text-emerald-400 hover:underline ml-1">Authenticate Access</Link>
                     </div>
                 </div>
             </motion.div>
@@ -170,3 +185,4 @@ const Signup = () => {
 };
 
 export default Signup;
+

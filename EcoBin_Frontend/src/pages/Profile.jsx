@@ -68,9 +68,9 @@ const Profile = () => {
             await updateMyProfileName(newName);
             setUser({ ...user, name: newName });
             setIsEditing(false);
-            showToast(`Identity synchronized: Welcome, ${newName}!`, 'success');
+            showToast(`Profile updated: Welcome, ${newName}!`, 'success');
         } catch (err) {
-            showToast('Failed to update neural identity record.', 'error');
+            showToast('Failed to update profile record.', 'error');
         } finally {
             setUpdating(false);
         }
@@ -155,7 +155,7 @@ const Profile = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
                     { label: 'Total XP', value: stats?.totalPoints || 0, icon: Star, color: 'text-amber-400' },
-                    { label: 'Neural Scans', value: stats?.totalClassifications || 0, icon: Camera, color: 'text-blue-400' },
+                    { label: 'Total Scans', value: stats?.totalClassifications || 0, icon: Camera, color: 'text-blue-400' },
                     { label: 'Current Streak', value: stats?.streakDays || 0, icon: Flame, color: 'text-orange-500' }
                 ].map((s, i) => {
                     const Icon = s.icon;

@@ -15,6 +15,17 @@ import {
     User,
     Zap,
 } from 'lucide-react';
+import { 
+    ResponsiveContainer, 
+    AreaChart, 
+    Area, 
+    XAxis, 
+    YAxis, 
+    Tooltip, 
+    PieChart, 
+    Pie, 
+    Cell 
+} from 'recharts';
 import { getCurrentUser, getMyReports, getRecentActivity, getUserStats, updateMyProfileName } from '@/services/api';
 
 const LOCAL_SCAN_ACTIVITY_KEY = 'ecobin_local_scan_activity';
@@ -241,37 +252,34 @@ const Dashboard = () => {
             >
                 <div className="dashboard-hero-main">
                     <div>
-                        <span className="section-kicker mb-4">Player HUD</span>
-                        <h1 className="page-title dashboard-hero-title">{currentUser?.name ? `Welcome back, ${currentUser.name}` : 'Dashboard'}</h1>
-                        <p className="page-subtitle dashboard-hero-subtitle">Scan smarter, keep the streak alive, and turn every correct sort into visible progress.</p>
+                        <span className="section-kicker mb-4 border-emerald-500/20 bg-emerald-500/10 text-emerald-300">EcoBin Profile: Active</span>
+                        <h1 className="page-title dashboard-hero-title text-5xl font-black">{currentUser?.name ? `${currentUser.name}` : 'EcoBin Dashboard'}</h1>
+                        <p className="page-subtitle dashboard-hero-subtitle text-slate-400 text-lg mt-4">Monitoring real-time environmental impact and personalized waste management performance.</p>
                     </div>
 
-                    <div className="row wrap gap-3">
-                        <Link to="/scan" className="btn-primary">
-                            Start Live Scan
-                            <Camera size={16} />
+                    <div className="row wrap gap-4 mt-8">
+                        <Link to="/scan" className="btn-primary py-4 px-8 shadow-xl shadow-blue-500/20">
+                            Initialize Neural Scan
+                            <Camera size={18} />
                         </Link>
-                        <Link to="/leaderboard" className="btn-ghost">
-                            View Leaderboard
-                            <Trophy size={16} />
+                        <Link to="/leaderboard" className="btn-ghost border-white/10 bg-white/5 hover:bg-white/10 py-4 px-8">
+                            Node Rankings
+                            <Trophy size={18} />
                         </Link>
-                        <button className="btn-soft" onClick={fetchDashboard}>
-                            <RefreshCcw size={15} /> Refresh
-                        </button>
                     </div>
 
-                    <div className="dashboard-hero-strip">
-                        <div className="dashboard-hero-strip-item">
-                            <span className="section-note">Current Title</span>
-                            <strong>{currentBadge.title}</strong>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 p-6 rounded-3xl bg-black/40 border border-white/5">
+                        <div className="space-y-1">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Current Protocol</span>
+                            <div className="text-sm font-black text-slate-200">{currentBadge.title}</div>
                         </div>
-                        <div className="dashboard-hero-strip-item">
-                            <span className="section-note">Daily Quest</span>
-                            <strong>{todayActivityCount}/{questTarget} scans</strong>
+                        <div className="space-y-1">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Diagnostic Cycle</span>
+                            <div className="text-sm font-black text-slate-200">{todayActivityCount}/{questTarget} Audits</div>
                         </div>
-                        <div className="dashboard-hero-strip-item">
-                            <span className="section-note">Next Tree</span>
-                            <strong>{stats.pointsToNextTree === 0 ? 'Unlocked' : `${stats.pointsToNextTree} XP left`}</strong>
+                        <div className="space-y-1">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Resource Milestone</span>
+                            <div className="text-sm font-black text-emerald-400">{stats.pointsToNextTree === 0 ? 'READY' : `${stats.pointsToNextTree} XP REQUIRED`}</div>
                         </div>
                     </div>
                 </div>
@@ -405,36 +413,153 @@ const Dashboard = () => {
             
             {/* Community Challenge Section */}
             <motion.section 
-                className="surface-card community-goal-card"
+                className="surface-card community-goal-card p-8 bg-blue-500/5 border-blue-500/10"
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2 }}
             >
-                <div className="row space mb-4">
+                <div className="row space mb-6">
                     <div className="stack-xs">
-                        <h2 className="section-title"><Sparkles size={18} className="text-amber-300" /> Community Challenge</h2>
-                        <p className="help-text">Together we can make a difference. Help reach this month's goal!</p>
+                        <h2 className="section-title text-blue-300 flex items-center gap-2">
+                            <Sparkles size={18} /> EcoBin Community Progress
+                        </h2>
+                        <p className="help-text">Collective impact tracking for the EcoBin community.</p>
                     </div>
-                    <div className="badge warning">Global Goal</div>
+                    <div className="badge warning border-amber-500/30 bg-amber-500/10 text-amber-300">Global Directive</div>
                 </div>
 
-                <div className="community-progress-wrap">
-                    <div className="row space mb-2">
-                        <span className="text-sm font-bold text-slate-100">Monthly CO₂ Offset Goal</span>
-                        <span className="text-sm font-black text-emerald-400">74% Reached</span>
+                <div className="community-progress-wrap space-y-4">
+                    <div className="row space">
+                        <span className="text-xs font-black uppercase tracking-widest text-slate-400">Monthly CO₂ Offset Target</span>
+                        <span className="text-sm font-black text-emerald-400">74% AGGREGATED</span>
                     </div>
-                    <div className="progress-track h-4">
-                        <div className="progress-fill community-glow" style={{ width: '74%' }} />
+                    <div className="progress-track h-3 bg-white/5">
+                        <div className="progress-fill bg-gradient-to-r from-emerald-500 to-blue-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]" style={{ width: '74%' }} />
                     </div>
-                    <div className="row space mt-3">
-                        <div className="row gap-2">
-                            <Leaf size={14} className="text-emerald-400" />
-                            <span className="help-text"><b>3,420kg</b> saved so far</span>
+                    <div className="row space pt-2">
+                        <div className="flex items-center gap-2">
+                            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500"><b>3,420kg</b> Offset Processed</span>
                         </div>
-                        <div className="help-text">Goal: 5,000kg</div>
+                        <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Node Target: 5,000kg</div>
                     </div>
                 </div>
             </motion.section>
+
+            {/* Performance Analytics Section */}
+            <section className="dashboard-main-grid">
+                <article className="surface-card p-6">
+                    <div className="row space mb-6">
+                        <div className="stack-xs">
+                            <h2 className="section-title text-emerald-400">Weekly XP Momentum</h2>
+                            <p className="text-[10px] uppercase font-black tracking-widest text-slate-500">Last 7 Days Performance</p>
+                        </div>
+                        <div className="badge brand">Trend</div>
+                    </div>
+                    
+                    <div className="h-[240px] w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={(() => {
+                                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                                const data = days.map(day => ({ name: day, xp: 0 }));
+                                recentActivity.forEach(item => {
+                                    const date = new Date(item.createdAt);
+                                    if (!isNaN(date)) {
+                                        const dayName = days[date.getDay()];
+                                        const entry = data.find(d => d.name === dayName);
+                                        if (entry) entry.xp += (item.pointsAwarded || item.points || 0);
+                                    }
+                                });
+                                return data;
+                            })()}>
+                                <defs>
+                                    <linearGradient id="colorXP" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                                    </linearGradient>
+                                </defs>
+                                <XAxis 
+                                    dataKey="name" 
+                                    axisLine={false} 
+                                    tickLine={false} 
+                                    tick={{ fill: '#64748b', fontSize: 10, fontWeight: 700 }} 
+                                />
+                                <YAxis hide />
+                                <Tooltip 
+                                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                                    itemStyle={{ color: '#10b981', fontWeight: 900 }}
+                                />
+                                <Area 
+                                    type="monotone" 
+                                    dataKey="xp" 
+                                    stroke="#10b981" 
+                                    strokeWidth={3}
+                                    fillOpacity={1} 
+                                    fill="url(#colorXP)" 
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    </div>
+                </article>
+
+                <article className="surface-card p-6">
+                    <div className="row space mb-6">
+                        <div className="stack-xs">
+                            <h2 className="section-title text-blue-400">Waste Allocation</h2>
+                            <p className="text-[10px] uppercase font-black tracking-widest text-slate-500">Category Distribution</p>
+                        </div>
+                        <div className="badge accent">Neural Data</div>
+                    </div>
+
+                    <div className="h-[240px] w-full flex items-center justify-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={(() => {
+                                        const counts = {};
+                                        recentActivity.forEach(item => {
+                                            const cat = item.categoryType || 'Other';
+                                            counts[cat] = (counts[cat] || 0) + 1;
+                                        });
+                                        const finalData = Object.entries(counts).map(([name, value]) => ({ name, value }));
+                                        return finalData.length > 0 ? finalData : [{ name: 'No Data', value: 1 }];
+                                    })()}
+                                    innerRadius={60}
+                                    outerRadius={80}
+                                    paddingAngle={8}
+                                    dataKey="value"
+                                >
+                                    {[
+                                        { name: 'Biodegradable', color: '#10b981' },
+                                        { name: 'Recyclable', color: '#3b82f6' },
+                                        { name: 'Non-Biodegradable', color: '#64748b' },
+                                        { name: 'Hazardous', color: '#ef4444' },
+                                        { name: 'Other', color: '#f59e0b' },
+                                        { name: 'No Data', color: '#1e293b' }
+                                    ].map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.color} />
+                                    ))}
+                                </Pie>
+                                <Tooltip 
+                                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                                />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-4 mt-2">
+                        {[
+                            { name: 'Bio', color: 'bg-emerald-500' },
+                            { name: 'Recycle', color: 'bg-blue-500' },
+                            { name: 'Other', color: 'bg-slate-500' }
+                        ].map(c => (
+                            <div key={c.name} className="flex items-center gap-1.5">
+                                <div className={`h-2 w-2 rounded-full ${c.color}`} />
+                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{c.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </article>
+            </section>
 
             <section className="dashboard-main-grid">
                 <article className="surface-card">

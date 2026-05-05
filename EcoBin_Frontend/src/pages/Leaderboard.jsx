@@ -64,19 +64,19 @@ const Leaderboard = () => {
 
     return (
         <div className="page-shell narrow">
-            <section className="section-head">
+            <section className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <span className="section-kicker mb-4">Eco Rankings</span>
-                    <h1 className="page-title">Leaderboard</h1>
-                    <p className="page-subtitle">Compete with fellow eco-warriors and climb the ranks by scanning waste and reporting incidents.</p>
+                    <span className="section-kicker mb-4 border-amber-500/20 bg-amber-500/10 text-amber-300">EcoBin Rankings</span>
+                    <h1 className="page-title text-4xl font-black">Global Leaderboard</h1>
+                    <p className="text-slate-500 text-sm mt-2">Aggregated performance data for top-performing EcoBin users.</p>
                 </div>
-                <div className="min-w-[280px]">
-                    <div className="input-icon-wrap">
-                        <Search size={16} className="input-icon" />
+                <div className="min-w-[320px]">
+                    <div className="relative">
+                        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                         <input 
                             type="text" 
-                            className="input-control" 
-                            placeholder="Search warrior..." 
+                            className="input-control pl-12 py-4 bg-white/5 border-white/10" 
+                            placeholder="Identify User..." 
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -84,7 +84,7 @@ const Leaderboard = () => {
                 </div>
             </section>
 
-            <section className="surface-card page-section">
+            <section className="surface-card p-10 bg-slate-950/40 border-white/5">
                 {loading ? (
                     <div className="empty-state">Loading rankings...</div>
                 ) : users.length === 0 ? (
@@ -106,15 +106,21 @@ const Leaderboard = () => {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: position * 0.1 }}
                                     >
-                                        <div className="podium-user-info">
+                                        <div className="podium-user-info space-y-4">
                                             {champion ? (
-                                                <Trophy size={28} className="mx-auto mb-2 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+                                                <div className="relative inline-block mx-auto">
+                                                    <Trophy size={40} className="text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" />
+                                                    <div className="absolute -inset-2 rounded-full bg-amber-400/20 blur-xl animate-pulse" />
+                                                </div>
                                             ) : (
-                                                <Medal size={22} className={`mx-auto mb-2 ${position === 2 ? 'text-slate-300' : 'text-orange-400'}`} />
+                                                <Medal size={28} className={position === 2 ? 'text-slate-300' : 'text-orange-400'} />
                                             )}
                                             {renderAvatar(user.name, position)}
-                                            <div className="text-lg font-black text-slate-100 mt-2 truncate w-full">{user.name}</div>
-                                            <div className="font-black text-emerald-400 text-lg">{(user.totalPoints || 0).toLocaleString()} <span className="text-[10px] text-slate-500 uppercase">XP</span></div>
+                                            <div className="min-w-0">
+                                                <div className="text-xl font-black text-slate-100 truncate w-full tracking-tight">{user.name}</div>
+                                                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">{position === 1 ? 'TOP RANK' : position === 2 ? 'ELITE' : 'PRO'}</div>
+                                            </div>
+                                            <div className="font-black text-emerald-400 text-2xl tracking-tighter">{(user.totalPoints || 0).toLocaleString()} <span className="text-[10px] text-slate-500 uppercase font-black">XP</span></div>
                                         </div>
                                         <div className={`podium-bar rank-${position}`}>
                                             <div className="rank-number">#{position}</div>
