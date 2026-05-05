@@ -71,8 +71,9 @@ const Navbar = () => {
             { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
             { to: '/scan', label: 'Scan', icon: ScanEye },
             { to: '/report', label: 'Report', icon: MapPinned },
-            { to: '/history', label: 'History', icon: UserCircle2 },
+            { to: '/history', label: 'History', icon: History },
             { to: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+            { to: '/profile', label: 'Profile', icon: UserCircle2 },
         ];
 
         if (!isAdmin) return common;

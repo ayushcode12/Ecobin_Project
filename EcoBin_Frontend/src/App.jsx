@@ -14,6 +14,7 @@ import AdminContent from '@/pages/AdminContent';
 import AdminLogs from '@/pages/AdminLogs';
 import ReportWaste from '@/pages/ReportWaste';
 import History from '@/pages/History';
+import Profile from '@/pages/Profile';
 import Layout from '@/components/layout/Layout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import AdminRoute from '@/components/auth/AdminRoute';
@@ -46,6 +47,10 @@ function App() {
                     <Route
                         path="/leaderboard"
                         element={<ProtectedRoute><Leaderboard /></ProtectedRoute>}
+                    />
+                    <Route
+                        path="/profile"
+                        element={<ProtectedRoute><Profile /></ProtectedRoute>}
                     />
 
                     <Route

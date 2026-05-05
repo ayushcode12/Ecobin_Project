@@ -103,13 +103,43 @@ const AdminUsers = () => {
 
             {error && <div className="alert error">{error}</div>}
 
-            <div className="surface-card p-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="surface-card p-6 flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+                        <Users size={24} />
+                    </div>
+                    <div>
+                        <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total Citizens</div>
+                        <div className="text-2xl font-black text-white">{users.length}</div>
+                    </div>
+                </div>
+                <div className="surface-card p-6 flex items-center gap-4 border-emerald-500/10 bg-emerald-500/[0.02]">
+                    <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                        <ShieldCheck size={24} />
+                    </div>
+                    <div>
+                        <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Active Accounts</div>
+                        <div className="text-2xl font-black text-white">{users.filter(u => u.enabled).length}</div>
+                    </div>
+                </div>
+                <div className="surface-card p-6 flex items-center gap-4 border-amber-500/10 bg-amber-500/[0.02]">
+                    <div className="h-12 w-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400">
+                        <Trophy size={24} />
+                    </div>
+                    <div>
+                        <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Elite Warriors</div>
+                        <div className="text-2xl font-black text-white">{users.filter(u => (u.points || 0) > 500).length}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="surface-card p-2 border-white/5 bg-white/[0.02] shadow-inner mb-6">
                 <div className="relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                     <input 
                         type="text" 
-                        placeholder="Search by name or email..." 
-                        className="input-control pl-12 py-3"
+                        placeholder="Search by identity or email sequence..." 
+                        className="input-control border-transparent bg-transparent pl-14 py-4 text-sm font-medium focus:bg-white/[0.02]"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -127,57 +157,58 @@ const AdminUsers = () => {
                             animate={{ opacity: 1, x: 0 }}
                             className="surface-card overflow-hidden"
                         >
-                            <div className="row wrap space p-6 gap-6">
-                                <div className="row gap-4 flex-1">
-                                    <div className="h-12 w-12 rounded-xl bg-slate-800 border border-white/5 flex items-center justify-center text-xl font-bold text-slate-100">
-                                        {user.name.charAt(0).toUpperCase()}
+                            <div className="row wrap space p-5 gap-6">
+                                <div className="row gap-5 flex-1 min-w-0">
+                                    <div className="relative shrink-0">
+                                        <div className="h-14 w-14 rounded-[20px] bg-gradient-to-br from-slate-700 to-slate-800 border border-white/10 flex items-center justify-center text-xl font-black text-white shadow-lg">
+                                            {user.name.charAt(0).toUpperCase()}
+                                        </div>
+                                        <div className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-slate-900 ${user.enabled ? 'bg-emerald-500' : 'bg-red-500'}`} />
                                     </div>
                                     <div className="stack-xs min-w-0">
-                                        <div className="row gap-2">
-                                            <h3 className="text-lg font-black text-slate-100 truncate">{user.name}</h3>
-                                            {user.role === 'ROLE_ADMIN' && <span className="badge warning scale-75">Admin</span>}
-                                            {user.enabled ? (
-                                                <span className="badge approved scale-75">Active</span>
-                                            ) : (
-                                                <span className="badge rejected scale-75">Disabled</span>
-                                            )}
+                                        <div className="row gap-3">
+                                            <h3 className="text-[17px] font-black text-white truncate">{user.name}</h3>
+                                            <div className="flex gap-1.5">
+                                                {user.role === 'ROLE_ADMIN' && <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-500 text-[9px] font-black uppercase tracking-widest border border-amber-500/20">Admin</span>}
+                                                <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest border ${user.enabled ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
+                                                    {user.enabled ? 'Verified' : 'Suspended'}
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div className="row gap-4 text-xs text-slate-400">
-                                            <span className="row gap-1"><Mail size={12} /> {user.email}</span>
-                                            <span className="row gap-1"><Calendar size={12} /> Joined {new Date(user.createdAt).toLocaleDateString()}</span>
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-y-1 gap-x-4 text-xs font-medium text-slate-500">
+                                            <span className="flex items-center gap-1.5"><Mail size={13} className="text-slate-600" /> {user.email}</span>
+                                            <span className="flex items-center gap-1.5"><Calendar size={13} className="text-slate-600" /> Registered {new Date(user.createdAt).toLocaleDateString()}</span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="row gap-3">
-                                    <button 
-                                        className={`btn-soft ${user.enabled ? 'text-red-400' : 'text-emerald-400'}`}
-                                        title={user.enabled ? 'Disable Account' : 'Enable Account'}
-                                        onClick={() => handleToggleStatus(user.id, user.enabled)}
-                                        disabled={actionLoading === user.id}
-                                    >
-                                        {user.enabled ? <ShieldX size={16} /> : <ShieldCheck size={16} />}
-                                        <span className="hidden sm:inline">{user.enabled ? 'Disable' : 'Enable'}</span>
-                                    </button>
-
-                                    <button 
-                                        className="btn-soft text-amber-400"
-                                        title="Reset Score"
-                                        onClick={() => handleResetScore(user.id)}
-                                        disabled={actionLoading === user.id}
-                                    >
-                                        <RotateCcw size={16} />
-                                        <span className="hidden sm:inline">Reset Score</span>
-                                    </button>
-
-                                    <button 
-                                        className="btn-soft text-red-500 hover:bg-red-500/10"
-                                        title="Delete User"
-                                        onClick={() => handleDeleteUser(user.id)}
-                                        disabled={actionLoading === user.id || user.role === 'ROLE_ADMIN'}
-                                    >
-                                        <UserMinus size={16} />
-                                    </button>
+                                <div className="row gap-2.5">
+                                    <div className="flex bg-black/20 rounded-xl p-1 border border-white/5">
+                                        <button 
+                                            className={`p-2.5 rounded-lg transition-all ${user.enabled ? 'text-slate-500 hover:text-red-400 hover:bg-red-400/10' : 'text-emerald-400 bg-emerald-400/10'}`}
+                                            title={user.enabled ? 'Suspend Account' : 'Reactivate Account'}
+                                            onClick={() => handleToggleStatus(user.id, user.enabled)}
+                                            disabled={actionLoading === user.id}
+                                        >
+                                            {user.enabled ? <ShieldX size={18} /> : <ShieldCheck size={18} />}
+                                        </button>
+                                        <button 
+                                            className="p-2.5 rounded-lg text-slate-500 hover:text-amber-400 hover:bg-amber-400/10 transition-all"
+                                            title="Reset Progress"
+                                            onClick={() => handleResetScore(user.id)}
+                                            disabled={actionLoading === user.id}
+                                        >
+                                            <RotateCcw size={18} />
+                                        </button>
+                                        <button 
+                                            className={`p-2.5 rounded-lg transition-all ${user.role === 'ROLE_ADMIN' ? 'opacity-20 cursor-not-allowed' : 'text-slate-500 hover:text-red-500 hover:bg-red-500/10'}`}
+                                            title="Terminate Identity"
+                                            onClick={() => handleDeleteUser(user.id)}
+                                            disabled={actionLoading === user.id || user.role === 'ROLE_ADMIN'}
+                                        >
+                                            <UserMinus size={18} />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </motion.article>
