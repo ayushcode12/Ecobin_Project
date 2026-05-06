@@ -25,6 +25,7 @@ import {
     Cell,
     Legend
 } from 'recharts';
+import { SkeletonCard, SkeletonText } from '@/components/ui/Skeleton';
 import { getAdminDashboardStats } from '@/services/api';
 
 const AdminDashboard = () => {
@@ -74,10 +75,24 @@ const AdminDashboard = () => {
 
     if (loading) {
         return (
-            <div className="page-shell narrow flex items-center justify-center min-h-[60vh]">
-                <div className="stack-sm items-center">
-                    <RefreshCcw size={40} className="animate-spin text-emerald-500 mb-4" />
-                    <div className="text-emerald-400 font-black tracking-[0.2em] uppercase text-xs">Synchronizing Neural Stats...</div>
+            <div className="page-shell space-y-8">
+                <div className="section-head">
+                    <div className="stack-sm">
+                        <SkeletonText width="200px" height="12px" />
+                        <SkeletonText width="400px" height="40px" />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    <SkeletonCard height="140px" />
+                    <SkeletonCard height="140px" />
+                    <SkeletonCard height="140px" />
+                    <SkeletonCard height="140px" />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8">
+                    <SkeletonCard height="450px" />
+                    <SkeletonCard height="450px" />
                 </div>
             </div>
         );

@@ -1421,3 +1421,68 @@
     @apply p-5;
   }
 }
+  /* --- Custom Neural Cursor --- */
+  .cursor-dot {
+    @apply fixed top-0 left-0 w-1.5 h-1.5 bg-emerald-400 rounded-full pointer-events-none z-[9999] transition-transform duration-75 ease-out;
+    box-shadow: 0 0 10px var(--ec-brand);
+  }
+  .cursor-outline {
+    @apply fixed top-0 left-0 w-8 h-8 border border-emerald-400/30 rounded-full pointer-events-none z-[9998] transition-all duration-300 ease-out flex items-center justify-center;
+  }
+  .cursor-coord {
+    @apply absolute -right-16 -top-4 text-[8px] font-mono text-emerald-500/60 uppercase tracking-widest hidden md:block;
+  }
+  .cursor-status {
+    @apply absolute -bottom-6 left-1/2 -translate-x-1/2 text-[7px] font-black text-emerald-400/80 uppercase tracking-[0.3em] whitespace-nowrap;
+  }
+
+  /* --- Skeleton Diagnostic Loader --- */
+  .skeleton-root {
+    @apply relative overflow-hidden bg-slate-900/40 rounded-[18px] border border-white/5;
+  }
+  .skeleton-shimmer {
+    @apply absolute inset-0 -translate-x-full;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.03) 20%,
+      rgba(104, 213, 163, 0.05) 50%,
+      rgba(255, 255, 255, 0.03) 80%,
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
+  .skeleton-grid {
+    @apply absolute inset-0 opacity-[0.03] pointer-events-none;
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 10px 10px;
+  }
+
+  @keyframes shimmer {
+    100% { transform: translateX(100%); }
+  }
+
+  @keyframes scan {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(320px); }
+    100% { transform: translateY(0); }
+  }
+
+  /* --- Premium Hover Interactions --- */
+  .hover-glow {
+    @apply transition-all duration-300;
+  }
+  .hover-glow:hover {
+    box-shadow: 0 0 20px rgba(104, 213, 163, 0.15);
+    border-color: rgba(104, 213, 163, 0.3) !important;
+  }
+
+  .interactive-active .cursor-outline {
+    @apply w-14 h-14 border-emerald-400 border-2 bg-emerald-400/5;
+    box-shadow: 0 0 30px rgba(104, 213, 163, 0.2);
+  }
+  .interactive-active .cursor-status {
+    @apply opacity-100 scale-110 text-emerald-300;
+  }
