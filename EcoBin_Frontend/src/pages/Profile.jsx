@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
     User, 
@@ -25,55 +26,40 @@ const BADGES = [
 ];
 
 const Profile = () => {
-    const [user, setUser] = useState(null);
-    const [stats, setStats] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState('');
-    const [updating, setUpdating] = useState(false);
     const { showToast } = useToast();
+    const queryClient = useQueryClient();
 
-    const fetchData = async () => {
-        setLoading(true);
-        try {
-            const [uRes, sRes] = await Promise.all([getCurrentUser(), getUserStats()]);
-            setUser(uRes.data);
-            setStats(sRes.data);
-            setNewName(uRes.data.name);
-        } catch (err) {
-            console.error('Failed to load profile data', err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { data: user, isLoading: userLoading } = useQuery({
+        queryKey: ['currentUser'],
+        queryFn: async () => { const res = await getCurrentUser(); return res.data; },
+        onSuccess: (data) => setNewName(data.name),
+    });
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+    const { data: stats, isLoading: statsLoading } = useQuery({
+        queryKey: ['userStats'],
+        queryFn: async () => { const res = await getUserStats(); return res.data; },
+    });
 
-    useEffect(() => {
-        if (stats && stats.totalPoints >= 500) {
-            showToast('Eco Legend Status Detected: You are in the top 1% of contributors!', 'info');
-        }
-    }, [stats]);
+    const loading = userLoading || statsLoading;
 
-    const handleUpdateName = async () => {
-        if (!newName.trim() || newName === user.name) {
+    const updateMutation = useMutation({
+        mutationFn: (name) => updateMyProfileName(name),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+            setIsEditing(false);
+            showToast(`Profile updated: Welcome, ${newName}!`, 'success');
+        },
+        onError: () => showToast('Failed to update profile record.', 'error'),
+    });
+
+    const handleUpdateName = () => {
+        if (!newName.trim() || newName === user?.name) {
             setIsEditing(false);
             return;
         }
-
-        setUpdating(true);
-        try {
-            await updateMyProfileName(newName);
-            setUser({ ...user, name: newName });
-            setIsEditing(false);
-            showToast(`Profile updated: Welcome, ${newName}!`, 'success');
-        } catch (err) {
-            showToast('Failed to update profile record.', 'error');
-        } finally {
-            setUpdating(false);
-        }
+        updateMutation.mutate(newName);
     };
 
     const getLevel = (xp) => Math.floor(xp / 100) + 1;
@@ -121,7 +107,7 @@ const Profile = () => {
                                             onChange={(e) => setNewName(e.target.value)}
                                             autoFocus
                                         />
-                                        <button onClick={handleUpdateName} disabled={updating} className="text-emerald-400 hover:text-emerald-300">
+                                        <button onClick={handleUpdateName} disabled={updateMutation.isPending} className="text-emerald-400 hover:text-emerald-300">
                                             <Check size={24} />
                                         </button>
                                     </div>
