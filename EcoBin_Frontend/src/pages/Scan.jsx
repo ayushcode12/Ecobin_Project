@@ -477,11 +477,11 @@ const Scan = () => {
                     {/* Bin Classification & Disposal Guide */}
                     {(() => {
                         const cat = String(result.categoryType || '').toLowerCase();
-                        let binColor = 'Grey';
-                        let binClass = 'bg-slate-500/10 text-slate-400 border-slate-500/20';
-                        let iconColor = 'text-slate-400';
-                        let instruction = 'Dispose in the general waste bin.';
-                        let motivation = 'Every step counts toward a cleaner planet.';
+                        let binColor = 'Black';
+                        let binClass = 'bg-slate-900/40 text-slate-400 border-white/10';
+                        let iconColor = 'text-slate-500';
+                        let instruction = 'Dispose in the Black Bin (General/Non-Recyclable).';
+                        let motivation = 'Properly disposing of non-recyclables keeps our streets clean!';
 
                         if (cat.includes('bio')) {
                             binColor = 'Green';
@@ -496,11 +496,11 @@ const Scan = () => {
                             instruction = 'Dispose in the Blue Bin. Ensure it is clean and dry.';
                             motivation = 'You just saved energy by recycling!';
                         } else if (cat.includes('hazard')) {
-                            binColor = 'Red';
-                            binClass = 'bg-red-500/10 text-red-400 border-red-500/20';
-                            iconColor = 'text-red-400';
-                            instruction = 'Dispose in the Red Bin. Handle with extreme caution.';
-                            motivation = 'Safety first! Thank you for protecting the environment.';
+                            binColor = 'Black';
+                            binClass = 'bg-slate-900/40 text-slate-400 border-white/10';
+                            iconColor = 'text-slate-500';
+                            instruction = 'Dispose in the Black Bin. Handle with caution as it may be hazardous.';
+                            motivation = 'Thank you for safely disposing of complex materials.';
                         }
 
                         return (
