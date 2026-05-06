@@ -3,7 +3,6 @@ import { motion, useSpring, useMotionValue } from 'framer-motion';
 
 const CustomCursor = () => {
     const [isHovering, setIsHovering] = useState(false);
-    const [coords, setCoords] = useState({ x: 0, y: 0 });
     
     const cursorX = useMotionValue(-100);
     const cursorY = useMotionValue(-100);
@@ -16,7 +15,6 @@ const CustomCursor = () => {
         const moveCursor = (e) => {
             cursorX.set(e.clientX);
             cursorY.set(e.clientY);
-            setCoords({ x: e.clientX, y: e.clientY });
         };
 
         const handleHoverStart = (e) => {
@@ -66,9 +64,6 @@ const CustomCursor = () => {
                     translateY: '-50%'
                 }}
             >
-                <div className="cursor-coord">
-                    {Math.round(coords.x)}, {Math.round(coords.y)}
-                </div>
                 {isHovering && (
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.5 }}
