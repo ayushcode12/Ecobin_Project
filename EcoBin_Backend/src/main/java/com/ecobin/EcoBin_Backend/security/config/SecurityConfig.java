@@ -83,7 +83,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOriginPattern("http://localhost:*"); // Support Vite dynamic ports (5173, 5174)
+        config.addAllowedOriginPattern("http://localhost:*");
+        config.addAllowedOrigin("https://gilded-tarsier-034ced.netlify.app");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
