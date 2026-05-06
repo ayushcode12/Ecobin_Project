@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-    ArrowRight, 
-    Home, 
-    Lock, 
-    Mail, 
-    Globe, 
-    ShieldCheck, 
-    Eye, 
+import {
+    ArrowRight,
+    Home,
+    Lock,
+    Mail,
+    // Globe,
+    // ShieldCheck,
+    ScanEye,
+    Trophy,
+    Eye,
     EyeOff,
     Fingerprint
 } from 'lucide-react';
@@ -79,29 +81,29 @@ const Login = () => {
                     <h1 className="text-4xl font-black text-white leading-tight mb-6">
                         Access the
                         <br />
-                        <span className="hero-gradient-text text-5xl">Sustainable Network.</span>
+                        <span className="hero-gradient-text text-5xl">Sustainable Future.</span>
                     </h1>
                     <p className="text-slate-400 text-sm leading-relaxed mb-10 max-w-[320px]">
-                        Synchronize your node to monitor environmental impact, track resource recovery, and manage geospatial reports.
+                        Track your waste classification, monitor eco-points, and build sustainable habits with EcoBin.
                     </p>
 
                     <div className="stack-md">
                         <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/5">
                             <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
-                                <Globe size={18} />
+                                <ScanEye size={18} />
                             </div>
                             <div>
-                                <div className="text-sm font-bold text-slate-100">Global Sync</div>
-                                <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">Real-time Impact Data</div>
+                                <div className="text-sm font-bold text-slate-100">Smart Waste Detection</div>
+                                <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">AI-Powered classification</div>
                             </div>
                         </div>
                         <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/5">
                             <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-                                <ShieldCheck size={18} />
+                                <Trophy size={18} />
                             </div>
                             <div>
-                                <div className="text-sm font-bold text-slate-100">Neural Security</div>
-                                <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">Encrypted Asset Ledger</div>
+                                <div className="text-sm font-bold text-slate-100">Eco Progress Tracking</div>
+                                <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">POINTS • STREAKS • REWARDS</div>
                             </div>
                         </div>
                     </div>
@@ -111,7 +113,7 @@ const Login = () => {
                     <div className="flex items-center justify-between mb-10">
                         <div>
                             <h2 className="text-2xl font-black text-white tracking-tight">EcoBin Login</h2>
-                            <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Verify Credentials</p>
+                            <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Welcome Back</p>
                         </div>
                         <Link to="/" className="h-10 w-10 rounded-xl border border-white/5 bg-white/5 flex items-center justify-center text-emerald-400 hover:bg-white/10 transition-colors">
                             <Home size={18} />
@@ -122,13 +124,13 @@ const Login = () => {
 
                     <form className="stack-lg" onSubmit={handleSubmit}>
                         <div className="stack-sm">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Neural Identifier (Email)</label>
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Email Address</label>
                             <div className="relative">
                                 <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <input
                                     type="email"
                                     className="input-control pl-12"
-                                    placeholder="node@network.org"
+                                    placeholder="Enter your email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
@@ -137,7 +139,7 @@ const Login = () => {
                         </div>
 
                         <div className="stack-sm">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Access Key (Password)</label>
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Password</label>
                             <div className="relative">
                                 <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <input
@@ -159,13 +161,13 @@ const Login = () => {
                         </div>
 
                         <button type="submit" className="btn-primary py-5 text-lg" disabled={submitting}>
-                            {submitting ? 'Synchronizing...' : 'Authorize Access'} <Fingerprint size={20} className="ml-2" />
+                            {submitting ? 'Logging in...' : 'Log In'} <Fingerprint size={20} className="ml-2" />
                         </button>
                     </form>
 
                     <div className="mt-12 pt-8 border-t border-white/5 text-center">
-                        <span className="text-xs text-slate-500">Unauthorized Access Prohibited. </span>
-                        <Link to="/signup" className="text-xs font-bold text-emerald-400 hover:underline ml-1">Request Node Access</Link>
+                        <span className="text-xs text-slate-500">Don't have an account. </span>
+                        <Link to="/signup" className="text-xs font-bold text-emerald-400 hover:underline ml-1">Sign Up</Link>
                     </div>
                 </div>
             </motion.div>

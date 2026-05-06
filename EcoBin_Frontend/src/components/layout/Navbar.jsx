@@ -125,8 +125,8 @@ const Navbar = () => {
         <header className="top-nav border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
             <div className="top-nav-inner px-6 max-w-[1600px]">
                 <div className="flex items-center gap-6">
-                    <button 
-                        className="brand-link group" 
+                    <button
+                        className="brand-link group"
                         onClick={() => {
                             if (!isAuthenticated) navigate('/');
                             else if (isAdmin) navigate('/admin/dashboard');
@@ -157,7 +157,7 @@ const Navbar = () => {
                 {!isAuthenticated ? (
                     <div className="nav-actions hidden md:inline-flex items-center gap-4">
                         <Link to="/login" className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-colors">Login Portal</Link>
-                        <Link to="/signup" className="btn-primary py-3 px-6 text-[10px] shadow-lg shadow-blue-500/20">Node Initialization</Link>
+                        <Link to="/signup" className="btn-primary py-3 px-6 text-[10px] shadow-lg shadow-blue-500/20">Sign Up</Link>
                     </div>
                 ) : (
                     <div className="nav-actions hidden md:inline-flex items-center gap-4">
@@ -193,7 +193,7 @@ const Navbar = () => {
                 {!isAuthenticated ? (
                     <div className="nav-actions mt-8 grid w-full gap-3">
                         <Link to="/login" className="btn-ghost py-4 text-center">Login Portal</Link>
-                        <Link to="/signup" className="btn-primary py-4 text-center">Node Initialization</Link>
+                        <Link to="/signup" className="btn-primary py-4 text-center">Sign Up</Link>
                     </div>
                 ) : (
                     <div className="nav-actions mt-8 w-full">

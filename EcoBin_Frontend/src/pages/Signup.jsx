@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-    ArrowRight, 
-    Home, 
-    Lock, 
-    Mail, 
-    ScanEye, 
-    Cpu, 
-    Trophy, 
-    User, 
-    Eye, 
+import {
+    ArrowRight,
+    Home,
+    Lock,
+    Mail,
+    ScanEye,
+    Cpu,
+    Trophy,
+    User,
+    Eye,
     EyeOff,
     Activity
 } from 'lucide-react';
@@ -71,14 +71,14 @@ const Signup = () => {
                 transition={{ duration: 0.5 }}
             >
                 <div className="auth-panel showcase bg-gradient-to-br from-slate-900 to-emerald-950/40">
-                    <span className="section-kicker mb-8 border-emerald-500/20 bg-emerald-500/10 text-emerald-400">EcoBin Registration</span>
+                    <span className="section-kicker mb-8 border-emerald-500/20 bg-emerald-500/10 text-emerald-400">EcoBin Sign Up</span>
                     <h1 className="text-4xl font-black text-white leading-tight mb-6">
                         Join the
                         <br />
-                        <span className="hero-gradient-text text-5xl">Sustainable Network.</span>
+                        <span className="hero-gradient-text text-5xl">Sustainable Future.</span>
                     </h1>
                     <p className="text-slate-400 text-sm leading-relaxed mb-10 max-w-[320px]">
-                        Register your identity to begin neural waste classification and contribute to the global resource orchestration ledger.
+                        Create your EcoBin account to classify waste, earn eco-points, and build sustainable habits.
                     </p>
 
                     <div className="stack-md">
@@ -87,17 +87,17 @@ const Signup = () => {
                                 <ScanEye size={18} />
                             </div>
                             <div>
-                                <div className="text-sm font-bold text-slate-100">Neural Scan</div>
+                                <div className="text-sm font-bold text-slate-100">Smart Waste Detection</div>
                                 <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">AI-Powered Classification</div>
                             </div>
                         </div>
                         <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/5">
                             <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-                                <Activity size={18} />
+                                <Trophy size={18} />
                             </div>
                             <div>
-                                <div className="text-sm font-bold text-slate-100">Process Optimization</div>
-                                <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">Resource Flow Analytics</div>
+                                <div className="text-sm font-bold text-slate-100">Eco Progress Tracking</div>
+                                <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">POINTS • STREAKS • REWARDS</div>
                             </div>
                         </div>
                     </div>
@@ -118,7 +118,7 @@ const Signup = () => {
 
                     <form className="stack-lg" onSubmit={handleSubmit}>
                         <div className="stack-sm">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Full Identity Name</label>
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Full Name</label>
                             <div className="relative">
                                 <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <input
@@ -133,13 +133,13 @@ const Signup = () => {
                         </div>
 
                         <div className="stack-sm">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Neural Identifier (Email)</label>
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Email Address</label>
                             <div className="relative">
                                 <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <input
                                     type="email"
                                     className="input-control pl-12"
-                                    placeholder="node@network.org"
+                                    placeholder="Enter your email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
@@ -148,7 +148,7 @@ const Signup = () => {
                         </div>
 
                         <div className="stack-sm">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Access Key (Password)</label>
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Password</label>
                             <div className="relative">
                                 <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <input
@@ -170,13 +170,13 @@ const Signup = () => {
                         </div>
 
                         <button type="submit" className="btn-primary py-5 text-lg" disabled={submitting}>
-                            {submitting ? 'Initializing Node...' : 'Initialize Identity'} <Cpu size={20} className="ml-2" />
+                            {submitting ? 'Signing Up...' : 'Sign Up'} <Cpu size={20} className="ml-2" />
                         </button>
                     </form>
 
                     <div className="mt-12 pt-8 border-t border-white/5 text-center">
-                        <span className="text-xs text-slate-500">Already a network node? </span>
-                        <Link to="/login" className="text-xs font-bold text-emerald-400 hover:underline ml-1">Authenticate Access</Link>
+                        <span className="text-xs text-slate-500">Already have an account? </span>
+                        <Link to="/login" className="text-xs font-bold text-emerald-400 hover:underline ml-1">Login</Link>
                     </div>
                 </div>
             </motion.div>
