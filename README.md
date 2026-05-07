@@ -135,7 +135,7 @@ The system relies on environment variables or `application.properties`:
 
 This project is a collaborative effort:
 *   **Ayush**: Lead Developer (Frontend, Backend, & System Architecture)
-*   **AI Engineering Partner**: AI Model Development & Neural Engine Integration
+*   **[Akash](https://github.com/Akash72914)**: AI Model Development & Neural Engine Integration
 
 ---
 
