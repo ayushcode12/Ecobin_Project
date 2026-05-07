@@ -15,7 +15,6 @@
 - [💻 Tech Stack](#-tech-stack)
 - [🚀 Quick Start](#-quick-start)
 - [🛠️ Configuration](#️-configuration)
-- [📸 Preview](#-preview)
 - [🛡️ Security & Privacy](#️-security--privacy)
 - [🤝 Contributors](#-contributors)
 - [📜 License](#-license)
