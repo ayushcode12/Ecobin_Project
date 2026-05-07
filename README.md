@@ -124,16 +124,6 @@ The system relies on environment variables or `application.properties`:
 
 ---
 
-## 📸 Preview
-
-*Placeholders for your high-resolution project screenshots*
-
-| Live Scanner | User Dashboard | Admin Console |
-| :---: | :---: | :---: |
-| ![Scanner Placeholder](https://via.placeholder.com/300x200?text=AI+Scanner) | ![Dashboard Placeholder](https://via.placeholder.com/300x200?text=Eco+Dashboard) | ![Admin Placeholder](https://via.placeholder.com/300x200?text=Admin+Settings) |
-
----
-
 ## 🛡️ Security & Privacy
 *   **Stateless Auth**: All requests are protected via JWT.
 *   **Data Integrity**: Bcrypt password hashing for all user accounts.
