@@ -39,6 +39,7 @@ const Scan = () => {
     const [result, setResult] = useState(null);
 
     const [useCamera, setUseCamera] = useState(false);
+    const [cameraFacingMode, setCameraFacingMode] = useState('environment');
     const [terminalLogs, setTerminalLogs] = useState([
         '[SYSTEM_READY]: OPTICAL_SENSOR_ONLINE',
         '[NEURAL_ENGINE]: STANDBY'
@@ -63,7 +64,7 @@ const Scan = () => {
         setTerminalLogs(prev => [...prev.slice(-4), `[${new Date().toLocaleTimeString()}]: ${msg}`]);
     };
 
-    const stopCamera = () => {
+    const stopCameraStream = () => {
         if (liveLoopTimeoutRef.current) {
             clearTimeout(liveLoopTimeoutRef.current);
             liveLoopTimeoutRef.current = null;
@@ -72,12 +73,17 @@ const Scan = () => {
             streamRef.current.getTracks().forEach((track) => track.stop());
             streamRef.current = null;
         }
+    };
+
+    const stopCamera = () => {
+        stopCameraStream();
         setUseCamera(false);
         setLiveProcessing(false);
         addLog('OPTICAL_SENSOR_OFFLINE');
     };
 
-    const startCamera = async () => {
+    const startCamera = async (facingMode = cameraFacingMode) => {
+        stopCameraStream();
         setResult(null);
         setAutoConfirmedFrame(null);
         setLivePrediction(null);
@@ -86,12 +92,16 @@ const Scan = () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 video: { 
-                    facingMode: 'environment',
+                    facingMode: { ideal: facingMode },
                     width: { ideal: 1280 },
                     height: { ideal: 720 }
                 } 
             });
             streamRef.current = stream;
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+            }
+            setCameraFacingMode(facingMode);
             setUseCamera(true);
             setPreview(null);
             setImageBase64('');
@@ -100,6 +110,12 @@ const Scan = () => {
             setError('Optical sensor access denied. Please utilize manual upload mode.');
             addLog('ERROR: SENSOR_ACCESS_DENIED');
         }
+    };
+
+    const switchCamera = () => {
+        const nextFacingMode = cameraFacingMode === 'environment' ? 'user' : 'environment';
+        addLog(`SWITCHING_TO_${nextFacingMode === 'environment' ? 'REAR' : 'FRONT'}_CAMERA`);
+        startCamera(nextFacingMode);
     };
 
     useEffect(() => {
@@ -332,10 +348,21 @@ const Scan = () => {
                                             )}
                                         </div>
                                         <div className="flex gap-3">
-                                            <button className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-all" onClick={captureFrame}>
+                                            <button
+                                                className="h-14 min-w-14 rounded-2xl bg-blue-500/10 backdrop-blur-md border border-blue-500/20 flex lg:hidden items-center justify-center gap-2 px-4 text-blue-300 hover:bg-blue-500/20 transition-all pointer-events-auto"
+                                                onClick={switchCamera}
+                                                title={`Switch to ${cameraFacingMode === 'environment' ? 'front' : 'rear'} camera`}
+                                                aria-label={`Switch to ${cameraFacingMode === 'environment' ? 'front' : 'rear'} camera`}
+                                            >
+                                                <RotateCcw size={22} />
+                                                <span className="hidden sm:inline text-[10px] font-black uppercase tracking-widest">
+                                                    {cameraFacingMode === 'environment' ? 'Rear' : 'Front'}
+                                                </span>
+                                            </button>
+                                            <button className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-all pointer-events-auto" onClick={captureFrame}>
                                                 <Aperture size={28} />
                                             </button>
-                                            <button className="h-14 w-14 rounded-2xl bg-red-500/10 backdrop-blur-md border border-red-500/20 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition-all" onClick={stopCamera}>
+                                            <button className="h-14 w-14 rounded-2xl bg-red-500/10 backdrop-blur-md border border-red-500/20 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition-all pointer-events-auto" onClick={stopCamera}>
                                                 <X size={24} />
                                             </button>
                                         </div>
@@ -364,7 +391,7 @@ const Scan = () => {
                         {!useCamera && !autoConfirmedFrame && (
                             <div className="p-8 stack-lg">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div onClick={startCamera} className="h-[200px] bg-emerald-500/5 border-2 border-dashed border-emerald-500/20 rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all group">
+                                    <div onClick={() => startCamera()} className="h-[200px] bg-emerald-500/5 border-2 border-dashed border-emerald-500/20 rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all group">
                                         <div className="h-16 w-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4 group-hover:scale-110 transition-transform">
                                             <Camera size={32} />
                                         </div>
